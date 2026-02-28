@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Management System - Task Module</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Robot Management System</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#" class="active">Tasks</a></li>
+                    <li><a href="#" class="devices-nav">Devices</a></li>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Reports</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <!-- Page title will be set dynamically -->
+                    <!-- Language Switcher -->
+                    <div class="language-switcher">
+                        <button class="language-btn" id="languageBtn">
+                            🌐
+                        </button>
+                        <div class="language-dropdown" id="languageDropdown">
+                            <a href="#" data-lang="en">English</a>
+                            <a href="#" data-lang="zh">中文</a>
+                            <a href="#" data-lang="ja">日本語</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <main class="main">
+            <!-- Task List Page -->
+            <section id="task-list-page" class="page active">
+                <div class="page-header">
+                    <h2>Task List</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">Add New Task</button>
+                        <button class="btn btn-secondary">Refresh</button>
+                    </div>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="search-filter">
+                    <div class="search">
+                        <input type="text" placeholder="Search tasks...">
+                        <button class="btn-search">🔍</button>
+                    </div>
+                    <div class="filter">
+                        <select>
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="en-route">En Route</option>
+                            <option value="executing">Executing</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                        <select>
+                            <option value="all">All Robots</option>
+                            <option value="robot1">Robot #1</option>
+                            <option value="robot2">Robot #2</option>
+                            <option value="robot3">Robot #3</option>
+                            <option value="robot4">Robot #4</option>
+                            <option value="robot5">Robot #5</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Task Table -->
+                <div class="task-table-container">
+                    <table class="task-table">
+                        <thead>
+                            <tr>
+                                <th>Task ID</th>
+                                <th>Task Type</th>
+                                <th>Task Name</th>
+                                <th>Status</th>
+                                <th>Robot</th>
+                                <th>Current Location</th>
+                                <th>ETA</th>
+                                <th>Priority</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="task-row" data-task-id="1">
+                                <td>Task #12345</td>
+                                <td>飞速达</td>
+                                <td>Package Delivery to Floor 3</td>
+                                <td>
+                                    <span class="status-badge en-route">En Route</span>
+                                </td>
+                                <td>Robot #7</td>
+                                <td>Elevator, 2nd Floor</td>
+                                <td>14:45:30</td>
+                                <td>
+                                    <span class="priority-badge normal">Normal</span>
+                                </td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="task-row" data-task-id="2">
+                                <td>Task #12346</td>
+                                <td>12-3</td>
+                                <td>Room Cleaning - Conference Hall</td>
+                                <td>
+                                    <span class="status-badge executing">Executing</span>
+                                </td>
+                                <td>Robot #3</td>
+                                <td>Conference Hall, 1st Floor</td>
+                                <td>14:50:15</td>
+                                <td>
+                                    <span class="priority-badge high">High</span>
+                                </td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="task-row" data-task-id="3">
+                                <td>Task #12347</td>
+                                <td>机场行李运输</td>
+                                <td>Airport Luggage Transport</td>
+                                <td>
+                                    <span class="status-badge assigned">Assigned</span>
+                                </td>
+                                <td>Robot #5</td>
+                                <td>Airport Terminal 1</td>
+                                <td>15:00:00</td>
+                                <td>
+                                    <span class="priority-badge normal">Normal</span>
+                                </td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="task-row" data-task-id="4">
+                                <td>Task #12348</td>
+                                <td>飞速达</td>
+                                <td>Medical Supply Delivery</td>
+                                <td>
+                                    <span class="status-badge completed">Completed</span>
+                                </td>
+                                <td>Robot #2</td>
+                                <td>Medical Bay, Basement</td>
+                                <td>14:30:45</td>
+                                <td>
+                                    <span class="priority-badge high">High</span>
+                                </td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="task-row" data-task-id="5">
+                                <td>Task #12349</td>
+                                <td>机场巡检</td>
+                                <td>Airport Patrol - Terminal 2</td>
+                                <td>
+                                    <span class="status-badge pending">Pending</span>
+                                </td>
+                                <td>Robot #9</td>
+                                <td>Airport Terminal 2</td>
+                                <td>15:15:30</td>
+                                <td>
+                                    <span class="priority-badge low">Low</span>
+                                </td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="btn-page">Previous</button>
+                    <button class="btn-page active">1</button>
+                    <button class="btn-page">2</button>
+                    <button class="btn-page">3</button>
+                    <button class="btn-page">Next</button>
+                </div>
+            </section>
+            
+            <!-- Task Details Page -->
+            <section id="task-details-page" class="page">
+                <div class="page-header">
+                    <button class="btn btn-back" id="back-to-list">← Back to Task List</button>
+                    <h2>Task Details</h2>
+                </div>
+                
+                <!-- Task Information -->
+                <div class="task-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Task ID:</label>
+                            <span>Task #12345</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Task Type:</label>
+                            <span>飞速达</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Task Name:</label>
+                            <span>Package Delivery to Floor 3</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Status:</label>
+                            <span class="status-badge en-route">En Route</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Priority:</label>
+                            <span class="priority-badge normal">Normal</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Robot:</label>
+                            <span>Robot #7</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Current Location:</label>
+                            <span>Elevator, 2nd Floor</span>
+                        </div>
+                        <div class="info-item">
+                            <label>ETA:</label>
+                            <span>14:45:30</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Start Time:</label>
+                            <span>14:32:15</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Estimated Duration:</label>
+                            <span>13 min 15 sec</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Progress:</label>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                            <span>60%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="task-actions">
+                        <button class="btn btn-delete" id="detailDeleteBtn">Delete</button>
+                    </div>
+                </div>
+                
+                <!-- Robot Location Map -->
+                <div class="robot-location">
+                    <h3>Current Robot Location</h3>
+                    <div class="map-snippet">
+                        <div class="map-placeholder">
+                            <div class="building-layout">
+                                <div class="floor floor-1">
+                                    <span class="floor-label">1st Floor</span>
+                                    <div class="room">Lobby</div>
+                                    <div class="room">Conference Hall</div>
+                                </div>
+                                <div class="floor floor-2">
+                                    <span class="floor-label">2nd Floor</span>
+                                    <div class="room">Offices</div>
+                                    <div class="elevator active">Elevator</div>
+                                </div>
+                                <div class="floor floor-3">
+                                    <span class="floor-label">3rd Floor</span>
+                                    <div class="room">Executive Suite</div>
+                                    <div class="room">Meeting Rooms</div>
+                                </div>
+                                <div class="robot-marker">🤖</div>
+                            </div>
+                        </div>
+                        <div class="location-details">
+                            <p>Robot #7 is currently in the elevator on the 2nd floor, en route to the 3rd floor for package delivery.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Task Steps -->
+                <div class="task-steps">
+                    <h3>Task Steps</h3>
+                    <div class="steps-table-container">
+                        <table class="steps-table">
+                            <thead>
+                                <tr>
+                                    <th>Step</th>
+                                    <th>Status</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Duration</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1. Leave Charging Station</td>
+                                    <td>
+                                        <span class="status-badge completed">Completed</span>
+                                    </td>
+                                    <td>14:32:15</td>
+                                    <td>14:32:47</td>
+                                    <td>32s</td>
+                                    <td>Robot left charging station successfully</td>
+                                </tr>
+                                <tr>
+                                    <td>2. Navigate to Elevator</td>
+                                    <td>
+                                        <span class="status-badge completed">Completed</span>
+                                    </td>
+                                    <td>14:32:47</td>
+                                    <td>14:33:20</td>
+                                    <td>33s</td>
+                                    <td>Robot navigated to elevator on 1st floor</td>
+                                </tr>
+                                <tr>
+                                    <td>3. Wait for Elevator</td>
+                                    <td>
+                                        <span class="status-badge completed">Completed</span>
+                                    </td>
+                                    <td>14:33:20</td>
+                                    <td>14:34:05</td>
+                                    <td>45s</td>
+                                    <td>Robot waited for elevator to arrive</td>
+                                </tr>
+                                <tr>
+                                    <td>4. Take Elevator to 3rd Floor</td>
+                                    <td>
+                                        <span class="status-badge executing">Executing</span>
+                                    </td>
+                                    <td>14:34:05</td>
+                                    <td>-</td>
+                                    <td>25s</td>
+                                    <td>Robot is currently in elevator</td>
+                                </tr>
+                                <tr>
+                                    <td>5. Navigate to Room 301</td>
+                                    <td>
+                                        <span class="status-badge pending">Pending</span>
+                                    </td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>Robot will navigate to Room 301</td>
+                                </tr>
+                                <tr>
+                                    <td>6. Deliver Package</td>
+                                    <td>
+                                        <span class="status-badge pending">Pending</span>
+                                    </td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>Robot will deliver package to recipient</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Devices Module Pages -->
+            <!-- Device List Page -->
+            <section id="device-list-page" class="page">
+                <div class="page-header">
+                    <h2>Device List</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">Add New Device</button>
+                        <button class="btn btn-secondary">Refresh</button>
+                    </div>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="search-filter">
+                    <div class="search">
+                        <input type="text" placeholder="Search devices...">
+                        <button class="btn-search">🔍</button>
+                    </div>
+                    <div class="filter">
+                        <select>
+                            <option value="all">All Types</option>
+                            <option value="robot">Robots</option>
+                            <option value="elevator">Elevators</option>
+                            <option value="door">Doors</option>
+                        </select>
+                        <select>
+                            <option value="all">All Statuses</option>
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Device Table -->
+                <div class="task-table-container">
+                    <table class="task-table">
+                        <thead>
+                            <tr>
+                                <th>Device ID</th>
+                                <th>Device Name</th>
+                                <th>Type</th>
+                                <th>Model</th>
+                                <th>Brand</th>
+                                <th>Status</th>
+                                <th>Battery</th>
+                                <th>Current Task</th>
+                                <th>Location</th>
+                                <th>IP Address</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Tianti Series Robots -->
+                            <tr class="device-row" data-device-id="1">
+                                <td>TZ123_001</td>
+                                <td>天体0号</td>
+                                <td>Robot</td>
+                                <td>TZC123</td>
+                                <td>Tianti</td>
+                                <td>
+                                    <span class="status-badge online">Online</span>
+                                </td>
+                                <td>85%</td>
+                                <td>Package Delivery</td>
+                                <td>2nd Floor, Office Area</td>
+                                <td>192.168.1.101</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                </td>
+                            </tr>
+                            <tr class="device-row" data-device-id="2">
+                                <td>TZ122_002</td>
+                                <td>天体1号</td>
+                                <td>Robot</td>
+                                <td>TZC122</td>
+                                <td>Tianti</td>
+                                <td>
+                                    <span class="status-badge online">Online</span>
+                                </td>
+                                <td>92%</td>
+                                <td>Cleaning Task</td>
+                                <td>3rd Floor, Conference Area</td>
+                                <td>192.168.1.102</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                </td>
+                            </tr>
+                            <!-- Other Brand Robots -->
+                            <tr class="device-row" data-device-id="3">
+                                <td>XG-001</td>
+                                <td>XG-R1</td>
+                                <td>Robot</td>
+                                <td>XG-R1</td>
+                                <td>仙工</td>
+                                <td>
+                                    <span class="status-badge online">Online</span>
+                                </td>
+                                <td>78%</td>
+                                <td>Warehouse Transfer</td>
+                                <td>1st Floor, Warehouse</td>
+                                <td>192.168.1.103</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                </td>
+                            </tr>
+                            <tr class="device-row" data-device-id="4">
+                                <td>MIR-001</td>
+                                <td>MiR200</td>
+                                <td>Robot</td>
+                                <td>MiR200</td>
+                                <td>MiR</td>
+                                <td>
+                                    <span class="status-badge offline">Offline</span>
+                                </td>
+                                <td>0%</td>
+                                <td>N/A</td>
+                                <td>Basement, Maintenance Area</td>
+                                <td>192.168.1.104</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                </td>
+                            </tr>
+                            <!-- Elevator -->
+                            <tr class="device-row" data-device-id="5">
+                                <td>ELV-001</td>
+                                <td>Elevator-1</td>
+                                <td>Elevator</td>
+                                <td>Gen2</td>
+                                <td>Otis</td>
+                                <td>
+                                    <span class="status-badge online">Online</span>
+                                </td>
+                                <td>N/A</td>
+                                <td>Idle</td>
+                                <td>Main Lobby</td>
+                                <td>192.168.1.105</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                </td>
+                            </tr>
+                            <!-- Door -->
+                            <tr class="device-row" data-device-id="6">
+                                <td>DR-001</td>
+                                <td>Main Entrance</td>
+                                <td>Door</td>
+                                <td>AS2000</td>
+                                <td>Assa Abloy</td>
+                                <td>
+                                    <span class="status-badge online">Online</span>
+                                </td>
+                                <td>N/A</td>
+                                <td>Idle</td>
+                                <td>Ground Floor</td>
+                                <td>192.168.1.106</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="btn-page">Previous</button>
+                    <button class="btn-page active">1</button>
+                    <button class="btn-page">2</button>
+                    <button class="btn-page">3</button>
+                    <button class="btn-page">Next</button>
+                </div>
+            </section>
+            
+            <!-- Device Details Page -->
+            <section id="device-details-page" class="page">
+                <div class="page-header">
+                    <button class="btn btn-back" id="back-to-device-list">← Back to Device List</button>
+                    <h2>Device Details</h2>
+                </div>
+                
+                <!-- Device Information -->
+                <div class="task-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Device ID:</label>
+                            <span>TZ123_001</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Device Name:</label>
+                            <span>天体0号</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Type:</label>
+                            <span>Robot</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Model:</label>
+                            <span>TZC123</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Brand:</label>
+                            <span>Tianti</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Base Status:</label>
+                            <span>Normal</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Run Status:</label>
+                            <span>Running</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Drive Type:</label>
+                            <span>Available</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Current Task:</label>
+                            <span>Package Delivery</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Location:</label>
+                            <span>2nd Floor, Office Area</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Map Code:</label>
+                            <span>3cf14d54-9552-4e21-87d6-ad11f3843e60</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Localization Value:</label>
+                            <span>0.95</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Current Marker:</label>
+                            <span>POI-1</span>
+                        </div>
+                        <div class="info-item">
+                            <label>IP Address:</label>
+                            <span>192.168.1.101</span>
+                        </div>
+                        <div class="info-item">
+                            <label>MAC Address:</label>
+                            <span>00:1B:44:11:3A:B7</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Firmware Version:</label>
+                            <span>v1.2.3</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Battery Level:</label>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                            <span>85%</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Last Maintenance:</label>
+                            <span>2026-02-20</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Next Maintenance:</label>
+                            <span>2026-03-20</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="task-actions">
+                        <button class="btn btn-primary">Edit Device</button>
+                        <button class="btn btn-secondary">Reboot</button>
+                        <button class="btn btn-delete">Delete</button>
+                    </div>
+                </div>
+                
+                <!-- Device Status -->
+                <div class="robot-location">
+                    <h3>Device Status</h3>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <span class="status-label">Connection:</span>
+                            <span class="status-value connected">Connected</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">CPU Usage:</span>
+                            <span class="status-value">45%</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Memory Usage:</span>
+                            <span class="status-value">60%</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Disk Usage:</span>
+                            <span class="status-value">35%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="task-steps">
+                    <h3>Recent Activity</h3>
+                    <div class="steps-table-container">
+                        <table class="steps-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Activity</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2026-02-24 14:30:00</td>
+                                    <td>Status Change</td>
+                                    <td>Changed from 'Maintenance' to 'Online'</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-02-24 14:25:00</td>
+                                    <td>Maintenance</td>
+                                    <td>Firmware updated to v1.2.3</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-02-24 10:15:00</td>
+                                    <td>Task Completed</td>
+                                    <td>Completed task #12345</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-02-24 08:00:00</td>
+                                    <td>System Boot</td>
+                                    <td>System started successfully</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+            
+            <!-- Footer -->
+            <footer class="footer">
+                <p>© 2026 Robot Management System</p>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
