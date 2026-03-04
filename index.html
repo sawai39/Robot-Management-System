@@ -559,117 +559,239 @@
                     <h2>Device Details</h2>
                 </div>
                 
-                <!-- Device Information -->
-                <div class="task-info">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Device ID:</label>
-                            <span>TZ123_001</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Device Name:</label>
-                            <span>天体0号</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Type:</label>
-                            <span>Robot</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Model:</label>
-                            <span>TZC123</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Brand:</label>
-                            <span>Tianti</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Base Status:</label>
-                            <span>Normal</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Run Status:</label>
-                            <span>Running</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Drive Type:</label>
-                            <span>Available</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Current Task:</label>
-                            <span>Package Delivery</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Location:</label>
-                            <span>2nd Floor, Office Area</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Map Code:</label>
-                            <span>3cf14d54-9552-4e21-87d6-ad11f3843e60</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Localization Value:</label>
-                            <span>0.95</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Current Marker:</label>
-                            <span>POI-1</span>
-                        </div>
-                        <div class="info-item">
-                            <label>IP Address:</label>
-                            <span>192.168.1.101</span>
-                        </div>
-                        <div class="info-item">
-                            <label>MAC Address:</label>
-                            <span>00:1B:44:11:3A:B7</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Firmware Version:</label>
-                            <span>v1.2.3</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Battery Level:</label>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 85%;"></div>
-                            </div>
-                            <span>85%</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Last Maintenance:</label>
-                            <span>2026-02-20</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Next Maintenance:</label>
-                            <span>2026-03-20</span>
-                        </div>
+                <!-- 1st Part: Basic Info -->
+                <div class="device-basic-info">
+                    <div class="device-image">
+                        <img id="device-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=autonomous%20mobile%20robot%20for%20indoor%20delivery%20in%20office%20environment%2C%20modern%20design%2C%20white%20and%20blue%20color%2C%20professional%20photography&image_size=portrait_4_3" alt="Device Image">
                     </div>
-                    
-                    <!-- Actions -->
-                    <div class="task-actions">
-                        <button class="btn btn-primary">Edit Device</button>
-                        <button class="btn btn-secondary">Reboot</button>
-                        <button class="btn btn-delete">Delete</button>
+                    <div class="basic-info-content">
+                        <h3>Basic Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Device ID:</label>
+                                <span>TZ123_001</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Device Name:</label>
+                                <span>天体0号</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Type:</label>
+                                <span>Robot</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Model:</label>
+                                <span>TZC123</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Brand:</label>
+                                <span>Tianti</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Status:</label>
+                                <span class="status-badge online">Online</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Battery Level:</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%;"></div>
+                                </div>
+                                <span>85%</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Location:</label>
+                                <span>2nd Floor, Office Area</span>
+                            </div>
+                        </div>
+                        <!-- Actions -->
+                        <div class="device-actions">
+                            <button class="btn btn-primary">Edit Device</button>
+                            <button class="btn btn-secondary">Reboot</button>
+                            <button class="btn btn-delete">Delete</button>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Device Status -->
-                <div class="robot-location">
-                    <h3>Device Status</h3>
-                    <div class="status-grid">
-                        <div class="status-item">
-                            <span class="status-label">Connection:</span>
-                            <span class="status-value connected">Connected</span>
+                <!-- 2nd Part: Real-time Info Window -->
+                <div class="real-time-info">
+                    <h3>Real-time Information</h3>
+                    <div class="info-card">
+                        <div class="info-row">
+                            <div class="info-section">
+                                <h4>Connection & Mission</h4>
+                                <div class="info-item">
+                                    <label>Connection State:</label>
+                                    <span class="status-value connected">Online</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Current Mission:</label>
+                                    <span>Moving to Dock 5</span>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <h4>Location</h4>
+                                <div class="info-item">
+                                    <label>Current Location:</label>
+                                    <span>2nd Floor, Office Area</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Coordinates:</label>
+                                    <span>X: 12.5, Y: 8.3, Floor: 2</span>
+                                </div>
+                                <div class="map-snippet">
+                                    <div class="building-layout">
+                                        <div class="floor floor-1">
+                                            <span class="floor-label">1st Floor</span>
+                                            <div class="room">Lobby</div>
+                                            <div class="room">Conference Hall</div>
+                                        </div>
+                                        <div class="floor floor-2">
+                                            <span class="floor-label">2nd Floor</span>
+                                            <div class="room">Offices</div>
+                                            <div class="room active">Office Area</div>
+                                        </div>
+                                        <div class="floor floor-3">
+                                            <span class="floor-label">3rd Floor</span>
+                                            <div class="room">Executive Suite</div>
+                                            <div class="room">Meeting Rooms</div>
+                                        </div>
+                                        <div class="robot-marker">🤖</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="status-item">
-                            <span class="status-label">CPU Usage:</span>
-                            <span class="status-value">45%</span>
+                        <div class="info-row">
+                            <div class="info-section">
+                                <h4>Battery & Power</h4>
+                                <div class="info-item">
+                                    <label>State of Charge:</label>
+                                    <span>85%</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Status:</label>
+                                    <span>Discharging</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Time Remaining:</label>
+                                    <span>2h 30m</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Temperature:</label>
+                                    <span>25°C</span>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <h4>Movement & Safety</h4>
+                                <div class="info-item">
+                                    <label>Current Speed:</label>
+                                    <span>0.8 m/s</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Direction:</label>
+                                    <span>North</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Safety Status:</label>
+                                    <span class="status-value connected">Normal</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>E-Stop:</label>
+                                    <span>Not Active</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="status-item">
-                            <span class="status-label">Memory Usage:</span>
-                            <span class="status-value">60%</span>
+                    </div>
+                </div>
+                
+                <!-- 3rd Part: Static Specifications -->
+                <div class="static-specs">
+                    <h3>Static Specifications</h3>
+                    <div class="specs-grid">
+                        <div class="specs-section">
+                            <h4>Physical Dimensions</h4>
+                            <div class="info-item">
+                                <label>Length x Width x Height:</label>
+                                <span>500mm x 400mm x 350mm</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Turn Radius:</label>
+                                <span>Zero (Differential Drive)</span>
+                            </div>
                         </div>
-                        <div class="status-item">
-                            <span class="status-label">Disk Usage:</span>
-                            <span class="status-value">35%</span>
+                        <div class="specs-section">
+                            <h4>Operational Capabilities</h4>
+                            <div class="info-item">
+                                <label>Max Speed (Laden):</label>
+                                <span>1.2 m/s</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Max Speed (Unladen):</label>
+                                <span>1.5 m/s</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Max Payload:</label>
+                                <span>50 kg</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Lift Height:</label>
+                                <span>Not applicable</span>
+                            </div>
+                        </div>
+                        <div class="specs-section">
+                            <h4>Interfaces & Connectivity</h4>
+                            <div class="info-item">
+                                <label>Communication Protocol:</label>
+                                <span>WiFi 5GHz, Ethernet</span>
+                            </div>
+                            <div class="info-item">
+                                <label>I/O Ports:</label>
+                                <span>2x USB, 1x RS-485</span>
+                            </div>
+                            <div class="info-item">
+                                <label>IP Address:</label>
+                                <span>192.168.1.101</span>
+                            </div>
+                            <div class="info-item">
+                                <label>MAC Address:</label>
+                                <span>00:1B:44:11:3A:B7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 4th Part: Statistics -->
+                <div class="device-statistics">
+                    <h3>Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stats-section">
+                            <h4>Odometry Data</h4>
+                            <div class="info-item">
+                                <label>Total Distance Traveled:</label>
+                                <span>1,245 meters</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Total Operating Time:</label>
+                                <span>48 hours</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Average Speed:</label>
+                                <span>0.6 m/s</span>
+                            </div>
+                        </div>
+                        <div class="stats-section">
+                            <h4>Performance Metrics</h4>
+                            <div class="info-item">
+                                <label>Mission Success Rate:</label>
+                                <span>98.5%</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Average Mission Time:</label>
+                                <span>8.5 minutes</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Maintenance Intervals:</label>
+                                <span>Every 500 hours</span>
+                            </div>
                         </div>
                     </div>
                 </div>

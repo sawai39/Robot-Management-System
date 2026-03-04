@@ -1,5 +1,5 @@
 // Robot Management System - Task Module Script
-
+    
 // DOM Elements
 const taskListPage = document.getElementById('task-list-page');
 const taskDetailsPage = document.getElementById('task-details-page');
@@ -120,7 +120,46 @@ const translations = {
         'status-cancelled': 'Cancelled',
         'priority-high': 'High',
         'priority-normal': 'Normal',
-        'priority-low': 'Low'
+        'priority-low': 'Low',
+        'basic-info-title': 'Basic Information',
+        'real-time-info-title': 'Real-time Information',
+        'static-specs-title': 'Static Specifications',
+        'statistics-title': 'Statistics',
+        'connection-mission': 'Connection & Mission',
+        'location': 'Location',
+        'battery-power': 'Battery & Power',
+        'movement-safety': 'Movement & Safety',
+        'connection-state': 'Connection State:',
+        'current-mission': 'Current Mission:',
+        'current-location': 'Current Location:',
+        'coordinates': 'Coordinates:',
+        'state-of-charge': 'State of Charge:',
+        'battery-status': 'Status:',
+        'time-remaining': 'Time Remaining:',
+        'temperature': 'Temperature:',
+        'current-speed': 'Current Speed:',
+        'direction': 'Direction:',
+        'safety-status': 'Safety Status:',
+        'e-stop': 'E-Stop:',
+        'physical-dimensions': 'Physical Dimensions',
+        'operational-capabilities': 'Operational Capabilities',
+        'interfaces-connectivity': 'Interfaces & Connectivity',
+        'length-width-height': 'Length x Width x Height:',
+        'turn-radius': 'Turn Radius:',
+        'max-speed-laden': 'Max Speed (Laden):',
+        'max-speed-unladen': 'Max Speed (Unladen):',
+        'max-payload': 'Max Payload:',
+        'lift-height': 'Lift Height:',
+        'communication-protocol': 'Communication Protocol:',
+        'io-ports': 'I/O Ports:',
+        'odometry-data': 'Odometry Data',
+        'performance-metrics': 'Performance Metrics',
+        'total-distance': 'Total Distance Traveled:',
+        'total-operating-time': 'Total Operating Time:',
+        'average-speed': 'Average Speed:',
+        'mission-success-rate': 'Mission Success Rate:',
+        'average-mission-time': 'Average Mission Time:',
+        'maintenance-intervals': 'Maintenance Intervals:'
     },
     zh: {
         'sidebar-title': '机器人管理系统',
@@ -222,7 +261,46 @@ const translations = {
         'status-cancelled': '已取消',
         'priority-high': '高',
         'priority-normal': '正常',
-        'priority-low': '低'
+        'priority-low': '低',
+        'basic-info-title': '基本信息',
+        'real-time-info-title': '实时信息',
+        'static-specs-title': '静态规格',
+        'statistics-title': '统计数据',
+        'connection-mission': '连接与任务',
+        'location': '位置',
+        'battery-power': '电池与电源',
+        'movement-safety': '移动与安全',
+        'connection-state': '连接状态:',
+        'current-mission': '当前任务:',
+        'current-location': '当前位置:',
+        'coordinates': '坐标:',
+        'state-of-charge': '电量:',
+        'battery-status': '状态:',
+        'time-remaining': '剩余时间:',
+        'temperature': '温度:',
+        'current-speed': '当前速度:',
+        'direction': '方向:',
+        'safety-status': '安全状态:',
+        'e-stop': '急停:',
+        'physical-dimensions': '物理尺寸',
+        'operational-capabilities': '操作能力',
+        'interfaces-connectivity': '接口与连接',
+        'length-width-height': '长x宽x高:',
+        'turn-radius': '转弯半径:',
+        'max-speed-laden': '满载最大速度:',
+        'max-speed-unladen': '空载最大速度:',
+        'max-payload': '最大载重:',
+        'lift-height': '提升高度:',
+        'communication-protocol': '通信协议:',
+        'io-ports': 'I/O端口:',
+        'odometry-data': '里程数据',
+        'performance-metrics': '性能指标',
+        'total-distance': '总行驶距离:',
+        'total-operating-time': '总运行时间:',
+        'average-speed': '平均速度:',
+        'mission-success-rate': '任务成功率:',
+        'average-mission-time': '平均任务时间:',
+        'maintenance-intervals': '维护周期:'
     },
     ja: {
         'sidebar-title': 'ロボット管理システム',
@@ -324,7 +402,46 @@ const translations = {
         'status-cancelled': 'キャンセル',
         'priority-high': '高',
         'priority-normal': '通常',
-        'priority-low': '低'
+        'priority-low': '低',
+        'basic-info-title': '基本情報',
+        'real-time-info-title': 'リアルタイム情報',
+        'static-specs-title': '静的仕様',
+        'statistics-title': '統計',
+        'connection-mission': '接続とミッション',
+        'location': '場所',
+        'battery-power': 'バッテリーと電源',
+        'movement-safety': '移動と安全',
+        'connection-state': '接続状態:',
+        'current-mission': '現在のタスク:',
+        'current-location': '現在地:',
+        'coordinates': '座標:',
+        'state-of-charge': '充電状態:',
+        'battery-status': '状態:',
+        'time-remaining': '残り時間:',
+        'temperature': '温度:',
+        'current-speed': '現在の速度:',
+        'direction': '方向:',
+        'safety-status': '安全状態:',
+        'e-stop': '緊急停止:',
+        'physical-dimensions': '物理サイズ',
+        'operational-capabilities': '動作能力',
+        'interfaces-connectivity': 'インターフェースと接続',
+        'length-width-height': '縦x横x高さ:',
+        'turn-radius': '旋回半径:',
+        'max-speed-laden': '最大速度(積載時):',
+        'max-speed-unladen': '最大速度(無負荷):',
+        'max-payload': '最大積載量:',
+        'lift-height': 'リフト高さ:',
+        'communication-protocol': '通信プロトコル:',
+        'io-ports': 'I/Oポート:',
+        'odometry-data': 'オドメトリデータ',
+        'performance-metrics': 'パフォーマンス指標',
+        'total-distance': '総走行距離:',
+        'total-operating-time': '総稼働時間:',
+        'average-speed': '平均速度:',
+        'mission-success-rate': 'ミッション成功率:',
+        'average-mission-time': '平均ミッション時間:',
+        'maintenance-intervals': 'メンテナンス間隔:'
     }
 };
 
@@ -699,126 +816,515 @@ function showDeviceDetails(deviceId) {
     // For this prototype, we'll just show the pre-populated details
     console.log(`Showing details for device ${deviceId}`);
     
-    // Example: Update device details based on selected device
-    // This would be implemented in a real application
-    if (deviceId === '2') {
-        // Update device info for TZ122_002 (天体1号)
-        const deviceInfoGrid = document.querySelector('#device-details-page .info-grid');
-        if (deviceInfoGrid) {
-            deviceInfoGrid.innerHTML = `
+    // Device data
+    const devices = {
+        '1': {
+            id: 'TZ123_001',
+            name: '天体0号',
+            type: 'Robot',
+            model: 'TZC123',
+            brand: 'Tianti',
+            status: 'online',
+            battery: 85,
+            location: '2nd Floor, Office Area',
+            ip: '192.168.1.101',
+            mac: '00:1B:44:11:3A:B7',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=autonomous%20mobile%20robot%20for%20indoor%20delivery%20in%20office%20environment%2C%20modern%20design%2C%20white%20and%20blue%20color%2C%20professional%20photography&image_size=portrait_4_3',
+            realTime: {
+                connection: 'Online',
+                mission: 'Moving to Dock 5',
+                coordinates: 'X: 12.5, Y: 8.3, Floor: 2',
+                batteryStatus: 'Discharging',
+                timeRemaining: '2h 30m',
+                temperature: '25°C',
+                speed: '0.8 m/s',
+                direction: 'North',
+                safetyStatus: 'Normal',
+                eStop: 'Not Active'
+            },
+            specs: {
+                dimensions: '500mm x 400mm x 350mm',
+                turnRadius: 'Zero (Differential Drive)',
+                maxSpeedLaden: '1.2 m/s',
+                maxSpeedUnladen: '1.5 m/s',
+                maxPayload: '50 kg',
+                liftHeight: 'Not applicable',
+                communication: 'WiFi 5GHz, Ethernet',
+                ioPorts: '2x USB, 1x RS-485'
+            },
+            stats: {
+                distance: '1,245 meters',
+                operatingTime: '48 hours',
+                averageSpeed: '0.6 m/s',
+                successRate: '98.5%',
+                averageMissionTime: '8.5 minutes',
+                maintenanceInterval: 'Every 500 hours'
+            }
+        },
+        '2': {
+            id: 'TZ122_002',
+            name: '天体1号',
+            type: 'Robot',
+            model: 'TZC122',
+            brand: 'Tianti',
+            status: 'online',
+            battery: 92,
+            location: '3rd Floor, Conference Area',
+            ip: '192.168.1.102',
+            mac: '00:1B:44:11:3A:B8',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=autonomous%20cleaning%20robot%20in%20office%20building%2C%20modern%20design%2C%20white%20and%20green%20color%2C%20professional%20photography&image_size=portrait_4_3',
+            realTime: {
+                connection: 'Online',
+                mission: 'Cleaning Conference Hall',
+                coordinates: 'X: 8.2, Y: 15.7, Floor: 3',
+                batteryStatus: 'Discharging',
+                timeRemaining: '3h 15m',
+                temperature: '23°C',
+                speed: '0.3 m/s',
+                direction: 'East',
+                safetyStatus: 'Normal',
+                eStop: 'Not Active'
+            },
+            specs: {
+                dimensions: '450mm x 380mm x 320mm',
+                turnRadius: 'Zero (Differential Drive)',
+                maxSpeedLaden: '1.0 m/s',
+                maxSpeedUnladen: '1.3 m/s',
+                maxPayload: '30 kg',
+                liftHeight: 'Not applicable',
+                communication: 'WiFi 5GHz',
+                ioPorts: '1x USB, 1x RS-485'
+            },
+            stats: {
+                distance: '980 meters',
+                operatingTime: '36 hours',
+                averageSpeed: '0.4 m/s',
+                successRate: '99.2%',
+                averageMissionTime: '12.3 minutes',
+                maintenanceInterval: 'Every 600 hours'
+            }
+        },
+        '3': {
+            id: 'XG-001',
+            name: 'XG-R1',
+            type: 'Robot',
+            model: 'XG-R1',
+            brand: '仙工',
+            status: 'online',
+            battery: 78,
+            location: '1st Floor, Warehouse',
+            ip: '192.168.1.103',
+            mac: '00:1B:44:11:3A:B9',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=warehouse%20autonomous%20mobile%20robot%2C%20industrial%20design%2C%20yellow%20and%20black%20color%2C%20professional%20photography&image_size=portrait_4_3',
+            realTime: {
+                connection: 'Online',
+                mission: 'Warehouse Transfer',
+                coordinates: 'X: 22.1, Y: 35.4, Floor: 1',
+                batteryStatus: 'Discharging',
+                timeRemaining: '1h 45m',
+                temperature: '26°C',
+                speed: '1.0 m/s',
+                direction: 'South',
+                safetyStatus: 'Normal',
+                eStop: 'Not Active'
+            },
+            specs: {
+                dimensions: '600mm x 500mm x 400mm',
+                turnRadius: 'Zero (Differential Drive)',
+                maxSpeedLaden: '1.5 m/s',
+                maxSpeedUnladen: '2.0 m/s',
+                maxPayload: '100 kg',
+                liftHeight: 'Not applicable',
+                communication: 'WiFi 5GHz, 5G',
+                ioPorts: '2x USB, 2x RS-485'
+            },
+            stats: {
+                distance: '2,150 meters',
+                operatingTime: '62 hours',
+                averageSpeed: '0.8 m/s',
+                successRate: '97.8%',
+                averageMissionTime: '6.2 minutes',
+                maintenanceInterval: 'Every 400 hours'
+            }
+        },
+        '4': {
+            id: 'MIR-001',
+            name: 'MiR200',
+            type: 'Robot',
+            model: 'MiR200',
+            brand: 'MiR',
+            status: 'offline',
+            battery: 0,
+            location: 'Basement, Maintenance Area',
+            ip: '192.168.1.104',
+            mac: '00:1B:44:11:3A:BA',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=MiR200%20autonomous%20mobile%20robot%2C%20industrial%20design%2C%20white%20and%20orange%20color%2C%20professional%20photography&image_size=portrait_4_3',
+            realTime: {
+                connection: 'Offline',
+                mission: 'N/A',
+                coordinates: 'X: 5.3, Y: 8.7, Floor: B1',
+                batteryStatus: 'Idle',
+                timeRemaining: '0h 0m',
+                temperature: '22°C',
+                speed: '0 m/s',
+                direction: 'N/A',
+                safetyStatus: 'Normal',
+                eStop: 'Not Active'
+            },
+            specs: {
+                dimensions: '580mm x 480mm x 320mm',
+                turnRadius: 'Zero (Differential Drive)',
+                maxSpeedLaden: '1.2 m/s',
+                maxSpeedUnladen: '1.8 m/s',
+                maxPayload: '200 kg',
+                liftHeight: 'Not applicable',
+                communication: 'WiFi 5GHz, Ethernet',
+                ioPorts: '2x USB, 1x RS-485, 1x Ethernet'
+            },
+            stats: {
+                distance: '3,420 meters',
+                operatingTime: '120 hours',
+                averageSpeed: '0.7 m/s',
+                successRate: '96.5%',
+                averageMissionTime: '5.8 minutes',
+                maintenanceInterval: 'Every 500 hours'
+            }
+        },
+        '5': {
+            id: 'ELV-001',
+            name: 'Elevator-1',
+            type: 'Elevator',
+            model: 'Gen2',
+            brand: 'Otis',
+            status: 'online',
+            battery: null,
+            location: 'Main Lobby',
+            ip: '192.168.1.105',
+            mac: '00:1B:44:11:3A:BB',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20elevator%20in%20office%20building%2C%20professional%20photography&image_size=portrait_4_3',
+            realTime: {
+                connection: 'Online',
+                mission: 'Idle',
+                coordinates: 'X: 10.0, Y: 10.0, Floor: 1',
+                batteryStatus: 'N/A',
+                timeRemaining: 'N/A',
+                temperature: '24°C',
+                speed: '0 m/s',
+                direction: 'N/A',
+                safetyStatus: 'Normal',
+                eStop: 'Not Active'
+            },
+            specs: {
+                dimensions: '2000mm x 1500mm x 3000mm',
+                turnRadius: 'N/A',
+                maxSpeedLaden: '1.5 m/s',
+                maxSpeedUnladen: '1.5 m/s',
+                maxPayload: '1000 kg',
+                liftHeight: '30 meters',
+                communication: 'Ethernet, RS-485',
+                ioPorts: '4x RS-485, 2x Ethernet'
+            },
+            stats: {
+                distance: 'N/A',
+                operatingTime: '720 hours',
+                averageSpeed: '0.5 m/s',
+                successRate: '99.9%',
+                averageMissionTime: '15 seconds',
+                maintenanceInterval: 'Every 1000 hours'
+            }
+        },
+        '6': {
+            id: 'DR-001',
+            name: 'Main Entrance',
+            type: 'Door',
+            model: 'AS2000',
+            brand: 'Assa Abloy',
+            status: 'online',
+            battery: null,
+            location: 'Ground Floor',
+            ip: '192.168.1.106',
+            mac: '00:1B:44:11:3A:BC',
+            image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20automatic%20door%20in%20office%20building%2C%20professional%20photography&image_size=portrait_4_3',
+            realTime: {
+                connection: 'Online',
+                mission: 'Idle',
+                coordinates: 'X: 0.0, Y: 0.0, Floor: G',
+                batteryStatus: 'N/A',
+                timeRemaining: 'N/A',
+                temperature: '23°C',
+                speed: '0 m/s',
+                direction: 'N/A',
+                safetyStatus: 'Normal',
+                eStop: 'Not Active'
+            },
+            specs: {
+                dimensions: '3000mm x 200mm x 2200mm',
+                turnRadius: 'N/A',
+                maxSpeedLaden: '0.5 m/s',
+                maxSpeedUnladen: '0.5 m/s',
+                maxPayload: 'N/A',
+                liftHeight: 'N/A',
+                communication: 'WiFi, Ethernet',
+                ioPorts: '2x RS-485, 1x Ethernet'
+            },
+            stats: {
+                distance: 'N/A',
+                operatingTime: '500 hours',
+                averageSpeed: '0.2 m/s',
+                successRate: '99.5%',
+                averageMissionTime: '3 seconds',
+                maintenanceInterval: 'Every 600 hours'
+            }
+        }
+    };
+    
+    // Get device data
+    const device = devices[deviceId] || devices['1'];
+    console.log('Device data:', device);
+    
+    // Update basic info section
+    const deviceImage = document.getElementById('device-image');
+    if (deviceImage) {
+        deviceImage.src = device.image;
+        deviceImage.alt = device.name;
+    }
+    
+    const basicInfoGrid = document.querySelector('.basic-info-content .info-grid');
+    if (basicInfoGrid) {
+        basicInfoGrid.innerHTML = `
+            <div class="info-item">
+                <label>Device ID:</label>
+                <span>${device.id}</span>
+            </div>
+            <div class="info-item">
+                <label>Device Name:</label>
+                <span>${device.name}</span>
+            </div>
+            <div class="info-item">
+                <label>Type:</label>
+                <span>${device.type}</span>
+            </div>
+            <div class="info-item">
+                <label>Model:</label>
+                <span>${device.model}</span>
+            </div>
+            <div class="info-item">
+                <label>Brand:</label>
+                <span>${device.brand}</span>
+            </div>
+            <div class="info-item">
+                <label>Status:</label>
+                <span class="status-badge ${device.status}">${device.status.charAt(0).toUpperCase() + device.status.slice(1)}</span>
+            </div>
+            <div class="info-item">
+                <label>Battery Level:</label>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${device.battery || 0}%;"></div>
+                </div>
+                <span>${device.battery || 'N/A'}%</span>
+            </div>
+            <div class="info-item">
+                <label>Location:</label>
+                <span>${device.location}</span>
+            </div>
+        `;
+    }
+    
+    // Update real-time info section
+    const infoCard = document.querySelector('.real-time-info .info-card');
+    console.log('Info card element:', infoCard);
+    if (infoCard) {
+        infoCard.innerHTML = `
+            <div class="info-row">
+                <div class="info-section">
+                    <h4>Connection & Mission</h4>
+                    <div class="info-item">
+                        <label>Connection State:</label>
+                        <span class="status-value ${device.realTime.connection === 'Online' ? 'connected' : ''}">${device.realTime.connection}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Current Mission:</label>
+                        <span>${device.realTime.mission}</span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h4>Location</h4>
+                    <div class="info-item">
+                        <label>Current Location:</label>
+                        <span>${device.location}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Coordinates:</label>
+                        <span>${device.realTime.coordinates}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-section">
+                    <h4>Battery & Power</h4>
+                    <div class="info-item">
+                        <label>State of Charge:</label>
+                        <span>${device.battery || 'N/A'}%</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Status:</label>
+                        <span>${device.realTime.batteryStatus}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Time Remaining:</label>
+                        <span>${device.realTime.timeRemaining}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Temperature:</label>
+                        <span>${device.realTime.temperature}</span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h4>Movement & Safety</h4>
+                    <div class="info-item">
+                        <label>Current Speed:</label>
+                        <span>${device.realTime.speed}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Direction:</label>
+                        <span>${device.realTime.direction}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Safety Status:</label>
+                        <span class="status-value ${device.realTime.safetyStatus === 'Normal' ? 'connected' : ''}">${device.realTime.safetyStatus}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>E-Stop:</label>
+                        <span>${device.realTime.eStop}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Update static specifications section
+    const specsGrid = document.querySelector('.static-specs .specs-grid');
+    if (specsGrid) {
+        specsGrid.innerHTML = `
+            <div class="specs-section">
+                <h4>Physical Dimensions</h4>
                 <div class="info-item">
-                    <label>Device ID:</label>
-                    <span>TZ122_002</span>
+                    <label>Length x Width x Height:</label>
+                    <span>${device.specs.dimensions}</span>
                 </div>
                 <div class="info-item">
-                    <label>Device Name:</label>
-                    <span>天体1号</span>
+                    <label>Turn Radius:</label>
+                    <span>${device.specs.turnRadius}</span>
+                </div>
+            </div>
+            <div class="specs-section">
+                <h4>Operational Capabilities</h4>
+                <div class="info-item">
+                    <label>Max Speed (Laden):</label>
+                    <span>${device.specs.maxSpeedLaden}</span>
                 </div>
                 <div class="info-item">
-                    <label>Type:</label>
-                    <span>Robot</span>
+                    <label>Max Speed (Unladen):</label>
+                    <span>${device.specs.maxSpeedUnladen}</span>
                 </div>
                 <div class="info-item">
-                    <label>Model:</label>
-                    <span>TZC122</span>
+                    <label>Max Payload:</label>
+                    <span>${device.specs.maxPayload}</span>
                 </div>
                 <div class="info-item">
-                    <label>Brand:</label>
-                    <span>Tianti</span>
+                    <label>Lift Height:</label>
+                    <span>${device.specs.liftHeight}</span>
+                </div>
+            </div>
+            <div class="specs-section">
+                <h4>Interfaces & Connectivity</h4>
+                <div class="info-item">
+                    <label>Communication Protocol:</label>
+                    <span>${device.specs.communication}</span>
                 </div>
                 <div class="info-item">
-                    <label>Base Status:</label>
-                    <span>Normal</span>
-                </div>
-                <div class="info-item">
-                    <label>Run Status:</label>
-                    <span>Running</span>
-                </div>
-                <div class="info-item">
-                    <label>Drive Type:</label>
-                    <span>Available</span>
-                </div>
-                <div class="info-item">
-                    <label>Current Task:</label>
-                    <span>Cleaning Task</span>
-                </div>
-                <div class="info-item">
-                    <label>Location:</label>
-                    <span>3rd Floor, Conference Area</span>
-                </div>
-                <div class="info-item">
-                    <label>Map Code:</label>
-                    <span>3cf14d54-9552-4e21-87d6-ad11f3843e60</span>
-                </div>
-                <div class="info-item">
-                    <label>Localization Value:</label>
-                    <span>0.98</span>
-                </div>
-                <div class="info-item">
-                    <label>Current Marker:</label>
-                    <span>POI-2</span>
+                    <label>I/O Ports:</label>
+                    <span>${device.specs.ioPorts}</span>
                 </div>
                 <div class="info-item">
                     <label>IP Address:</label>
-                    <span>192.168.1.102</span>
+                    <span>${device.ip}</span>
                 </div>
                 <div class="info-item">
                     <label>MAC Address:</label>
-                    <span>00:1B:44:11:3A:B8</span>
+                    <span>${device.mac}</span>
                 </div>
-                <div class="info-item">
-                    <label>Firmware Version:</label>
-                    <span>v1.2.3</span>
-                </div>
-                <div class="info-item">
-                    <label>Battery Level:</label>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 92%;"></div>
-                    </div>
-                    <span>92%</span>
-                </div>
-                <div class="info-item">
-                    <label>Last Maintenance:</label>
-                    <span>2026-02-15</span>
-                </div>
-                <div class="info-item">
-                    <label>Next Maintenance:</label>
-                    <span>2026-03-15</span>
-                </div>
-            `;
-        }
-        
-        // Update device activity
-        const activityTable = document.querySelector('#device-details-page .steps-table tbody');
-        if (activityTable) {
-            activityTable.innerHTML = `
-                <tr>
-                    <td>2026-02-24 15:30:00</td>
-                    <td>Status Change</td>
-                    <td>Changed from 'Offline' to 'Online'</td>
-                </tr>
-                <tr>
-                    <td>2026-02-24 10:15:00</td>
-                    <td>Task Completed</td>
-                    <td>Completed task #12346</td>
-                </tr>
-                <tr>
-                    <td>2026-02-24 09:00:00</td>
-                    <td>System Boot</td>
-                    <td>System started successfully</td>
-                </tr>
-                <tr>
-                    <td>2026-02-23 18:00:00</td>
-                    <td>System Shutdown</td>
-                    <td>System shutdown gracefully</td>
-                </tr>
-            `;
-        }
-        
-        // Update language for the new elements
-        const currentLang = 'zh'; // In a real app, we would track the current language
-        setLanguage(currentLang);
+            </div>
+        `;
     }
+    
+    // Update statistics section
+    const statsGrid = document.querySelector('.device-statistics .stats-grid');
+    if (statsGrid) {
+        statsGrid.innerHTML = `
+            <div class="stats-section">
+                <h4>Odometry Data</h4>
+                <div class="info-item">
+                    <label>Total Distance Traveled:</label>
+                    <span>${device.stats.distance}</span>
+                </div>
+                <div class="info-item">
+                    <label>Total Operating Time:</label>
+                    <span>${device.stats.operatingTime}</span>
+                </div>
+                <div class="info-item">
+                    <label>Average Speed:</label>
+                    <span>${device.stats.averageSpeed}</span>
+                </div>
+            </div>
+            <div class="stats-section">
+                <h4>Performance Metrics</h4>
+                <div class="info-item">
+                    <label>Mission Success Rate:</label>
+                    <span>${device.stats.successRate}</span>
+                </div>
+                <div class="info-item">
+                    <label>Average Mission Time:</label>
+                    <span>${device.stats.averageMissionTime}</span>
+                </div>
+                <div class="info-item">
+                    <label>Maintenance Intervals:</label>
+                    <span>${device.stats.maintenanceInterval}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Update recent activity
+    const activityTable = document.querySelector('#device-details-page .steps-table tbody');
+    if (activityTable) {
+        activityTable.innerHTML = `
+            <tr>
+                <td>2026-02-24 14:30:00</td>
+                <td>Status Change</td>
+                <td>Changed from 'Maintenance' to '${device.status.charAt(0).toUpperCase() + device.status.slice(1)}'</td>
+            </tr>
+            <tr>
+                <td>2026-02-24 14:25:00</td>
+                <td>Maintenance</td>
+                <td>Firmware updated to v1.2.3</td>
+            </tr>
+            <tr>
+                <td>2026-02-24 10:15:00</td>
+                <td>Task Completed</td>
+                <td>Completed task #12345</td>
+            </tr>
+            <tr>
+                <td>2026-02-24 08:00:00</td>
+                <td>System Boot</td>
+                <td>System started successfully</td>
+            </tr>
+        `;
+    }
+    
+    // Update language for the new elements
+    const currentLang = 'zh'; // In a real app, we would track the current language
+    setLanguage(currentLang);
 }
 
 // Simulate real-time updates (for demo purposes)
@@ -1044,6 +1550,125 @@ function setLanguage(lang) {
             activityHeaders[0].textContent = translations[lang]['table-time'];
             activityHeaders[1].textContent = translations[lang]['table-activity'];
             activityHeaders[2].textContent = translations[lang]['table-details'];
+        }
+        
+        // Update device details section titles
+        const basicInfoTitle = document.querySelector('.device-basic-info .basic-info-content h3');
+        if (basicInfoTitle) {
+            basicInfoTitle.textContent = translations[lang]['basic-info-title'];
+        }
+        
+        // Update basic info section labels
+        const basicInfoLabels = document.querySelectorAll('.device-basic-info .info-item label');
+        if (basicInfoLabels.length >= 8) {
+            basicInfoLabels[0].textContent = translations[lang]['info-device-id'];
+            basicInfoLabels[1].textContent = translations[lang]['info-device-name'];
+            basicInfoLabels[2].textContent = translations[lang]['info-type'];
+            basicInfoLabels[3].textContent = translations[lang]['info-model'];
+            basicInfoLabels[4].textContent = translations[lang]['info-brand'];
+            basicInfoLabels[5].textContent = translations[lang]['info-status'];
+            basicInfoLabels[6].textContent = translations[lang]['info-battery'];
+            basicInfoLabels[7].textContent = translations[lang]['info-location'];
+        }
+        
+        const realTimeInfoTitle = document.querySelector('.real-time-info h3');
+        if (realTimeInfoTitle) {
+            realTimeInfoTitle.textContent = translations[lang]['real-time-info-title'];
+        }
+        
+        const staticSpecsTitle = document.querySelector('.static-specs h3');
+        if (staticSpecsTitle) {
+            staticSpecsTitle.textContent = translations[lang]['static-specs-title'];
+        }
+        
+        const statisticsTitle = document.querySelector('.device-statistics h3');
+        if (statisticsTitle) {
+            statisticsTitle.textContent = translations[lang]['statistics-title'];
+        }
+        
+        // Update real-time info subsection titles and labels
+        const infoSections = document.querySelectorAll('.real-time-info .info-section');
+        if (infoSections.length >= 4) {
+            if (infoSections[0].querySelector('h4')) {
+                infoSections[0].querySelector('h4').textContent = translations[lang]['connection-mission'];
+            }
+            if (infoSections[1].querySelector('h4')) {
+                infoSections[1].querySelector('h4').textContent = translations[lang]['location'];
+            }
+            if (infoSections[2].querySelector('h4')) {
+                infoSections[2].querySelector('h4').textContent = translations[lang]['battery-power'];
+            }
+            if (infoSections[3].querySelector('h4')) {
+                infoSections[3].querySelector('h4').textContent = translations[lang]['movement-safety'];
+            }
+        }
+        
+        // Update real-time info labels
+        const realTimeLabels = document.querySelectorAll('.real-time-info .info-item label');
+        if (realTimeLabels.length >= 12) {
+            realTimeLabels[0].textContent = translations[lang]['connection-state'];
+            realTimeLabels[1].textContent = translations[lang]['current-mission'];
+            realTimeLabels[2].textContent = translations[lang]['current-location'];
+            realTimeLabels[3].textContent = translations[lang]['coordinates'];
+            realTimeLabels[4].textContent = translations[lang]['state-of-charge'];
+            realTimeLabels[5].textContent = translations[lang]['battery-status'];
+            realTimeLabels[6].textContent = translations[lang]['time-remaining'];
+            realTimeLabels[7].textContent = translations[lang]['temperature'];
+            realTimeLabels[8].textContent = translations[lang]['current-speed'];
+            realTimeLabels[9].textContent = translations[lang]['direction'];
+            realTimeLabels[10].textContent = translations[lang]['safety-status'];
+            realTimeLabels[11].textContent = translations[lang]['e-stop'];
+        }
+        
+        // Update static specs subsection titles
+        const specsSections = document.querySelectorAll('.static-specs .specs-section');
+        if (specsSections.length >= 3) {
+            if (specsSections[0].querySelector('h4')) {
+                specsSections[0].querySelector('h4').textContent = translations[lang]['physical-dimensions'];
+            }
+            if (specsSections[1].querySelector('h4')) {
+                specsSections[1].querySelector('h4').textContent = translations[lang]['operational-capabilities'];
+            }
+            if (specsSections[2].querySelector('h4')) {
+                specsSections[2].querySelector('h4').textContent = translations[lang]['interfaces-connectivity'];
+            }
+        }
+        
+        // Update static specs labels
+        const specsLabels = document.querySelectorAll('.static-specs .info-item label');
+        if (specsLabels.length >= 10) {
+            specsLabels[0].textContent = translations[lang]['length-width-height'];
+            specsLabels[1].textContent = translations[lang]['turn-radius'];
+            specsLabels[2].textContent = translations[lang]['max-speed-laden'];
+            specsLabels[3].textContent = translations[lang]['max-speed-unladen'];
+            specsLabels[4].textContent = translations[lang]['max-payload'];
+            specsLabels[5].textContent = translations[lang]['lift-height'];
+            specsLabels[6].textContent = translations[lang]['communication-protocol'];
+            specsLabels[7].textContent = translations[lang]['io-ports'];
+            specsLabels[8].textContent = translations[lang]['info-ip'];
+            specsLabels[9].textContent = translations[lang]['info-mac'];
+        }
+        
+        // Update statistics subsection titles
+        const statsSections = document.querySelectorAll('.device-statistics .stats-section');
+        if (statsSections.length >= 2) {
+            if (statsSections[0].querySelector('h4')) {
+                statsSections[0].querySelector('h4').textContent = translations[lang]['odometry-data'];
+            }
+            if (statsSections[1].querySelector('h4')) {
+                statsSections[1].querySelector('h4').textContent = translations[lang]['performance-metrics'];
+            }
+        }
+        
+        // Update statistics labels
+        const statsLabels = document.querySelectorAll('.device-statistics .info-item label');
+        if (statsLabels.length >= 6) {
+            statsLabels[0].textContent = translations[lang]['total-distance'];
+            statsLabels[1].textContent = translations[lang]['total-operating-time'];
+            statsLabels[2].textContent = translations[lang]['average-speed'];
+            statsLabels[3].textContent = translations[lang]['mission-success-rate'];
+            statsLabels[4].textContent = translations[lang]['average-mission-time'];
+            statsLabels[5].textContent = translations[lang]['maintenance-intervals'];
         }
     }
     
