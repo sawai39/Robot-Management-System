@@ -21,7 +21,7 @@ const tasksNav = document.querySelector('.nav ul li a.active');
 // Translation objects
 const translations = {
     en: {
-        'sidebar-title': 'Robot Management System',
+        'sidebar-title': 'Robot Scheduling System',
         'nav-tasks': 'Tasks',
         'nav-robots': 'Robots',
         'nav-dashboard': 'Dashboard',
@@ -110,7 +110,7 @@ const translations = {
         'steps-end': 'End Time',
         'steps-duration': 'Duration',
         'steps-details': 'Details',
-        'footer': '© 2026 Robot Management System',
+        'footer': '© 2026 Robot Scheduling System',
         'status-pending': 'Pending',
         'status-assigned': 'Assigned',
         'status-en-route': 'En Route',
@@ -162,7 +162,7 @@ const translations = {
         'maintenance-intervals': 'Maintenance Intervals:'
     },
     zh: {
-        'sidebar-title': '机器人管理系统',
+        'sidebar-title': '机器人调度系统',
         'nav-tasks': '任务',
         'nav-robots': '机器人',
         'nav-dashboard': '仪表盘',
@@ -251,7 +251,7 @@ const translations = {
         'steps-end': '结束时间',
         'steps-duration': '持续时间',
         'steps-details': '详情',
-        'footer': '© 2026 机器人管理系统',
+        'footer': '© 2026 机器人调度系统',
         'status-pending': '待处理',
         'status-assigned': '已分配',
         'status-en-route': '在途中',
@@ -303,7 +303,7 @@ const translations = {
         'maintenance-intervals': '维护周期:'
     },
     ja: {
-        'sidebar-title': 'ロボット管理システム',
+        'sidebar-title': 'ロボットスケジュールシステム',
         'nav-tasks': 'タスク',
         'nav-robots': 'ロボット',
         'nav-dashboard': 'ダッシュボード',
@@ -392,7 +392,7 @@ const translations = {
         'steps-end': '終了時間',
         'steps-duration': '所要時間',
         'steps-details': '詳細',
-        'footer': '© 2026 ロボット管理システム',
+        'footer': '© 2026 ロボットスケジュールシステム',
         'status-pending': '保留中',
         'status-assigned': '割り当て済み',
         'status-en-route': '途中',
