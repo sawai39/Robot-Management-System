@@ -159,7 +159,10 @@ const translations = {
         'average-speed': 'Average Speed:',
         'mission-success-rate': 'Mission Success Rate:',
         'average-mission-time': 'Average Mission Time:',
-        'maintenance-intervals': 'Maintenance Intervals:'
+        'maintenance-intervals': 'Maintenance Intervals:',
+        'task-type': 'Task Type',
+        'success-rate': 'Success Rate',
+        'avg-time': 'Avg Time'
     },
     zh: {
         'sidebar-title': '机器人调度系统',
@@ -300,7 +303,10 @@ const translations = {
         'average-speed': '平均速度:',
         'mission-success-rate': '任务成功率:',
         'average-mission-time': '平均任务时间:',
-        'maintenance-intervals': '维护周期:'
+        'maintenance-intervals': '维护周期:',
+        'task-type': '任务类型',
+        'success-rate': '成功率',
+        'avg-time': '平均时间'
     },
     ja: {
         'sidebar-title': 'ロボット管理システム',
@@ -441,7 +447,10 @@ const translations = {
         'average-speed': '平均速度:',
         'mission-success-rate': 'ミッション成功率:',
         'average-mission-time': '平均ミッション時間:',
-        'maintenance-intervals': 'メンテナンス間隔:'
+        'maintenance-intervals': 'メンテナンス間隔:',
+        'task-type': 'タスクタイプ',
+        'success-rate': '成功率',
+        'avg-time': '平均時間'
     }
 };
 
@@ -933,9 +942,10 @@ function showDeviceDetails(deviceId) {
                 distance: '1,245 meters',
                 operatingTime: '48 hours',
                 averageSpeed: '0.6 m/s',
-                successRate: '98.5%',
-                averageMissionTime: '8.5 minutes',
-                maintenanceInterval: 'Every 500 hours'
+                tasks: [
+                    { name: '飞速达', successRate: '98.5%', avgTime: '12-3' },
+                    { name: '配送', successRate: '99.1%', avgTime: '8-5' }
+                ]
             }
         },
         '2': {
@@ -976,9 +986,10 @@ function showDeviceDetails(deviceId) {
                 distance: '980 meters',
                 operatingTime: '36 hours',
                 averageSpeed: '0.4 m/s',
-                successRate: '99.2%',
-                averageMissionTime: '12.3 minutes',
-                maintenanceInterval: 'Every 600 hours'
+                tasks: [
+                    { name: '清洁', successRate: '99.2%', avgTime: '15-2' },
+                    { name: '巡检', successRate: '98.8%', avgTime: '20-0' }
+                ]
             }
         },
         '3': {
@@ -1019,9 +1030,10 @@ function showDeviceDetails(deviceId) {
                 distance: '2,150 meters',
                 operatingTime: '62 hours',
                 averageSpeed: '0.8 m/s',
-                successRate: '97.8%',
-                averageMissionTime: '6.2 minutes',
-                maintenanceInterval: 'Every 400 hours'
+                tasks: [
+                    { name: '搬运', successRate: '97.8%', avgTime: '5-8' },
+                    { name: '入库', successRate: '98.5%', avgTime: '6-2' }
+                ]
             }
         },
         '4': {
@@ -1062,9 +1074,10 @@ function showDeviceDetails(deviceId) {
                 distance: '3,420 meters',
                 operatingTime: '120 hours',
                 averageSpeed: '0.7 m/s',
-                successRate: '96.5%',
-                averageMissionTime: '5.8 minutes',
-                maintenanceInterval: 'Every 500 hours'
+                tasks: [
+                    { name: '配送', successRate: '96.5%', avgTime: '10-3' },
+                    { name: '巡检', successRate: '97.2%', avgTime: '8-5' }
+                ]
             }
         },
         '5': {
@@ -1105,9 +1118,10 @@ function showDeviceDetails(deviceId) {
                 distance: 'N/A',
                 operatingTime: '720 hours',
                 averageSpeed: '0.5 m/s',
-                successRate: '99.9%',
-                averageMissionTime: '15 seconds',
-                maintenanceInterval: 'Every 1000 hours'
+                tasks: [
+                    { name: '呼梯', successRate: '99.9%', avgTime: '0-15' },
+                    { name: '派梯', successRate: '99.5%', avgTime: '0-20' }
+                ]
             }
         },
         '6': {
@@ -1148,9 +1162,10 @@ function showDeviceDetails(deviceId) {
                 distance: 'N/A',
                 operatingTime: '500 hours',
                 averageSpeed: '0.2 m/s',
-                successRate: '99.5%',
-                averageMissionTime: '3 seconds',
-                maintenanceInterval: 'Every 600 hours'
+                tasks: [
+                    { name: '开门', successRate: '99.5%', avgTime: '0-3' },
+                    { name: '关门', successRate: '99.8%', avgTime: '0-2' }
+                ]
             }
         }
     };
@@ -1356,18 +1371,24 @@ function showDeviceDetails(deviceId) {
             </div>
             <div class="stats-section">
                 <h4>Performance Metrics</h4>
-                <div class="info-item">
-                    <label>Mission Success Rate:</label>
-                    <span>${device.stats.successRate}</span>
-                </div>
-                <div class="info-item">
-                    <label>Average Mission Time:</label>
-                    <span>${device.stats.averageMissionTime}</span>
-                </div>
-                <div class="info-item">
-                    <label>Maintenance Intervals:</label>
-                    <span>${device.stats.maintenanceInterval}</span>
-                </div>
+                <table class="task-metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Task Type</th>
+                            <th>Success Rate</th>
+                            <th>Avg Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${device.stats.tasks.map(task => `
+                            <tr>
+                                <td>${task.name}</td>
+                                <td>${task.successRate}</td>
+                                <td>${task.avgTime}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             </div>
         `;
     }
@@ -1736,15 +1757,15 @@ function setLanguage(lang) {
             }
         }
         
-        // Update statistics labels
-        const statsLabels = document.querySelectorAll('.device-statistics .info-item label');
-        if (statsLabels.length >= 6) {
-            statsLabels[0].textContent = translations[lang]['total-distance'];
-            statsLabels[1].textContent = translations[lang]['total-operating-time'];
-            statsLabels[2].textContent = translations[lang]['average-speed'];
-            statsLabels[3].textContent = translations[lang]['mission-success-rate'];
-            statsLabels[4].textContent = translations[lang]['average-mission-time'];
-            statsLabels[5].textContent = translations[lang]['maintenance-intervals'];
+        // Update statistics section - update table headers
+        const taskMetricsTable = document.querySelector('.task-metrics-table');
+        if (taskMetricsTable) {
+            const tableHeaders = taskMetricsTable.querySelectorAll('thead th');
+            if (tableHeaders.length === 3) {
+                tableHeaders[0].textContent = translations[lang]['task-type'] || 'Task Type';
+                tableHeaders[1].textContent = translations[lang]['success-rate'] || 'Success Rate';
+                tableHeaders[2].textContent = translations[lang]['avg-time'] || 'Avg Time';
+            }
         }
     }
     
