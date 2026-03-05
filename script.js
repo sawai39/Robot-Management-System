@@ -534,7 +534,6 @@ function setupEventListeners() {
     const deviceIdInput = document.getElementById('new-device-id');
     const deviceNameInput = document.getElementById('new-device-name');
     const closeModalBtns = document.querySelectorAll('.close-modal, .close-modal-btn');
-    const CORRECT_PASSWORD = 'admin123';
     
     if (addDeviceBtn) {
         addDeviceBtn.addEventListener('click', () => {
@@ -562,16 +561,10 @@ function setupEventListeners() {
     });
     
     btnVerifyPassword.addEventListener('click', () => {
-        const password = connectionPasswordInput.value;
-        if (password === CORRECT_PASSWORD) {
-            step1.style.display = 'none';
-            step2.style.display = 'block';
-            btnVerifyPassword.style.display = 'none';
-            btnAddDeviceConfirm.style.display = 'inline-block';
-        } else {
-            alert('连接口令错误，请重试！');
-            connectionPasswordInput.value = '';
-        }
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+        btnVerifyPassword.style.display = 'none';
+        btnAddDeviceConfirm.style.display = 'inline-block';
     });
     
     btnAddDeviceConfirm.addEventListener('click', () => {
