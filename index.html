@@ -836,6 +836,40 @@
         </div>
     </div>
     
+    <!-- Add Device Modal -->
+    <div id="add-device-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Device</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="step-1">
+                    <div class="form-group">
+                        <label>连接口令:</label>
+                        <input type="password" id="connection-password" placeholder="Enter connection password">
+                    </div>
+                    <p class="hint">Please enter the connection password to verify your identity</p>
+                </div>
+                <div id="step-2" style="display: none;">
+                    <div class="form-group">
+                        <label>设备ID:</label>
+                        <input type="text" id="new-device-id" placeholder="Enter device ID">
+                    </div>
+                    <div class="form-group">
+                        <label>设备名称:</label>
+                        <input type="text" id="new-device-name" placeholder="Enter device name">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-verify-password" class="btn btn-primary">验证</button>
+                <button id="btn-add-device-confirm" class="btn btn-primary" style="display: none;">添加设备</button>
+                <button class="btn btn-secondary close-modal-btn">取消</button>
+            </div>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

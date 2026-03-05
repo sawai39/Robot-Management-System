@@ -525,11 +525,95 @@ function setupEventListeners() {
     
     // Add New Device button
     const addDeviceBtn = document.querySelector('#device-list-page .btn-primary');
+    const addDeviceModal = document.getElementById('add-device-modal');
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const btnVerifyPassword = document.getElementById('btn-verify-password');
+    const btnAddDeviceConfirm = document.getElementById('btn-add-device-confirm');
+    const connectionPasswordInput = document.getElementById('connection-password');
+    const deviceIdInput = document.getElementById('new-device-id');
+    const deviceNameInput = document.getElementById('new-device-name');
+    const closeModalBtns = document.querySelectorAll('.close-modal, .close-modal-btn');
+    const CORRECT_PASSWORD = 'admin123';
+    
     if (addDeviceBtn) {
         addDeviceBtn.addEventListener('click', () => {
-            alert('Add New Device functionality would be implemented here');
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+            btnVerifyPassword.style.display = 'inline-block';
+            btnAddDeviceConfirm.style.display = 'none';
+            connectionPasswordInput.value = '';
+            deviceIdInput.value = '';
+            deviceNameInput.value = '';
+            addDeviceModal.classList.add('show');
         });
     }
+    
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            addDeviceModal.classList.remove('show');
+        });
+    });
+    
+    addDeviceModal.addEventListener('click', (e) => {
+        if (e.target === addDeviceModal) {
+            addDeviceModal.classList.remove('show');
+        }
+    });
+    
+    btnVerifyPassword.addEventListener('click', () => {
+        const password = connectionPasswordInput.value;
+        if (password === CORRECT_PASSWORD) {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            btnVerifyPassword.style.display = 'none';
+            btnAddDeviceConfirm.style.display = 'inline-block';
+        } else {
+            alert('连接口令错误，请重试！');
+            connectionPasswordInput.value = '';
+        }
+    });
+    
+    btnAddDeviceConfirm.addEventListener('click', () => {
+        const deviceId = deviceIdInput.value.trim();
+        const deviceName = deviceNameInput.value.trim();
+        
+        if (!deviceId || !deviceName) {
+            alert('请输入设备ID和设备名称！');
+            return;
+        }
+        
+        const deviceListTable = document.querySelector('#device-list-page tbody');
+        if (deviceListTable) {
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-device-id', deviceId);
+            newRow.innerHTML = `
+                <td>${deviceId}</td>
+                <td>${deviceName}</td>
+                <td><span class="status-badge online">Online</span></td>
+                <td>0%</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>
+                    <button class="btn-icon btn-view-details" title="View Details">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </td>
+            `;
+            deviceListTable.appendChild(newRow);
+            
+            const viewDetailsBtn = newRow.querySelector('.btn-view-details');
+            viewDetailsBtn.addEventListener('click', () => {
+                showDeviceDetails(deviceId);
+            });
+        }
+        
+        addDeviceModal.classList.remove('show');
+        alert('设备添加成功！');
+    });
     
     // Refresh buttons
     const refreshBtns = document.querySelectorAll('.btn-secondary');
