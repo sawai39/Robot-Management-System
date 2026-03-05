@@ -1421,8 +1421,7 @@ function setLanguage(lang) {
         deviceTableHeaders[6].textContent = translations[lang]['table-battery'];
         deviceTableHeaders[7].textContent = translations[lang]['table-current-task'];
         deviceTableHeaders[8].textContent = translations[lang]['table-location'];
-        deviceTableHeaders[9].textContent = translations[lang]['table-ip'];
-        deviceTableHeaders[10].textContent = translations[lang]['table-actions'];
+        deviceTableHeaders[9].textContent = translations[lang]['table-actions'];
     }
     
     // Update view details buttons
