@@ -98,6 +98,7 @@ const translations = {
         'info-priority': 'Priority:',
         'info-robot': 'Robot:',
         'info-location': 'Current Location:',
+        'info-work-area': '工作域:',
         'info-eta': 'ETA:',
         'info-start-time': 'Start Time:',
         'info-duration': 'Estimated Duration:',
@@ -162,7 +163,12 @@ const translations = {
         'maintenance-intervals': 'Maintenance Intervals:',
         'task-type': 'Task Type',
         'success-rate': 'Success Rate',
-        'avg-time': 'Avg Time'
+        'avg-time': 'Avg Time',
+        'velocity-over-time': 'Velocity Over Time',
+        'acceleration': 'Acceleration',
+        'angular-acceleration': 'Angular Acceleration',
+        'view-table': 'Table View',
+        'view-tree': 'Tree View'
     },
     zh: {
         'sidebar-title': '机器人调度系统',
@@ -306,7 +312,12 @@ const translations = {
         'maintenance-intervals': '维护周期:',
         'task-type': '任务类型',
         'success-rate': '成功率',
-        'avg-time': '平均时间'
+        'avg-time': '平均时间',
+        'velocity-over-time': '速度随时间变化',
+        'acceleration': '加速度',
+        'angular-acceleration': '角加速度',
+        'view-table': '表格视图',
+        'view-tree': '树形视图'
     },
     ja: {
         'sidebar-title': 'ロボット管理システム',
@@ -450,7 +461,12 @@ const translations = {
         'maintenance-intervals': 'メンテナンス間隔:',
         'task-type': 'タスクタイプ',
         'success-rate': '成功率',
-        'avg-time': '平均時間'
+        'avg-time': '平均時間',
+        'velocity-over-time': '速度の時間推移',
+        'acceleration': '加速度',
+        'angular-acceleration': '角加速度',
+        'view-table': 'テーブルビュー',
+        'view-tree': 'ツリービュー'
     }
 };
 
@@ -460,6 +476,321 @@ function init() {
     setupLanguageSwitcher();
     // Set default language
     setLanguage('zh');
+    
+    // Setup view toggle for task steps
+    setupViewToggle();
+}
+
+// Setup view toggle between table and tree view
+function setupViewToggle() {
+    const viewToggleBtn = document.getElementById('viewToggleBtn');
+    const tableView = document.getElementById('tableView');
+    const treeView = document.getElementById('treeView');
+    const iconTable = viewToggleBtn.querySelector('.icon-table');
+    const iconTree = viewToggleBtn.querySelector('.icon-tree');
+    
+    if (!viewToggleBtn || !tableView || !treeView) return;
+    
+    // Set default to tree view
+    tableView.style.display = 'none';
+    treeView.style.display = 'block';
+    iconTable.style.display = 'none';
+    iconTree.style.display = 'inline-block';
+    
+    viewToggleBtn.addEventListener('click', () => {
+        const currentLang = 'zh'; // In a real app, we would track the current language
+        
+        if (tableView.style.display !== 'none') {
+            // Switch to tree view
+            tableView.style.display = 'none';
+            treeView.style.display = 'block';
+            iconTable.style.display = 'none';
+            iconTree.style.display = 'inline-block';
+            viewToggleBtn.title = translations[currentLang]['view-table'] || 'Table View';
+        } else {
+            // Switch to table view
+            tableView.style.display = 'block';
+            treeView.style.display = 'none';
+            iconTable.style.display = 'inline-block';
+            iconTree.style.display = 'none';
+            viewToggleBtn.title = translations[currentLang]['view-tree'] || 'Tree View';
+        }
+    });
+}
+
+// Chart instances
+let velocityChart = null;
+let accelerationChart = null;
+
+// Initialize velocity chart
+function initVelocityChart() {
+    const ctx = document.getElementById('velocityChart');
+    if (!ctx) return;
+    
+    // Destroy existing chart if it exists
+    if (velocityChart) {
+        velocityChart.destroy();
+    }
+    
+    // Get current language
+    const currentLang = 'zh'; // In a real app, we would track the current language
+    
+    // Generate sample time labels (last 60 seconds)
+    const timeLabels = [];
+    const now = new Date();
+    for (let i = 59; i >= 0; i--) {
+        const time = new Date(now - i * 1000);
+        timeLabels.push(time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }
+    
+    // Generate sample velocity data
+    const velocityData = [];
+    for (let i = 0; i < 60; i++) {
+        velocityData.push(Math.random() * 1.5);
+    }
+    
+    velocityChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timeLabels,
+            datasets: [{
+                label: translations[currentLang]['velocity-over-time'] || 'Velocity (m/s)',
+                data: velocityData,
+                borderColor: '#3498db',
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 15,
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 12
+                    },
+                    bodyFont: {
+                        size: 11
+                    },
+                    padding: 10
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 6,
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                y: {
+                    display: true,
+                    min: 0,
+                    max: 2,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            }
+        }
+    });
+}
+
+// Initialize acceleration chart
+function initAccelerationChart() {
+    const ctx = document.getElementById('accelerationChart');
+    if (!ctx) return;
+    
+    // Destroy existing chart if it exists
+    if (accelerationChart) {
+        accelerationChart.destroy();
+    }
+    
+    // Get current language
+    const currentLang = 'zh'; // In a real app, we would track the current language
+    
+    // Generate sample time labels (last 60 seconds)
+    const timeLabels = [];
+    const now = new Date();
+    for (let i = 59; i >= 0; i--) {
+        const time = new Date(now - i * 1000);
+        timeLabels.push(time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }
+    
+    // Generate sample acceleration data
+    const accelerationData = [];
+    const angularAccelerationData = [];
+    for (let i = 0; i < 60; i++) {
+        accelerationData.push((Math.random() - 0.5) * 0.5);
+        angularAccelerationData.push((Math.random() - 0.5) * 2);
+    }
+    
+    accelerationChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timeLabels,
+            datasets: [{
+                label: translations[currentLang]['acceleration'] || 'Acceleration (m/s²)',
+                data: accelerationData,
+                borderColor: '#e74c3c',
+                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 4
+            }, {
+                label: translations[currentLang]['angular-acceleration'] || 'Angular Acceleration (rad/s²)',
+                data: angularAccelerationData,
+                borderColor: '#27ae60',
+                backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 15,
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 12
+                    },
+                    bodyFont: {
+                        size: 11
+                    },
+                    padding: 10
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 6,
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                y: {
+                    display: true,
+                    min: -2,
+                    max: 2,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            }
+        }
+    });
+}
+
+// Update charts with new data
+function updateCharts() {
+    if (!velocityChart || !accelerationChart) return;
+    
+    // Update velocity chart
+    const newVelocity = Math.random() * 1.5;
+    velocityChart.data.datasets[0].data.shift();
+    velocityChart.data.datasets[0].data.push(newVelocity);
+    
+    const now = new Date();
+    const newTimeLabel = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    velocityChart.data.labels.shift();
+    velocityChart.data.labels.push(newTimeLabel);
+    velocityChart.update('none');
+    
+    // Update acceleration chart
+    const newAcceleration = (Math.random() - 0.5) * 0.5;
+    const newAngularAcceleration = (Math.random() - 0.5) * 2;
+    accelerationChart.data.datasets[0].data.shift();
+    accelerationChart.data.datasets[0].data.push(newAcceleration);
+    accelerationChart.data.datasets[1].data.shift();
+    accelerationChart.data.datasets[1].data.push(newAngularAcceleration);
+    
+    accelerationChart.data.labels.shift();
+    accelerationChart.data.labels.push(newTimeLabel);
+    accelerationChart.update('none');
+}
+
+// Start real-time chart updates
+let chartUpdateInterval = null;
+
+function startChartUpdates() {
+    if (chartUpdateInterval) {
+        clearInterval(chartUpdateInterval);
+    }
+    chartUpdateInterval = setInterval(updateCharts, 1000);
+}
+
+function stopChartUpdates() {
+    if (chartUpdateInterval) {
+        clearInterval(chartUpdateInterval);
+        chartUpdateInterval = null;
+    }
 }
 
 // Set up event listeners
@@ -686,6 +1017,31 @@ function setupEventListeners() {
         });
     });
     
+    // Device Edit buttons
+    const deviceEditBtns = document.querySelectorAll('#device-list-page .btn-edit');
+    deviceEditBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const deviceRow = btn.closest('.device-row');
+            const deviceId = deviceRow.dataset.deviceId;
+            alert('Edit functionality for device ' + deviceId + ' would be implemented here');
+        });
+    });
+    
+    // Device Delete buttons
+    const deviceDeleteBtns = document.querySelectorAll('#device-list-page .btn-delete');
+    deviceDeleteBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const deviceRow = btn.closest('.device-row');
+            const deviceId = deviceRow.dataset.deviceId;
+            if (confirm('Are you sure you want to delete this device?')) {
+                deviceRow.remove();
+                alert('Device ' + deviceId + ' has been deleted');
+            }
+        });
+    });
+    
     // Devices navigation
     devicesNav.addEventListener('click', (e) => {
         e.preventDefault();
@@ -749,6 +1105,10 @@ function showTaskDetails(taskId) {
             <div class="info-item">
                 <label>Current Location:</label>
                 <span>Conference Hall, 1st Floor</span>
+            </div>
+            <div class="info-item">
+                <label>工作域:</label>
+                <span>1st Floor, Conference Area</span>
             </div>
             <div class="info-item">
                 <label>ETA:</label>
@@ -871,11 +1231,87 @@ function showTaskDetails(taskId) {
                 <td>Robot will return to charging station</td>
             </tr>
         `;
+        
+        // Update tree view
+        const treeRoot = document.querySelector('.tree-root');
+        if (treeRoot) {
+            treeRoot.innerHTML = `
+                <div class="tree-node">
+                    <div class="node-content">
+                        <span class="node-icon">🚀</span>
+                        <span class="node-text">Start Task: Room Cleaning - Conference Hall</span>
+                        <span class="node-status completed">✓</span>
+                    </div>
+                    <div class="tree-children">
+                        <div class="tree-node">
+                            <div class="node-content">
+                                <span class="node-icon">🔋</span>
+                                <span class="node-text">1. Leave Charging Station</span>
+                                <span class="node-status completed">✓</span>
+                            </div>
+                            <div class="node-details">
+                                <span class="detail-item">14:35:00 - 14:35:20 (20s)</span>
+                                <span class="detail-desc">Robot left charging station successfully</span>
+                            </div>
+                        </div>
+                        <div class="tree-node">
+                            <div class="node-content">
+                                <span class="node-icon">🧭</span>
+                                <span class="node-text">2. Navigate to Conference Hall</span>
+                                <span class="node-status completed">✓</span>
+                            </div>
+                            <div class="node-details">
+                                <span class="detail-item">14:35:20 - 14:35:45 (25s)</span>
+                                <span class="detail-desc">Robot navigated to Conference Hall</span>
+                            </div>
+                        </div>
+                        <div class="tree-node">
+                            <div class="node-content">
+                                <span class="node-icon">🧹</span>
+                                <span class="node-text">3. Start Cleaning</span>
+                                <span class="node-status executing">⚡</span>
+                            </div>
+                            <div class="node-details">
+                                <span class="detail-item">14:35:45 - (4 min 30s)</span>
+                                <span class="detail-desc">Robot is currently cleaning Conference Hall</span>
+                            </div>
+                            <div class="tree-children">
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon">✅</span>
+                                        <span class="node-text">4. Verify Cleaning Completion</span>
+                                        <span class="node-status pending">⏳</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">Pending</span>
+                                        <span class="detail-desc">Robot will verify cleaning completion</span>
+                                    </div>
+                                </div>
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon">🔋</span>
+                                        <span class="node-text">5. Return to Charging Station</span>
+                                        <span class="node-status pending">⏳</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">Pending</span>
+                                        <span class="detail-desc">Robot will return to charging station</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
     }
 }
 
 // Show Task List page
 function showTaskList() {
+    // Stop chart updates
+    stopChartUpdates();
+    
     // Hide all pages except task list
     taskDetailsPage.classList.remove('active');
     deviceListPage.classList.remove('active');
@@ -885,6 +1321,9 @@ function showTaskList() {
 
 // Show Device List page
 function showDeviceList() {
+    // Stop chart updates
+    stopChartUpdates();
+    
     // Hide all pages except device list
     taskListPage.classList.remove('active');
     taskDetailsPage.classList.remove('active');
@@ -898,8 +1337,18 @@ function showDeviceDetails(deviceId) {
     deviceListPage.classList.remove('active');
     deviceDetailsPage.classList.add('active');
     
+    // Stop chart updates if running
+    stopChartUpdates();
+    
+    // Initialize charts
+    setTimeout(() => {
+        initVelocityChart();
+        initAccelerationChart();
+        startChartUpdates();
+    }, 100);
+    
     // In a real application, we would fetch device details based on deviceId
-    // For this prototype, we'll just show the pre-populated details
+    // For this prototype, we'll just show of pre-populated details
     console.log(`Showing details for device ${deviceId}`);
     
     // Device data
@@ -1244,6 +1693,10 @@ function showDeviceDetails(deviceId) {
                     <div class="info-item">
                         <label>Current Location:</label>
                         <span>${device.location}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>工作域:</label>
+                        <span>2nd Floor, Office Area</span>
                     </div>
                     <div class="info-item">
                         <label>Coordinates:</label>
@@ -1765,6 +2218,27 @@ function setLanguage(lang) {
                 tableHeaders[0].textContent = translations[lang]['task-type'] || 'Task Type';
                 tableHeaders[1].textContent = translations[lang]['success-rate'] || 'Success Rate';
                 tableHeaders[2].textContent = translations[lang]['avg-time'] || 'Avg Time';
+            }
+        }
+        
+        // Update graph section titles
+        const graphSectionTitles = document.querySelectorAll('.graph-section h4');
+        if (graphSectionTitles.length >= 2) {
+            graphSectionTitles[0].textContent = translations[lang]['velocity-over-time'] || 'Velocity Over Time';
+            graphSectionTitles[1].textContent = (translations[lang]['acceleration'] || 'Acceleration') + ' & ' + (translations[lang]['angular-acceleration'] || 'Angular Acceleration');
+        }
+        
+        // Update view toggle button title
+        const viewToggleBtn = document.getElementById('viewToggleBtn');
+        if (viewToggleBtn) {
+            const iconTable = viewToggleBtn.querySelector('.icon-table');
+            const iconTree = viewToggleBtn.querySelector('.icon-tree');
+            const tableView = document.getElementById('tableView');
+            
+            if (tableView.style.display !== 'none') {
+                viewToggleBtn.title = translations[lang]['view-tree'] || 'Tree View';
+            } else {
+                viewToggleBtn.title = translations[lang]['view-table'] || 'Table View';
             }
         }
     }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Robot Management System - Task Module</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -93,6 +94,7 @@
                                 <th>Status</th>
                                 <th>Robot</th>
                                 <th>Current Location</th>
+                                <th>工作域</th>
                                 <th>ETA</th>
                                 <th>Priority</th>
                                 <th>Actions</th>
@@ -108,6 +110,7 @@
                                 </td>
                                 <td>Robot #7</td>
                                 <td>Elevator, 2nd Floor</td>
+                                <td>2nd Floor, Office Area</td>
                                 <td>14:45:30</td>
                                 <td>
                                     <span class="priority-badge normal">Normal</span>
@@ -126,6 +129,7 @@
                                 </td>
                                 <td>Robot #3</td>
                                 <td>Conference Hall, 1st Floor</td>
+                                <td>1st Floor, Conference Area</td>
                                 <td>14:50:15</td>
                                 <td>
                                     <span class="priority-badge high">High</span>
@@ -143,6 +147,7 @@
                                     <span class="status-badge assigned">Assigned</span>
                                 </td>
                                 <td>Robot #5</td>
+                                <td>Airport Terminal 1</td>
                                 <td>Airport Terminal 1</td>
                                 <td>15:00:00</td>
                                 <td>
@@ -162,6 +167,7 @@
                                 </td>
                                 <td>Robot #2</td>
                                 <td>Medical Bay, Basement</td>
+                                <td>Basement, Medical Bay</td>
                                 <td>14:30:45</td>
                                 <td>
                                     <span class="priority-badge high">High</span>
@@ -179,6 +185,7 @@
                                     <span class="status-badge pending">Pending</span>
                                 </td>
                                 <td>Robot #9</td>
+                                <td>Airport Terminal 2</td>
                                 <td>Airport Terminal 2</td>
                                 <td>15:15:30</td>
                                 <td>
@@ -242,6 +249,10 @@
                             <span>Elevator, 2nd Floor</span>
                         </div>
                         <div class="info-item">
+                            <label>工作域:</label>
+                            <span>2nd Floor, Office Area</span>
+                        </div>
+                        <div class="info-item">
                             <label>ETA:</label>
                             <span>14:45:30</span>
                         </div>
@@ -300,8 +311,14 @@
                 
                 <!-- Task Steps -->
                 <div class="task-steps">
-                    <h3>Task Steps</h3>
-                    <div class="steps-table-container">
+                    <div class="task-steps-header">
+                        <h3>Task Steps</h3>
+                        <button class="btn-view-toggle" id="viewToggleBtn" title="Toggle View">
+                            <span class="icon-table" style="display: none;">📊</span>
+                            <span class="icon-tree">🌳</span>
+                        </button>
+                    </div>
+                    <div class="steps-table-container" id="tableView" style="display: none;">
                         <table class="steps-table">
                             <thead>
                                 <tr>
@@ -377,6 +394,87 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="steps-tree-container" id="treeView">
+                        <div class="tree-root">
+                            <div class="tree-node">
+                                <div class="node-content">
+                                    <span class="node-icon">🚀</span>
+                                    <span class="node-text">Start Task: Package Delivery to Floor 3</span>
+                                    <span class="node-status completed">✓</span>
+                                </div>
+                                <div class="tree-children">
+                                    <div class="tree-node">
+                                        <div class="node-content">
+                                            <span class="node-icon">🔋</span>
+                                            <span class="node-text">1. Leave Charging Station</span>
+                                            <span class="node-status completed">✓</span>
+                                        </div>
+                                        <div class="node-details">
+                                            <span class="detail-item">14:32:15 - 14:32:47 (32s)</span>
+                                            <span class="detail-desc">Robot left charging station successfully</span>
+                                        </div>
+                                    </div>
+                                    <div class="tree-node">
+                                        <div class="node-content">
+                                            <span class="node-icon">🧭</span>
+                                            <span class="node-text">2. Navigate to Elevator</span>
+                                            <span class="node-status completed">✓</span>
+                                        </div>
+                                        <div class="node-details">
+                                            <span class="detail-item">14:32:47 - 14:33:20 (33s)</span>
+                                            <span class="detail-desc">Robot navigated to elevator on 1st floor</span>
+                                        </div>
+                                    </div>
+                                    <div class="tree-node">
+                                        <div class="node-content">
+                                            <span class="node-icon">⏳</span>
+                                            <span class="node-text">3. Wait for Elevator</span>
+                                            <span class="node-status completed">✓</span>
+                                        </div>
+                                        <div class="node-details">
+                                            <span class="detail-item">14:33:20 - 14:34:05 (45s)</span>
+                                            <span class="detail-desc">Robot waited for elevator to arrive</span>
+                                        </div>
+                                    </div>
+                                    <div class="tree-node">
+                                        <div class="node-content">
+                                            <span class="node-icon">🛗</span>
+                                            <span class="node-text">4. Take Elevator to 3rd Floor</span>
+                                            <span class="node-status executing">⚡</span>
+                                        </div>
+                                        <div class="node-details">
+                                            <span class="detail-item">14:34:05 - (25s)</span>
+                                            <span class="detail-desc">Robot is currently in elevator</span>
+                                        </div>
+                                        <div class="tree-children">
+                                            <div class="tree-node">
+                                                <div class="node-content">
+                                                    <span class="node-icon">🚶</span>
+                                                    <span class="node-text">5. Navigate to Room 301</span>
+                                                    <span class="node-status pending">⏳</span>
+                                                </div>
+                                                <div class="node-details">
+                                                    <span class="detail-item">Pending</span>
+                                                    <span class="detail-desc">Robot will navigate to Room 301</span>
+                                                </div>
+                                            </div>
+                                            <div class="tree-node">
+                                                <div class="node-content">
+                                                    <span class="node-icon">📦</span>
+                                                    <span class="node-text">6. Deliver Package</span>
+                                                    <span class="node-status pending">⏳</span>
+                                                </div>
+                                                <div class="node-details">
+                                                    <span class="detail-item">Pending</span>
+                                                    <span class="detail-desc">Robot will deliver package to recipient</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
             
@@ -446,6 +544,8 @@
                                 <td>2nd Floor, Office Area</td>
                                 <td>
                                     <button class="btn-view-details">View Details</button>
+                                    <button class="btn-edit">Edit</button>
+                                    <button class="btn-delete">Delete</button>
                                 </td>
                             </tr>
                             <tr class="device-row" data-device-id="2">
@@ -462,6 +562,8 @@
                                 <td>3rd Floor, Conference Area</td>
                                 <td>
                                     <button class="btn-view-details">View Details</button>
+                                    <button class="btn-edit">Edit</button>
+                                    <button class="btn-delete">Delete</button>
                                 </td>
                             </tr>
                             <!-- Other Brand Robots -->
@@ -479,6 +581,8 @@
                                 <td>1st Floor, Warehouse</td>
                                 <td>
                                     <button class="btn-view-details">View Details</button>
+                                    <button class="btn-edit">Edit</button>
+                                    <button class="btn-delete">Delete</button>
                                 </td>
                             </tr>
                             <tr class="device-row" data-device-id="4">
@@ -495,6 +599,8 @@
                                 <td>Basement, Maintenance Area</td>
                                 <td>
                                     <button class="btn-view-details">View Details</button>
+                                    <button class="btn-edit">Edit</button>
+                                    <button class="btn-delete">Delete</button>
                                 </td>
                             </tr>
                             <!-- Elevator -->
@@ -512,6 +618,8 @@
                                 <td>Main Lobby</td>
                                 <td>
                                     <button class="btn-view-details">View Details</button>
+                                    <button class="btn-edit">Edit</button>
+                                    <button class="btn-delete">Delete</button>
                                 </td>
                             </tr>
                             <!-- Door -->
@@ -529,6 +637,8 @@
                                 <td>Ground Floor</td>
                                 <td>
                                     <button class="btn-view-details">View Details</button>
+                                    <button class="btn-edit">Edit</button>
+                                    <button class="btn-delete">Delete</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -691,6 +801,24 @@
                                     <label>E-Stop:</label>
                                     <span>Not Active</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Real-time Graphs -->
+                <div class="real-time-graphs">
+                    <div class="graph-row">
+                        <div class="graph-section">
+                            <h4>Velocity Over Time</h4>
+                            <div class="graph-container">
+                                <canvas id="velocityChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="graph-section">
+                            <h4>Acceleration & Angular Acceleration</h4>
+                            <div class="graph-container">
+                                <canvas id="accelerationChart"></canvas>
                             </div>
                         </div>
                     </div>
