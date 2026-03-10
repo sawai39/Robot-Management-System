@@ -16,7 +16,13 @@
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href="#" class="active">Tasks</a></li>
+                    <li class="has-submenu">
+                        <a href="#" class="active">Tasks</a>
+                        <ul class="submenu">
+                            <li><a href="#" class="task-list-nav active">Task List</a></li>
+                            <li><a href="#" class="task-queue-nav">Task Queue</a></li>
+                        </ul>
+                    </li>
                     <li><a href="#" class="devices-nav">Devices</a></li>
                     <li><a href="#">Dashboard</a></li>
                     <li><a href="#">Reports</a></li>
@@ -93,7 +99,6 @@
                                 <th>Task Name</th>
                                 <th>Status</th>
                                 <th>Robot</th>
-                                <th>Current Location</th>
                                 <th>工作域</th>
                                 <th>ETA</th>
                                 <th>Priority</th>
@@ -109,8 +114,7 @@
                                     <span class="status-badge en-route">En Route</span>
                                 </td>
                                 <td>Robot #7</td>
-                                <td>Elevator, 2nd Floor</td>
-                                <td>2nd Floor, Office Area</td>
+                                <td>C11</td>
                                 <td>14:45:30</td>
                                 <td>
                                     <span class="priority-badge normal">Normal</span>
@@ -128,8 +132,7 @@
                                     <span class="status-badge executing">Executing</span>
                                 </td>
                                 <td>Robot #3</td>
-                                <td>Conference Hall, 1st Floor</td>
-                                <td>1st Floor, Conference Area</td>
+                                <td>C12</td>
                                 <td>14:50:15</td>
                                 <td>
                                     <span class="priority-badge high">High</span>
@@ -147,8 +150,7 @@
                                     <span class="status-badge assigned">Assigned</span>
                                 </td>
                                 <td>Robot #5</td>
-                                <td>Airport Terminal 1</td>
-                                <td>Airport Terminal 1</td>
+                                <td>复材车间</td>
                                 <td>15:00:00</td>
                                 <td>
                                     <span class="priority-badge normal">Normal</span>
@@ -166,8 +168,7 @@
                                     <span class="status-badge completed">Completed</span>
                                 </td>
                                 <td>Robot #2</td>
-                                <td>Medical Bay, Basement</td>
-                                <td>Basement, Medical Bay</td>
+                                <td>零件加工中心</td>
                                 <td>14:30:45</td>
                                 <td>
                                     <span class="priority-badge high">High</span>
@@ -185,8 +186,7 @@
                                     <span class="status-badge pending">Pending</span>
                                 </td>
                                 <td>Robot #9</td>
-                                <td>Airport Terminal 2</td>
-                                <td>Airport Terminal 2</td>
+                                <td>C11</td>
                                 <td>15:15:30</td>
                                 <td>
                                     <span class="priority-badge low">Low</span>
@@ -250,7 +250,7 @@
                         </div>
                         <div class="info-item">
                             <label>工作域:</label>
-                            <span>2nd Floor, Office Area</span>
+                            <span>C11</span>
                         </div>
                         <div class="info-item">
                             <label>ETA:</label>
@@ -475,6 +475,192 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+            
+            <!-- Task Queue Page -->
+            <section id="task-queue-page" class="page">
+                <div class="page-header">
+                    <h2>Task Queue</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">Add to Queue</button>
+                        <button class="btn btn-secondary">Refresh</button>
+                    </div>
+                </div>
+                
+                <!-- Queue Info -->
+                <div class="queue-info">
+                    <div class="queue-stats">
+                        <div class="stat-card">
+                            <span class="stat-label">Pending Tasks</span>
+                            <span class="stat-value">12</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">In Progress</span>
+                            <span class="stat-value">3</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Completed Today</span>
+                            <span class="stat-value">28</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="search-filter">
+                    <div class="search">
+                        <input type="text" placeholder="Search queue...">
+                        <button class="btn-search">🔍</button>
+                    </div>
+                    <div class="filter">
+                        <select>
+                            <option value="all">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="normal">Normal</option>
+                            <option value="low">Low</option>
+                        </select>
+                        <select>
+                            <option value="all">All Robots</option>
+                            <option value="robot1">Robot #1</option>
+                            <option value="robot2">Robot #2</option>
+                            <option value="robot3">Robot #3</option>
+                            <option value="robot4">Robot #4</option>
+                            <option value="robot5">Robot #5</option>
+                        </select>
+                        <select>
+                            <option value="all">All 工作域</option>
+                            <option value="c11">C11</option>
+                            <option value="c12">C12</option>
+                            <option value="c13">C13</option>
+                            <option value="复材车间">复材车间</option>
+                            <option value="零件加工中心">零件加工中心</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Queue Table -->
+                <div class="task-table-container">
+                    <table class="task-table">
+                        <thead>
+                            <tr>
+                                <th>Queue Position</th>
+                                <th>Task ID</th>
+                                <th>Task Type</th>
+                                <th>Task Name</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Assigned Robot</th>
+                                <th>工作域</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="task-row running" data-task-id="q2">
+                                <td>1</td>
+                                <td>Task #Q1002</td>
+                                <td>12-3</td>
+                                <td>Room Cleaning - Meeting Room A</td>
+                                <td>
+                                    <span class="status-badge running">Running</span>
+                                </td>
+                                <td>
+                                    <span class="priority-badge normal">Normal</span>
+                                </td>
+                                <td>Robot #7</td>
+                                <td>C12</td>
+                                <td>14:25:00</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="task-row pending" data-task-id="q1">
+                                <td>
+                                    <span class="queue-pos">2</span>
+                                    <div class="position-controls">
+                                        <button class="btn-move-up" title="Move Up">↑</button>
+                                        <button class="btn-move-down" title="Move Down">↓</button>
+                                    </div>
+                                </td>
+                                <td>Task #Q1001</td>
+                                <td>飞速达</td>
+                                <td>Package Delivery to Floor 5</td>
+                                <td>
+                                    <span class="status-badge pending">Pending</span>
+                                </td>
+                                <td>
+                                    <span class="priority-badge high">High</span>
+                                </td>
+                                <td>Robot #3</td>
+                                <td>C11</td>
+                                <td>14:30:00</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="task-row pending" data-task-id="q3">
+                                <td>
+                                    <span class="queue-pos">3</span>
+                                    <div class="position-controls">
+                                        <button class="btn-move-up" title="Move Up">↑</button>
+                                        <button class="btn-move-down" title="Move Down">↓</button>
+                                    </div>
+                                </td>
+                                <td>Task #Q1003</td>
+                                <td>机场巡检</td>
+                                <td>Airport Patrol - Terminal 1</td>
+                                <td>
+                                    <span class="status-badge pending">Pending</span>
+                                </td>
+                                <td>
+                                    <span class="priority-badge low">Low</span>
+                                </td>
+                                <td>Robot #9</td>
+                                <td>复材车间</td>
+                                <td>14:20:00</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Remove</button>
+                                </td>
+                            </tr>
+                            <tr class="task-row pending" data-task-id="q4">
+                                <td>
+                                    <span class="queue-pos">4</span>
+                                    <div class="position-controls">
+                                        <button class="btn-move-up" title="Move Up">↑</button>
+                                        <button class="btn-move-down" title="Move Down">↓</button>
+                                    </div>
+                                </td>
+                                <td>Task #Q1004</td>
+                                <td>配送</td>
+                                <td>Warehouse Transfer</td>
+                                <td>
+                                    <span class="status-badge pending">Pending</span>
+                                </td>
+                                <td>
+                                    <span class="priority-badge normal">Normal</span>
+                                </td>
+                                <td>Robot #5</td>
+                                <td>零件加工中心</td>
+                                <td>14:15:00</td>
+                                <td>
+                                    <button class="btn-view-details">View Details</button>
+                                    <button class="btn-delete">Remove</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="btn-page">Previous</button>
+                    <button class="btn-page active">1</button>
+                    <button class="btn-page">2</button>
+                    <button class="btn-page">3</button>
+                    <button class="btn-page">Next</button>
                 </div>
             </section>
             

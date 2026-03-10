@@ -3,6 +3,7 @@
 // DOM Elements
 const taskListPage = document.getElementById('task-list-page');
 const taskDetailsPage = document.getElementById('task-details-page');
+const taskQueuePage = document.getElementById('task-queue-page');
 const backToListBtn = document.getElementById('back-to-list');
 const viewDetailsBtns = document.querySelectorAll('.btn-view-details');
 const taskRows = document.querySelectorAll('.task-row');
@@ -16,7 +17,12 @@ const deviceDetailsPage = document.getElementById('device-details-page');
 const backToDeviceListBtn = document.getElementById('back-to-device-list');
 const deviceRows = document.querySelectorAll('.device-row');
 const devicesNav = document.querySelector('.devices-nav');
-const tasksNav = document.querySelector('.nav ul li a.active');
+const tasksNav = document.querySelector('.nav ul li.has-submenu > a');
+
+// Sub-navigation Elements
+const taskListNav = document.querySelector('.task-list-nav');
+const taskQueueNav = document.querySelector('.task-queue-nav');
+const tasksSubmenu = document.querySelector('.nav li.has-submenu');
 
 // Translation objects
 const translations = {
@@ -27,7 +33,16 @@ const translations = {
         'nav-dashboard': 'Dashboard',
         'nav-reports': 'Reports',
         'nav-devices': 'Devices',
+        'nav-task-list': 'Task List',
+        'nav-task-queue': 'Task Queue',
         'task-list-title': 'Task List',
+        'task-queue-title': 'Task Queue',
+        'btn-add-to-queue': 'Add to Queue',
+        'queue-pending': 'Pending Tasks',
+        'queue-in-progress': 'In Progress',
+        'queue-completed-today': 'Completed Today',
+        'queue-position': 'Queue Position',
+        'queue-search': 'Search queue...',
         'btn-add-task': 'Add New Task',
         'btn-refresh': 'Refresh',
         'search-placeholder': 'Search tasks...',
@@ -83,7 +98,7 @@ const translations = {
         'table-task-name': 'Task Name',
         'table-status': 'Status',
         'table-robot': 'Robot',
-        'table-location': 'Current Location',
+        'table-work-area': '工作域',
         'table-eta': 'ETA',
         'table-priority': 'Priority',
         'table-actions': 'Actions',
@@ -116,9 +131,13 @@ const translations = {
         'status-assigned': 'Assigned',
         'status-en-route': 'En Route',
         'status-executing': 'Executing',
+        'status-running': 'Running',
         'status-completed': 'Completed',
         'status-failed': 'Failed',
         'status-cancelled': 'Cancelled',
+        'filter-all-work-areas': 'All 工作域',
+        'btn-move-up': 'Move Up',
+        'btn-move-down': 'Move Down',
         'priority-high': 'High',
         'priority-normal': 'Normal',
         'priority-low': 'Low',
@@ -177,7 +196,16 @@ const translations = {
         'nav-dashboard': '仪表盘',
         'nav-reports': '报告',
         'nav-devices': '设备',
+        'nav-task-list': '任务列表',
+        'nav-task-queue': '任务队列',
         'task-list-title': '任务列表',
+        'task-queue-title': '任务队列',
+        'btn-add-to-queue': '添加到队列',
+        'queue-pending': '待处理任务',
+        'queue-in-progress': '进行中',
+        'queue-completed-today': '今日完成',
+        'queue-position': '队列位置',
+        'queue-search': '搜索队列...',
         'btn-add-task': '添加新任务',
         'btn-refresh': '刷新',
         'search-placeholder': '搜索任务...',
@@ -233,7 +261,7 @@ const translations = {
         'table-task-name': '任务名称',
         'table-status': '状态',
         'table-robot': '机器人',
-        'table-location': '当前位置',
+        'table-work-area': '工作域',
         'table-eta': '预计完成时间',
         'table-priority': '优先级',
         'table-actions': '操作',
@@ -248,6 +276,7 @@ const translations = {
         'info-priority': '优先级:',
         'info-robot': '机器人:',
         'info-location': '当前位置:',
+        'info-work-area': '工作域:',
         'info-eta': '预计完成时间:',
         'info-start-time': '开始时间:',
         'info-duration': '预计持续时间:',
@@ -265,9 +294,13 @@ const translations = {
         'status-assigned': '已分配',
         'status-en-route': '在途中',
         'status-executing': '执行中',
+        'status-running': '运行中',
         'status-completed': '已完成',
         'status-failed': '失败',
         'status-cancelled': '已取消',
+        'filter-all-work-areas': '所有工作域',
+        'btn-move-up': '上移',
+        'btn-move-down': '下移',
         'priority-high': '高',
         'priority-normal': '正常',
         'priority-low': '低',
@@ -326,7 +359,16 @@ const translations = {
         'nav-dashboard': 'ダッシュボード',
         'nav-reports': 'レポート',
         'nav-devices': 'デバイス',
+        'nav-task-list': 'タスクリスト',
+        'nav-task-queue': 'タスクキュー',
         'task-list-title': 'タスクリスト',
+        'task-queue-title': 'タスクキュー',
+        'btn-add-to-queue': 'キューに追加',
+        'queue-pending': '保留中タスク',
+        'queue-in-progress': '進行中',
+        'queue-completed-today': '本日完了',
+        'queue-position': 'キュー位置',
+        'queue-search': 'キューを検索...',
         'btn-add-task': '新しいタスクを追加',
         'btn-refresh': '更新',
         'search-placeholder': 'タスクを検索...',
@@ -414,12 +456,16 @@ const translations = {
         'status-assigned': '割り当て済み',
         'status-en-route': '途中',
         'status-executing': '実行中',
+        'status-running': '実行中',
         'status-completed': '完了',
         'status-failed': '失敗',
         'status-cancelled': 'キャンセル',
+        'filter-all-work-areas': 'すべての工作域',
         'priority-high': '高',
         'priority-normal': '通常',
         'priority-low': '低',
+        'btn-move-up': '上へ',
+        'btn-move-down': '下へ',
         'basic-info-title': '基本情報',
         'real-time-info-title': 'リアルタイム情報',
         'static-specs-title': '静的仕様',
@@ -1050,9 +1096,10 @@ function setupEventListeners() {
         // Update active navigation
         tasksNav.classList.remove('active');
         devicesNav.classList.add('active');
+        if (tasksSubmenu) tasksSubmenu.classList.remove('open');
     });
     
-    // Tasks navigation
+    // Tasks navigation (main tab)
     tasksNav.addEventListener('click', (e) => {
         e.preventDefault();
         showTaskList();
@@ -1060,6 +1107,128 @@ function setupEventListeners() {
         // Update active navigation
         devicesNav.classList.remove('active');
         tasksNav.classList.add('active');
+        if (tasksSubmenu) tasksSubmenu.classList.toggle('open');
+    });
+    
+    // Task List sub-navigation
+    if (taskListNav) {
+        taskListNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTaskList();
+            
+            // Update active sub-navigation
+            taskListNav.classList.add('active');
+            if (taskQueueNav) taskQueueNav.classList.remove('active');
+        });
+    }
+    
+    // Task Queue sub-navigation
+    if (taskQueueNav) {
+        taskQueueNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTaskQueue();
+            
+            // Update active sub-navigation
+            taskQueueNav.classList.add('active');
+            if (taskListNav) taskListNav.classList.remove('active');
+        });
+    }
+    
+    // Task Queue position controls
+    setupQueuePositionControls();
+}
+
+// Setup queue position controls
+function setupQueuePositionControls() {
+    const queueTable = document.querySelector('#task-queue-page .task-table tbody');
+    if (!queueTable) return;
+    
+    queueTable.addEventListener('click', (e) => {
+        const moveUpBtn = e.target.closest('.btn-move-up');
+        const moveDownBtn = e.target.closest('.btn-move-down');
+        
+        if (moveUpBtn) {
+            e.stopPropagation();
+            moveTaskPosition(moveUpBtn, 'up');
+        }
+        
+        if (moveDownBtn) {
+            e.stopPropagation();
+            moveTaskPosition(moveDownBtn, 'down');
+        }
+    });
+    
+    // Initial button state update
+    updatePositionButtonStates();
+}
+
+// Move task position in queue
+function moveTaskPosition(button, direction) {
+    const row = button.closest('.task-row');
+    if (!row || row.classList.contains('running')) return;
+    
+    const tbody = row.parentElement;
+    const pendingRows = Array.from(tbody.querySelectorAll('.task-row.pending'));
+    const currentIndex = pendingRows.indexOf(row);
+    
+    if (direction === 'up' && currentIndex > 0) {
+        const prevRow = pendingRows[currentIndex - 1];
+        tbody.insertBefore(row, prevRow);
+    } else if (direction === 'down' && currentIndex < pendingRows.length - 1) {
+        const nextRow = pendingRows[currentIndex + 1];
+        tbody.insertBefore(nextRow, row);
+    }
+    
+    // Update position numbers
+    updateQueuePositions();
+    
+    // Update button states
+    updatePositionButtonStates();
+}
+
+// Update queue position numbers
+function updateQueuePositions() {
+    const queueTable = document.querySelector('#task-queue-page .task-table tbody');
+    if (!queueTable) return;
+    
+    const runningRows = queueTable.querySelectorAll('.task-row.running');
+    const pendingRows = queueTable.querySelectorAll('.task-row.pending');
+    
+    // Running tasks get positions 1, 2, etc.
+    runningRows.forEach((row, index) => {
+        const posCell = row.querySelector('td:first-child');
+        if (posCell) {
+            posCell.textContent = index + 1;
+        }
+    });
+    
+    // Pending tasks get positions after running tasks
+    const startPos = runningRows.length + 1;
+    pendingRows.forEach((row, index) => {
+        const posSpan = row.querySelector('.queue-pos');
+        if (posSpan) {
+            posSpan.textContent = startPos + index;
+        }
+    });
+}
+
+// Update position button states (disable first up and last down)
+function updatePositionButtonStates() {
+    const queueTable = document.querySelector('#task-queue-page .task-table tbody');
+    if (!queueTable) return;
+    
+    const pendingRows = queueTable.querySelectorAll('.task-row.pending');
+    
+    pendingRows.forEach((row, index) => {
+        const upBtn = row.querySelector('.btn-move-up');
+        const downBtn = row.querySelector('.btn-move-down');
+        
+        if (upBtn) {
+            upBtn.disabled = (index === 0);
+        }
+        if (downBtn) {
+            downBtn.disabled = (index === pendingRows.length - 1);
+        }
     });
 }
 
@@ -1108,7 +1277,7 @@ function showTaskDetails(taskId) {
             </div>
             <div class="info-item">
                 <label>工作域:</label>
-                <span>1st Floor, Conference Area</span>
+                <span>C12</span>
             </div>
             <div class="info-item">
                 <label>ETA:</label>
@@ -1238,14 +1407,14 @@ function showTaskDetails(taskId) {
             treeRoot.innerHTML = `
                 <div class="tree-node">
                     <div class="node-content">
-                        <span class="node-icon">🚀</span>
+                        <span class="node-icon node-circle completed"></span>
                         <span class="node-text">Start Task: Room Cleaning - Conference Hall</span>
                         <span class="node-status completed">✓</span>
                     </div>
                     <div class="tree-children">
                         <div class="tree-node">
                             <div class="node-content">
-                                <span class="node-icon">🔋</span>
+                                <span class="node-icon node-circle completed"></span>
                                 <span class="node-text">1. Leave Charging Station</span>
                                 <span class="node-status completed">✓</span>
                             </div>
@@ -1256,7 +1425,7 @@ function showTaskDetails(taskId) {
                         </div>
                         <div class="tree-node">
                             <div class="node-content">
-                                <span class="node-icon">🧭</span>
+                                <span class="node-icon node-circle completed"></span>
                                 <span class="node-text">2. Navigate to Conference Hall</span>
                                 <span class="node-status completed">✓</span>
                             </div>
@@ -1264,10 +1433,69 @@ function showTaskDetails(taskId) {
                                 <span class="detail-item">14:35:20 - 14:35:45 (25s)</span>
                                 <span class="detail-desc">Robot navigated to Conference Hall</span>
                             </div>
+                            <div class="tree-children">
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon node-circle completed"></span>
+                                        <span class="node-text">2.1 Check Navigation Path</span>
+                                        <span class="node-status completed">✓</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">14:35:20 - 14:35:25 (5s)</span>
+                                        <span class="detail-desc">Robot checked navigation path</span>
+                                    </div>
+                                </div>
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon node-circle completed"></span>
+                                        <span class="node-text">2.2 Avoid Obstacles</span>
+                                        <span class="node-status completed">✓</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">14:35:25 - 14:35:40 (15s)</span>
+                                        <span class="detail-desc">Robot avoided obstacles on path</span>
+                                    </div>
+                                </div>
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon node-circle completed"></span>
+                                        <span class="node-text">2.3 Arrive at Destination</span>
+                                        <span class="node-status completed">✓</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">14:35:40 - 14:35:45 (5s)</span>
+                                        <span class="detail-desc">Robot arrived at Conference Hall</span>
+                                    </div>
+                                    <div class="tree-children">
+                                        <div class="tree-node">
+                                            <div class="node-content">
+                                                <span class="node-icon node-circle completed"></span>
+                                                <span class="node-text">2.3.1 Verify Location</span>
+                                                <span class="node-status completed">✓</span>
+                                            </div>
+                                            <div class="node-details">
+                                                <span class="detail-item">14:35:40 - 14:35:42 (2s)</span>
+                                                <span class="detail-desc">Robot verified its location</span>
+                                            </div>
+                                        </div>
+                                        <div class="tree-node">
+                                            <div class="node-content">
+                                                <span class="node-icon node-circle completed"></span>
+                                                <span class="node-text">2.3.2 Adjust Position</span>
+                                                <span class="node-status completed">✓</span>
+                                            </div>
+                                            <div class="node-details">
+                                                <span class="detail-item">14:35:42 - 14:35:45 (3s)</span>
+                                                <span class="detail-desc">Robot adjusted its position</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="tree-node">
                             <div class="node-content">
-                                <span class="node-icon">🧹</span>
+                                <span class="node-icon node-circle executing"></span>
                                 <span class="node-text">3. Start Cleaning</span>
                                 <span class="node-status executing">⚡</span>
                             </div>
@@ -1278,24 +1506,151 @@ function showTaskDetails(taskId) {
                             <div class="tree-children">
                                 <div class="tree-node">
                                     <div class="node-content">
-                                        <span class="node-icon">✅</span>
-                                        <span class="node-text">4. Verify Cleaning Completion</span>
+                                        <span class="node-icon node-circle pending"></span>
+                                        <span class="node-text">3.1 Clean Main Area</span>
                                         <span class="node-status pending">⏳</span>
                                     </div>
                                     <div class="node-details">
                                         <span class="detail-item">Pending</span>
-                                        <span class="detail-desc">Robot will verify cleaning completion</span>
+                                        <span class="detail-desc">Robot will clean main hall area</span>
                                     </div>
                                 </div>
                                 <div class="tree-node">
                                     <div class="node-content">
-                                        <span class="node-icon">🔋</span>
-                                        <span class="node-text">5. Return to Charging Station</span>
+                                        <span class="node-icon node-circle pending"></span>
+                                        <span class="node-text">3.2 Clean Side Areas</span>
                                         <span class="node-status pending">⏳</span>
                                     </div>
                                     <div class="node-details">
                                         <span class="detail-item">Pending</span>
-                                        <span class="detail-desc">Robot will return to charging station</span>
+                                        <span class="detail-desc">Robot will clean side areas</span>
+                                    </div>
+                                </div>
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon node-circle pending"></span>
+                                        <span class="node-text">3.3 Clean Entrance</span>
+                                        <span class="node-status pending">⏳</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">Pending</span>
+                                        <span class="node-text">Robot will clean entrance area</span>
+                                    </div>
+                                </div>
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon node-circle pending"></span>
+                                        <span class="node-text">3.4 Troubleshooting Branch (Only in Tree View)</span>
+                                        <span class="node-status pending">⏳</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">Only in Tree View</span>
+                                        <span class="node-text">Alternative path if cleaning encounters issues</span>
+                                    </div>
+                                    <div class="tree-children">
+                                        <div class="tree-node">
+                                            <div class="node-content">
+                                                <span class="node-icon node-circle pending"></span>
+                                                <span class="node-text">3.4.1 Detect Cleaning Issue</span>
+                                                <span class="node-status pending">⏳</span>
+                                            </div>
+                                            <div class="node-details">
+                                                <span class="detail-item">Only in Tree View</span>
+                                                <span class="node-text">Robot detects cleaning problem</span>
+                                            </div>
+                                        </div>
+                                        <div class="tree-node">
+                                            <div class="node-content">
+                                                <span class="node-icon node-circle pending"></span>
+                                                <span class="node-text">3.4.2 Attempt Recovery</span>
+                                                <span class="node-status pending">⏳</span>
+                                            </div>
+                                            <div class="node-details">
+                                                <span class="detail-item">Only in Tree View</span>
+                                                <span class="node-text">Robot attempts to recover from issue</span>
+                                            </div>
+                                        </div>
+                                        <div class="tree-node">
+                                            <div class="node-content">
+                                                <span class="node-icon node-circle pending"></span>
+                                                <span class="node-text">3.4.3 Resume Cleaning</span>
+                                                <span class="node-status pending">⏳</span>
+                                            </div>
+                                            <div class="node-details">
+                                                <span class="detail-item">Only in Tree View</span>
+                                                <span class="node-text">Robot resumes cleaning after recovery</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tree-node">
+                            <div class="node-content">
+                                <span class="node-icon node-circle pending"></span>
+                                <span class="node-text">4. Verify Cleaning Completion</span>
+                                <span class="node-status pending">⏳</span>
+                            </div>
+                            <div class="node-details">
+                                <span class="detail-item">Pending</span>
+                                <span class="detail-desc">Robot will verify cleaning completion</span>
+                            </div>
+                        </div>
+                        <div class="tree-node">
+                            <div class="node-content">
+                                <span class="node-icon node-circle pending"></span>
+                                <span class="node-text">5. Return to Charging Station</span>
+                                <span class="node-status pending">⏳</span>
+                            </div>
+                            <div class="node-details">
+                                <span class="detail-item">Pending</span>
+                                <span class="node-text">Robot will return to charging station</span>
+                            </div>
+                            <div class="tree-children">
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon node-circle pending"></span>
+                                        <span class="node-text">5.1 Navigate to Charging Station</span>
+                                        <span class="node-status pending">⏳</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">Pending</span>
+                                        <span class="node-text">Robot navigates back to charging station</span>
+                                    </div>
+                                    <div class="tree-children">
+                                        <div class="tree-node">
+                                            <div class="node-content">
+                                                <span class="node-icon node-circle pending"></span>
+                                                <span class="node-text">5.1.1 Check Battery Level</span>
+                                                <span class="node-status pending">⏳</span>
+                                            </div>
+                                            <div class="node-details">
+                                                <span class="detail-item">Only in Tree View</span>
+                                                <span class="node-text">Robot checks battery level during return</span>
+                                            </div>
+                                        </div>
+                                        <div class="tree-node">
+                                            <div class="node-content">
+                                                <span class="node-icon node-circle pending"></span>
+                                                <span class="node-text">5.1.2 Alternative Route (Only in Tree View)</span>
+                                                <span class="node-status pending">⏳</span>
+                                            </div>
+                                            <div class="node-details">
+                                                <span class="detail-item">Only in Tree View</span>
+                                                <span class="node-text">Alternative path if main route is blocked</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tree-node">
+                                    <div class="node-content">
+                                        <span class="node-icon node-circle pending"></span>
+                                        <span class="node-text">5.2 Dock at Charging Station</span>
+                                        <span class="node-status pending">⏳</span>
+                                    </div>
+                                    <div class="node-details">
+                                        <span class="detail-item">Pending</span>
+                                        <span class="node-text">Robot docks at charging station</span>
                                     </div>
                                 </div>
                             </div>
@@ -1316,7 +1671,29 @@ function showTaskList() {
     taskDetailsPage.classList.remove('active');
     deviceListPage.classList.remove('active');
     deviceDetailsPage.classList.remove('active');
+    if (taskQueuePage) taskQueuePage.classList.remove('active');
     taskListPage.classList.add('active');
+    
+    // Update sub-navigation active state
+    if (taskListNav) taskListNav.classList.add('active');
+    if (taskQueueNav) taskQueueNav.classList.remove('active');
+}
+
+// Show Task Queue page
+function showTaskQueue() {
+    // Stop chart updates
+    stopChartUpdates();
+    
+    // Hide all pages except task queue
+    taskListPage.classList.remove('active');
+    taskDetailsPage.classList.remove('active');
+    deviceListPage.classList.remove('active');
+    deviceDetailsPage.classList.remove('active');
+    if (taskQueuePage) taskQueuePage.classList.add('active');
+    
+    // Update sub-navigation active state
+    if (taskQueueNav) taskQueueNav.classList.add('active');
+    if (taskListNav) taskListNav.classList.remove('active');
 }
 
 // Show Device List page
@@ -1327,6 +1704,7 @@ function showDeviceList() {
     // Hide all pages except device list
     taskListPage.classList.remove('active');
     taskDetailsPage.classList.remove('active');
+    if (taskQueuePage) taskQueuePage.classList.remove('active');
     deviceDetailsPage.classList.remove('active');
     deviceListPage.classList.add('active');
 }
@@ -1916,11 +2294,59 @@ function setLanguage(lang) {
     document.querySelector('.sidebar-header h1').textContent = translations[lang]['sidebar-title'];
     
     // Update navigation links
-    const navLinks = document.querySelectorAll('.nav ul li a');
+    const navLinks = document.querySelectorAll('.nav > ul > li > a');
     navLinks[0].textContent = translations[lang]['nav-tasks'];
     navLinks[1].textContent = translations[lang]['nav-devices'];
     navLinks[2].textContent = translations[lang]['nav-dashboard'];
     navLinks[3].textContent = translations[lang]['nav-reports'];
+    
+    // Update sub-navigation links
+    if (taskListNav) {
+        taskListNav.textContent = translations[lang]['nav-task-list'];
+    }
+    if (taskQueueNav) {
+        taskQueueNav.textContent = translations[lang]['nav-task-queue'];
+    }
+    
+    // Update task queue page
+    const taskQueueH2 = document.querySelector('#task-queue-page h2');
+    if (taskQueueH2) {
+        taskQueueH2.textContent = translations[lang]['task-queue-title'];
+    }
+    
+    const taskQueueActionButtons = document.querySelectorAll('#task-queue-page .action-buttons button');
+    if (taskQueueActionButtons.length > 0) {
+        taskQueueActionButtons[0].textContent = translations[lang]['btn-add-to-queue'];
+        taskQueueActionButtons[1].textContent = translations[lang]['btn-refresh'];
+    }
+    
+    const queueSearchInput = document.querySelector('#task-queue-page .search input');
+    if (queueSearchInput) {
+        queueSearchInput.placeholder = translations[lang]['queue-search'];
+    }
+    
+    // Update queue stats
+    const statLabels = document.querySelectorAll('.stat-card .stat-label');
+    if (statLabels.length >= 3) {
+        statLabels[0].textContent = translations[lang]['queue-pending'];
+        statLabels[1].textContent = translations[lang]['queue-in-progress'];
+        statLabels[2].textContent = translations[lang]['queue-completed-today'];
+    }
+    
+    // Update queue table headers
+    const queueTableHeaders = document.querySelectorAll('#task-queue-page .task-table th');
+    if (queueTableHeaders.length > 0) {
+        queueTableHeaders[0].textContent = translations[lang]['queue-position'];
+        queueTableHeaders[1].textContent = translations[lang]['table-task-id'];
+        queueTableHeaders[2].textContent = translations[lang]['table-task-type'];
+        queueTableHeaders[3].textContent = translations[lang]['table-task-name'];
+        queueTableHeaders[4].textContent = translations[lang]['table-status'];
+        queueTableHeaders[5].textContent = translations[lang]['table-priority'];
+        queueTableHeaders[6].textContent = translations[lang]['table-robot'];
+        queueTableHeaders[7].textContent = translations[lang]['table-work-area'];
+        queueTableHeaders[8].textContent = translations[lang]['info-start-time'];
+        queueTableHeaders[9].textContent = translations[lang]['table-actions'];
+    }
     
     // Update task list page
     const taskListActionButtons = document.querySelectorAll('#task-list-page .action-buttons button');
@@ -1954,7 +2380,7 @@ function setLanguage(lang) {
         taskTableHeaders[2].textContent = translations[lang]['table-task-name'];
         taskTableHeaders[3].textContent = translations[lang]['table-status'];
         taskTableHeaders[4].textContent = translations[lang]['table-robot'];
-        taskTableHeaders[5].textContent = translations[lang]['table-location'];
+        taskTableHeaders[5].textContent = translations[lang]['table-work-area'];
         taskTableHeaders[6].textContent = translations[lang]['table-eta'];
         taskTableHeaders[7].textContent = translations[lang]['table-priority'];
         taskTableHeaders[8].textContent = translations[lang]['table-actions'];
@@ -2001,10 +2427,11 @@ function setLanguage(lang) {
             taskInfoLabels[4].textContent = translations[lang]['info-priority'];
             taskInfoLabels[5].textContent = translations[lang]['info-robot'];
             taskInfoLabels[6].textContent = translations[lang]['info-location'];
-            taskInfoLabels[7].textContent = translations[lang]['info-eta'];
-            taskInfoLabels[8].textContent = translations[lang]['info-start-time'];
-            taskInfoLabels[9].textContent = translations[lang]['info-duration'];
-            taskInfoLabels[10].textContent = translations[lang]['info-progress'];
+            taskInfoLabels[7].textContent = translations[lang]['info-work-area'];
+            taskInfoLabels[8].textContent = translations[lang]['info-eta'];
+            taskInfoLabels[9].textContent = translations[lang]['info-start-time'];
+            taskInfoLabels[10].textContent = translations[lang]['info-duration'];
+            taskInfoLabels[11].textContent = translations[lang]['info-progress'];
         }
         
         // Update delete button on task details page
@@ -2072,6 +2499,12 @@ function setLanguage(lang) {
             deviceActionButtons[1].textContent = translations[lang]['btn-reboot'];
             deviceActionButtons[2].textContent = translations[lang]['btn-delete'];
         }
+        
+        // Update device list edit buttons
+        const deviceListEditButtons = document.querySelectorAll('#device-list-page .btn-edit');
+        deviceListEditButtons.forEach(btn => {
+            btn.textContent = translations[lang]['btn-edit-device'];
+        });
         
         // Update device status title
         const deviceStatusH3 = document.querySelectorAll('#device-details-page .robot-location h3')[0];
@@ -2201,13 +2634,24 @@ function setLanguage(lang) {
         
         // Update statistics subsection titles
         const statsSections = document.querySelectorAll('.device-statistics .stats-section');
+        console.log('Stats sections found:', statsSections.length);
         if (statsSections.length >= 2) {
             if (statsSections[0].querySelector('h4')) {
+                console.log('Updating odometry data title');
                 statsSections[0].querySelector('h4').textContent = translations[lang]['odometry-data'];
             }
             if (statsSections[1].querySelector('h4')) {
+                console.log('Updating performance metrics title');
                 statsSections[1].querySelector('h4').textContent = translations[lang]['performance-metrics'];
             }
+        }
+        
+        // Update odometry data labels
+        const odometryLabels = document.querySelectorAll('.device-statistics .stats-section:first-child .info-item label');
+        if (odometryLabels.length >= 3) {
+            odometryLabels[0].textContent = translations[lang]['total-distance'];
+            odometryLabels[1].textContent = translations[lang]['total-operating-time'];
+            odometryLabels[2].textContent = translations[lang]['average-speed'];
         }
         
         // Update statistics section - update table headers
