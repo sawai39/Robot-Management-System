@@ -24,6 +24,7 @@
                         </ul>
                     </li>
                     <li><a href="#" class="devices-nav">Devices</a></li>
+                    <li><a href="#" class="models-nav">模型</a></li>
                     <li><a href="#">Dashboard</a></li>
                     <li><a href="#">Reports</a></li>
                 </ul>
@@ -704,7 +705,6 @@
                             <tr>
                                 <th>Device ID</th>
                                 <th>Device Name</th>
-                                <th>Type</th>
                                 <th>Model</th>
                                 <th>Brand</th>
                                 <th>Status</th>
@@ -719,7 +719,7 @@
                             <tr class="device-row" data-device-id="1">
                                 <td>TZ123_001</td>
                                 <td>天体0号</td>
-                                <td>Robot</td>
+                                <td>抱箱机器人</td>
                                 <td>TZC123</td>
                                 <td>Tianti</td>
                                 <td>
@@ -737,7 +737,7 @@
                             <tr class="device-row" data-device-id="2">
                                 <td>TZ122_002</td>
                                 <td>天体1号</td>
-                                <td>Robot</td>
+                                <td>12-3蜂巢车</td>
                                 <td>TZC122</td>
                                 <td>Tianti</td>
                                 <td>
@@ -756,7 +756,7 @@
                             <tr class="device-row" data-device-id="3">
                                 <td>XG-001</td>
                                 <td>XG-R1</td>
-                                <td>Robot</td>
+                                <td>MIR-100</td>
                                 <td>XG-R1</td>
                                 <td>仙工</td>
                                 <td>
@@ -774,7 +774,7 @@
                             <tr class="device-row" data-device-id="4">
                                 <td>MIR-001</td>
                                 <td>MiR200</td>
-                                <td>Robot</td>
+                                <td>MIR-100</td>
                                 <td>MiR200</td>
                                 <td>MiR</td>
                                 <td>
@@ -793,7 +793,7 @@
                             <tr class="device-row" data-device-id="5">
                                 <td>ELV-001</td>
                                 <td>Elevator-1</td>
-                                <td>Elevator</td>
+                                <td>ELEV-200</td>
                                 <td>Gen2</td>
                                 <td>Otis</td>
                                 <td>
@@ -865,12 +865,8 @@
                                 <span>天体0号</span>
                             </div>
                             <div class="info-item">
-                                <label>Type:</label>
-                                <span>Robot</span>
-                            </div>
-                            <div class="info-item">
                                 <label>Model:</label>
-                                <span>TZC123</span>
+                                <span>抱箱机器人</span>
                             </div>
                             <div class="info-item">
                                 <label>Brand:</label>
@@ -1141,6 +1137,194 @@
                     </div>
                 </div>
             </section>
+            
+            <!-- Models Module Pages -->
+            <!-- Model List Page -->
+            <section id="model-list-page" class="page">
+                <div class="page-header">
+                    <h2>Model List</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="addModelBtn">Add New Model</button>
+                        <button class="btn btn-secondary">Refresh</button>
+                    </div>
+                </div>
+                
+                <!-- Base Model Categories -->
+                <div class="base-model-categories">
+                    <div class="base-model-section">
+                        <h3>天体机器人</h3>
+                        <div class="model-grid">
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <h4>抱箱机器人</h4>
+                                    <span class="model-id">TBT-001</span>
+                                </div>
+                                <div class="model-body">
+                                    <div class="model-info">
+                                        <span class="info-label">Base Model:</span>
+                                        <span class="info-value">天体机器人</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Description:</span>
+                                        <span class="info-value">Box carrying robot for indoor delivery</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Status:</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn-view-model">View Details</button>
+                                </div>
+                            </div>
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <h4>12-3蜂巢车</h4>
+                                    <span class="model-id">TBT-002</span>
+                                </div>
+                                <div class="model-body">
+                                    <div class="model-info">
+                                        <span class="info-label">Base Model:</span>
+                                        <span class="info-value">天体机器人</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Description:</span>
+                                        <span class="info-value">Hive transport vehicle for warehouse</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Status:</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn-view-model">View Details</button>
+                                </div>
+                            </div>
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <h4>新疆机场行李运送车</h4>
+                                    <span class="model-id">TBT-003</span>
+                                </div>
+                                <div class="model-body">
+                                    <div class="model-info">
+                                        <span class="info-label">Base Model:</span>
+                                        <span class="info-value">天体机器人</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Description:</span>
+                                        <span class="info-value">Airport luggage transport vehicle</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Status:</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn-view-model">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="base-model-section">
+                        <h3>米尔机器人</h3>
+                        <div class="model-grid">
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <h4>MIR-100</h4>
+                                    <span class="model-id">MIR-001</span>
+                                </div>
+                                <div class="model-body">
+                                    <div class="model-info">
+                                        <span class="info-label">Base Model:</span>
+                                        <span class="info-value">米尔机器人</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Description:</span>
+                                        <span class="info-value">Standard industrial robot</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Status:</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn-view-model">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="base-model-section">
+                        <h3>电梯</h3>
+                        <div class="model-grid">
+                            <div class="model-card">
+                                <div class="model-header">
+                                    <h4>ELEV-200</h4>
+                                    <span class="model-id">ELV-001</span>
+                                </div>
+                                <div class="model-body">
+                                    <div class="model-info">
+                                        <span class="info-label">Base Model:</span>
+                                        <span class="info-value">电梯</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Description:</span>
+                                        <span class="info-value">Standard elevator system</span>
+                                    </div>
+                                    <div class="model-info">
+                                        <span class="info-label">Status:</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="btn-view-model">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Add Model Modal -->
+            <div id="addModelModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Add New Model</h3>
+                        <button class="modal-close" id="closeModelModal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addModelForm">
+                            <div class="form-group">
+                                <label for="modelName">Model Name:</label>
+                                <input type="text" id="modelName" name="modelName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="baseModel">Base Model:</label>
+                                <select id="baseModel" name="baseModel" required>
+                                    <option value="">Select Base Model</option>
+                                    <option value="天体机器人">天体机器人</option>
+                                    <option value="米尔机器人">米尔机器人</option>
+                                    <option value="电梯">电梯</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="modelDescription">Model Description:</label>
+                                <textarea id="modelDescription" name="modelDescription" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="modelFile">Upload Model Description File:</label>
+                                <input type="file" id="modelFile" name="modelFile" accept=".txt,.pdf,.doc,.docx">
+                                <small>Supported formats: .txt, .pdf, .doc, .docx</small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="cancelModelBtn">Cancel</button>
+                        <button class="btn btn-primary" id="saveModelBtn">Save Model</button>
+                    </div>
+                </div>
+            </div>
         </main>
             
             <!-- Footer -->
@@ -1159,6 +1343,17 @@
             </div>
             <div class="modal-body">
                 <div id="step-1">
+                    <div class="form-group">
+                        <label>模型:</label>
+                        <select id="new-device-model">
+                            <option value="">Select Model</option>
+                            <option value="抱箱机器人">抱箱机器人</option>
+                            <option value="12-3蜂巢车">12-3蜂巢车</option>
+                            <option value="新疆机场行李运送车">新疆机场行李运送车</option>
+                            <option value="MIR-100">MIR-100</option>
+                            <option value="ELEV-200">ELEV-200</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>连接口令:</label>
                         <input type="password" id="connection-password" placeholder="Enter connection password">

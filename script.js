@@ -19,6 +19,16 @@ const deviceRows = document.querySelectorAll('.device-row');
 const devicesNav = document.querySelector('.devices-nav');
 const tasksNav = document.querySelector('.nav ul li.has-submenu > a');
 
+// Model Module Elements
+const modelListPage = document.getElementById('model-list-page');
+const modelsNav = document.querySelector('.models-nav');
+const addModelBtn = document.getElementById('addModelBtn');
+const addModelModal = document.getElementById('addModelModal');
+const closeModelModal = document.getElementById('closeModelModal');
+const cancelModelBtn = document.getElementById('cancelModelBtn');
+const saveModelBtn = document.getElementById('saveModelBtn');
+const addModelForm = document.getElementById('addModelForm');
+
 // Sub-navigation Elements
 const taskListNav = document.querySelector('.task-list-nav');
 const taskQueueNav = document.querySelector('.task-queue-nav');
@@ -49,6 +59,22 @@ const translations = {
         'device-list-title': 'Device List',
         'btn-add-device': 'Add New Device',
         'search-devices-placeholder': 'Search devices...',
+        'model-list-title': 'Model List',
+        'btn-add-model': 'Add New Model',
+        'search-models-placeholder': 'Search models...',
+        'base-model-title': 'Base Model',
+        'model-id': 'Model ID',
+        'model-name': 'Model Name',
+        'model-description': 'Description',
+        'model-status': 'Status',
+        'model-active': 'Active',
+        'model-inactive': 'Inactive',
+        'select-base-model': 'Select Base Model',
+        'upload-model-file': 'Upload Model Description File',
+        'supported-formats': 'Supported formats: .txt, .pdf, .doc, .docx',
+        'btn-save-model': 'Save Model',
+        'btn-cancel': 'Cancel',
+        'btn-view-details': 'View Details',
         'table-device-id': 'Device ID',
         'table-device-name': 'Device Name',
         'table-type': 'Type',
@@ -212,6 +238,22 @@ const translations = {
         'device-list-title': '设备列表',
         'btn-add-device': '添加新设备',
         'search-devices-placeholder': '搜索设备...',
+        'model-list-title': '模型列表',
+        'btn-add-model': '添加新模型',
+        'search-models-placeholder': '搜索模型...',
+        'base-model-title': '基础模型',
+        'model-id': '模型ID',
+        'model-name': '模型名称',
+        'model-description': '描述',
+        'model-status': '状态',
+        'model-active': '活跃',
+        'model-inactive': '非活跃',
+        'select-base-model': '选择基础模型',
+        'upload-model-file': '上传模型描述文件',
+        'supported-formats': '支持的格式: .txt, .pdf, .doc, .docx',
+        'btn-save-model': '保存模型',
+        'btn-cancel': '取消',
+        'btn-view-details': '查看详情',
         'table-device-id': '设备ID',
         'table-device-name': '设备名称',
         'table-type': '类型',
@@ -512,7 +554,23 @@ const translations = {
         'acceleration': '加速度',
         'angular-acceleration': '角加速度',
         'view-table': 'テーブルビュー',
-        'view-tree': 'ツリービュー'
+        'view-tree': 'ツリービュー',
+        'model-list-title': 'モデルリスト',
+        'btn-add-model': '新規モデル追加',
+        'search-models-placeholder': 'モデルを検索...',
+        'base-model-title': 'ベースモデル',
+        'model-id': 'モデルID',
+        'model-name': 'モデル名',
+        'model-description': '説明',
+        'model-status': 'ステータス',
+        'model-active': 'アクティブ',
+        'model-inactive': '非アクティブ',
+        'select-base-model': 'ベースモデルを選択',
+        'upload-model-file': 'モデル説明ファイルをアップロード',
+        'supported-formats': '対応フォーマット: .txt, .pdf, .doc, .docx',
+        'btn-save-model': 'モデルを保存',
+        'btn-cancel': 'キャンセル',
+        'btn-view-details': '詳細を表示'
     }
 };
 
@@ -842,16 +900,20 @@ function stopChartUpdates() {
 // Set up event listeners
 function setupEventListeners() {
     // View Details buttons
+    const viewDetailsBtns = document.querySelectorAll('.btn-view-details');
     viewDetailsBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent row click event
+            e.stopPropagation();
             const taskRow = btn.closest('.task-row');
-            const taskId = taskRow.dataset.taskId;
-            showTaskDetails(taskId);
+            if (taskRow) {
+                const taskId = taskRow.dataset.taskId;
+                showTaskDetails(taskId);
+            }
         });
     });
     
     // Task rows (click anywhere on row to view details)
+    const taskRows = document.querySelectorAll('.task-row');
     taskRows.forEach(row => {
         row.addEventListener('click', () => {
             const taskId = row.dataset.taskId;
@@ -937,6 +999,66 @@ function setupEventListeners() {
     closeModalBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             addDeviceModal.classList.remove('show');
+        });
+    });
+    
+    // Model navigation
+    if (modelsNav) {
+        modelsNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModelList();
+        });
+    }
+    
+    // Add Model button
+    if (addModelBtn) {
+        addModelBtn.addEventListener('click', () => {
+            addModelModal.classList.add('active');
+        });
+    }
+    
+    // Close Model Modal
+    if (closeModelModal) {
+        closeModelModal.addEventListener('click', () => {
+            addModelModal.classList.remove('active');
+        });
+    }
+    
+    // Cancel Model button
+    if (cancelModelBtn) {
+        cancelModelBtn.addEventListener('click', () => {
+            addModelModal.classList.remove('active');
+        });
+    }
+    
+    // Save Model button
+    if (saveModelBtn) {
+        saveModelBtn.addEventListener('click', () => {
+            const modelName = document.getElementById('modelName').value;
+            const baseModel = document.getElementById('baseModel').value;
+            const modelDescription = document.getElementById('modelDescription').value;
+            const modelFile = document.getElementById('modelFile').files[0];
+            
+            if (!modelName || !baseModel || !modelDescription) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // In a real application, we would send this data to the server
+            // For this prototype, we'll just show an alert and close the modal
+            alert(`Model "${modelName}" has been added successfully!`);
+            addModelModal.classList.remove('active');
+            
+            // Clear form
+            addModelForm.reset();
+        });
+    }
+    
+    // View Model Details buttons
+    const viewModelBtns = document.querySelectorAll('.btn-view-model');
+    viewModelBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            alert('Model details functionality would be implemented here');
         });
     });
     
@@ -1089,26 +1211,46 @@ function setupEventListeners() {
     });
     
     // Devices navigation
-    devicesNav.addEventListener('click', (e) => {
-        e.preventDefault();
-        showDeviceList();
-        
-        // Update active navigation
-        tasksNav.classList.remove('active');
-        devicesNav.classList.add('active');
-        if (tasksSubmenu) tasksSubmenu.classList.remove('open');
-    });
+    if (devicesNav) {
+        devicesNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            showDeviceList();
+            
+            // Update active navigation
+            if (tasksNav) tasksNav.classList.remove('active');
+            if (modelsNav) modelsNav.classList.remove('active');
+            devicesNav.classList.add('active');
+            if (tasksSubmenu) tasksSubmenu.classList.remove('open');
+        });
+    }
+    
+    // Models navigation
+    if (modelsNav) {
+        modelsNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModelList();
+            
+            // Update active navigation
+            if (tasksNav) tasksNav.classList.remove('active');
+            if (devicesNav) devicesNav.classList.remove('active');
+            modelsNav.classList.add('active');
+            if (tasksSubmenu) tasksSubmenu.classList.remove('open');
+        });
+    }
     
     // Tasks navigation (main tab)
-    tasksNav.addEventListener('click', (e) => {
-        e.preventDefault();
-        showTaskList();
-        
-        // Update active navigation
-        devicesNav.classList.remove('active');
-        tasksNav.classList.add('active');
-        if (tasksSubmenu) tasksSubmenu.classList.toggle('open');
-    });
+    if (tasksNav) {
+        tasksNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTaskList();
+            
+            // Update active navigation
+            if (devicesNav) devicesNav.classList.remove('active');
+            if (modelsNav) modelsNav.classList.remove('active');
+            tasksNav.classList.add('active');
+            if (tasksSubmenu) tasksSubmenu.classList.toggle('open');
+        });
+    }
     
     // Task List sub-navigation
     if (taskListNav) {
@@ -1709,6 +1851,22 @@ function showDeviceList() {
     deviceListPage.classList.add('active');
 }
 
+// Show Model List page
+function showModelList() {
+    // Hide all pages except model list
+    taskListPage.classList.remove('active');
+    taskDetailsPage.classList.remove('active');
+    deviceListPage.classList.remove('active');
+    deviceDetailsPage.classList.remove('active');
+    if (taskQueuePage) taskQueuePage.classList.remove('active');
+    if (modelListPage) modelListPage.classList.add('active');
+    
+    // Update navigation active state
+    if (tasksNav) tasksNav.classList.remove('active');
+    if (devicesNav) devicesNav.classList.remove('active');
+    if (modelsNav) modelsNav.classList.add('active');
+}
+
 // Show Device Details page
 function showDeviceDetails(deviceId) {
     // Hide device list page, show device details page
@@ -2297,8 +2455,9 @@ function setLanguage(lang) {
     const navLinks = document.querySelectorAll('.nav > ul > li > a');
     navLinks[0].textContent = translations[lang]['nav-tasks'];
     navLinks[1].textContent = translations[lang]['nav-devices'];
-    navLinks[2].textContent = translations[lang]['nav-dashboard'];
-    navLinks[3].textContent = translations[lang]['nav-reports'];
+    navLinks[2].textContent = translations[lang]['nav-models'] || '模型';
+    navLinks[3].textContent = translations[lang]['nav-dashboard'];
+    navLinks[4].textContent = translations[lang]['nav-reports'];
     
     // Update sub-navigation links
     if (taskListNav) {
@@ -2685,6 +2844,20 @@ function setLanguage(lang) {
                 viewToggleBtn.title = translations[lang]['view-table'] || 'Table View';
             }
         }
+        
+        // Update model list page
+        const modelListActionButtons = document.querySelectorAll('#model-list-page .action-buttons button');
+        if (modelListActionButtons.length > 0) {
+            document.querySelector('#model-list-page h2').textContent = translations[lang]['model-list-title'];
+            modelListActionButtons[0].textContent = translations[lang]['btn-add-model'];
+            modelListActionButtons[1].textContent = translations[lang]['btn-refresh'];
+        }
+        
+        // Update model card headers and buttons
+        const viewModelBtns = document.querySelectorAll('.btn-view-model');
+        viewModelBtns.forEach(btn => {
+            btn.textContent = translations[lang]['btn-view-details'];
+        });
     }
     
     // Update footer
