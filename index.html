@@ -1,1384 +1,1226 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robot Management System - Task Module</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>Robot Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3498db',
+                        'primary-dark': '#2980b9',
+                        'sidebar': '#2c3e50',
+                        'sidebar-dark': '#233140',
+                        'success': '#27ae60',
+                        'warning': '#f39c12',
+                        'error': '#e74c3c',
+                        'executing': '#9b59b6',
+                        'neutral': '#95a5a6',
+                        'text-primary': '#333333',
+                        'text-secondary': '#666666',
+                        'text-light': '#999999',
+                        'bg-light': '#f8f9fa',
+                        'border-gray': '#e0e0e0'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        
+        /* Sidebar transitions */
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        
+        /* Submenu animation */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .submenu.expanded {
+            max-height: 200px;
+        }
+        
+        /* Pulse animation for robot marker */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .animate-pulse-custom {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* Card hover effect */
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Page content transition */
+        .page-content {
+            display: none;
+        }
+        .page-content.active {
+            display: block;
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>Robot Management System</h1>
+<body class="bg-bg-light min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col">
+            <!-- Logo/Title -->
+            <div class="p-5 border-b border-white/10">
+                <h1 class="text-white text-lg font-semibold leading-tight">
+                    Robot Management<br>System
+                </h1>
             </div>
-            <nav class="nav">
-                <ul>
-                    <li class="has-submenu">
-                        <a href="#" class="active">Tasks</a>
-                        <ul class="submenu">
-                            <li><a href="#" class="task-list-nav active">Task List</a></li>
-                            <li><a href="#" class="task-queue-nav">Task Queue</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#" class="devices-nav">Devices</a></li>
-                    <li><a href="#" class="models-nav">模型</a></li>
-                    <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Reports</a></li>
-                </ul>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 py-4 overflow-y-auto">
+                <!-- Tasks - Expandable -->
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span>Tasks</span>
+                        </div>
+                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="tasks-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" onclick="showPage('task-list'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            Task List
+                        </a>
+                        <a href="#" onclick="showPage('task-queue'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            Task Queue
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Devices -->
+                <a href="#" onclick="showPage('device-list'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                    </svg>
+                    <span>Devices</span>
+                </a>
+                
+                <!-- Models -->
+                <a href="#" onclick="showPage('models'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    <span>Models</span>
+                </a>
+                
+                <!-- Dashboard -->
+                <a href="#" onclick="showPage('dashboard'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <!-- Reports -->
+                <a href="#" onclick="showPage('reports'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Reports</span>
+                </a>
             </nav>
+            
+            <!-- Sidebar Footer -->
+            <div class="p-4 border-t border-white/10">
+                <p class="text-white/50 text-xs">Version 1.0.0</p>
+            </div>
         </aside>
         
         <!-- Main Content -->
-        <div class="main-content">
+        <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
             <!-- Header -->
-            <header class="header">
-                <div class="header-content">
-                    <!-- Page title will be set dynamically -->
-                    <!-- Language Switcher -->
-                    <div class="language-switcher">
-                        <button class="language-btn" id="languageBtn">
-                            🌐
+            <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                <div>
+                    <h2 id="page-title" class="text-xl font-semibold text-sidebar">Welcome to Robot Management System</h2>
+                    <p id="page-description" class="text-text-secondary text-sm mt-1">Monitor and manage your robot fleet efficiently</p>
+                </div>
+                
+                <!-- Language Switcher -->
+                <div class="relative">
+                    <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
+                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
+                        <span id="current-lang" class="text-sm font-medium">中文</span>
+                        <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Language Dropdown -->
+                    <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
+                        <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors flex items-center gap-2">
+                            <span>English</span>
+                            <span class="text-text-light text-xs">(EN)</span>
                         </button>
-                        <div class="language-dropdown" id="languageDropdown">
-                            <a href="#" data-lang="en">English</a>
-                            <a href="#" data-lang="zh">中文</a>
-                            <a href="#" data-lang="ja">日本語</a>
-                        </div>
+                        <button onclick="setLanguage('zh')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors flex items-center gap-2 bg-bg-light">
+                            <span>中文</span>
+                            <span class="text-text-light text-xs">(ZH)</span>
+                        </button>
+                        <button onclick="setLanguage('ja')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors flex items-center gap-2">
+                            <span>日本語</span>
+                            <span class="text-text-light text-xs">(JA)</span>
+                        </button>
                     </div>
                 </div>
             </header>
             
-            <!-- Content Area -->
-            <main class="main">
-            <!-- Task List Page -->
-            <section id="task-list-page" class="page active">
-                <div class="page-header">
-                    <h2>Task List</h2>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary">Add New Task</button>
-                        <button class="btn btn-secondary">Refresh</button>
-                    </div>
-                </div>
-                
-                <!-- Search and Filter -->
-                <div class="search-filter">
-                    <div class="search">
-                        <input type="text" placeholder="Search tasks...">
-                        <button class="btn-search">🔍</button>
-                    </div>
-                    <div class="filter">
-                        <select>
-                            <option value="all">All Statuses</option>
-                            <option value="pending">Pending</option>
-                            <option value="assigned">Assigned</option>
-                            <option value="en-route">En Route</option>
-                            <option value="executing">Executing</option>
-                            <option value="completed">Completed</option>
-                            <option value="failed">Failed</option>
-                        </select>
-                        <select>
-                            <option value="all">All Robots</option>
-                            <option value="robot1">Robot #1</option>
-                            <option value="robot2">Robot #2</option>
-                            <option value="robot3">Robot #3</option>
-                            <option value="robot4">Robot #4</option>
-                            <option value="robot5">Robot #5</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Task Table -->
-                <div class="task-table-container">
-                    <table class="task-table">
-                        <thead>
-                            <tr>
-                                <th>Task ID</th>
-                                <th>Task Type</th>
-                                <th>Task Name</th>
-                                <th>Status</th>
-                                <th>Robot</th>
-                                <th>工作域</th>
-                                <th>ETA</th>
-                                <th>Priority</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="task-row" data-task-id="1">
-                                <td>Task #12345</td>
-                                <td>飞速达</td>
-                                <td>Package Delivery to Floor 3</td>
-                                <td>
-                                    <span class="status-badge en-route">En Route</span>
-                                </td>
-                                <td>Robot #7</td>
-                                <td>C11</td>
-                                <td>14:45:30</td>
-                                <td>
-                                    <span class="priority-badge normal">Normal</span>
-                                </td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <tr class="task-row" data-task-id="2">
-                                <td>Task #12346</td>
-                                <td>12-3</td>
-                                <td>Room Cleaning - Conference Hall</td>
-                                <td>
-                                    <span class="status-badge executing">Executing</span>
-                                </td>
-                                <td>Robot #3</td>
-                                <td>C12</td>
-                                <td>14:50:15</td>
-                                <td>
-                                    <span class="priority-badge high">High</span>
-                                </td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <tr class="task-row" data-task-id="3">
-                                <td>Task #12347</td>
-                                <td>机场行李运输</td>
-                                <td>Airport Luggage Transport</td>
-                                <td>
-                                    <span class="status-badge assigned">Assigned</span>
-                                </td>
-                                <td>Robot #5</td>
-                                <td>复材车间</td>
-                                <td>15:00:00</td>
-                                <td>
-                                    <span class="priority-badge normal">Normal</span>
-                                </td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <tr class="task-row" data-task-id="4">
-                                <td>Task #12348</td>
-                                <td>飞速达</td>
-                                <td>Medical Supply Delivery</td>
-                                <td>
-                                    <span class="status-badge completed">Completed</span>
-                                </td>
-                                <td>Robot #2</td>
-                                <td>零件加工中心</td>
-                                <td>14:30:45</td>
-                                <td>
-                                    <span class="priority-badge high">High</span>
-                                </td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <tr class="task-row" data-task-id="5">
-                                <td>Task #12349</td>
-                                <td>机场巡检</td>
-                                <td>Airport Patrol - Terminal 2</td>
-                                <td>
-                                    <span class="status-badge pending">Pending</span>
-                                </td>
-                                <td>Robot #9</td>
-                                <td>C11</td>
-                                <td>15:15:30</td>
-                                <td>
-                                    <span class="priority-badge low">Low</span>
-                                </td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Pagination -->
-                <div class="pagination">
-                    <button class="btn-page">Previous</button>
-                    <button class="btn-page active">1</button>
-                    <button class="btn-page">2</button>
-                    <button class="btn-page">3</button>
-                    <button class="btn-page">Next</button>
-                </div>
-            </section>
-            
-            <!-- Task Details Page -->
-            <section id="task-details-page" class="page">
-                <div class="page-header">
-                    <button class="btn btn-back" id="back-to-list">← Back to Task List</button>
-                    <h2>Task Details</h2>
-                </div>
-                
-                <!-- Task Information -->
-                <div class="task-info">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Task ID:</label>
-                            <span>Task #12345</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Task Type:</label>
-                            <span>飞速达</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Task Name:</label>
-                            <span>Package Delivery to Floor 3</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Status:</label>
-                            <span class="status-badge en-route">En Route</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Priority:</label>
-                            <span class="priority-badge normal">Normal</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Robot:</label>
-                            <span>Robot #7</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Current Location:</label>
-                            <span>Elevator, 2nd Floor</span>
-                        </div>
-                        <div class="info-item">
-                            <label>工作域:</label>
-                            <span>C11</span>
-                        </div>
-                        <div class="info-item">
-                            <label>ETA:</label>
-                            <span>14:45:30</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Start Time:</label>
-                            <span>14:32:15</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Estimated Duration:</label>
-                            <span>13 min 15 sec</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Progress:</label>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 60%;"></div>
+            <!-- Page Content -->
+            <div class="flex-1 p-6">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page-content active">
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Total Robots -->
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-secondary text-sm font-medium">Total Robots</p>
+                                    <p class="text-3xl font-bold text-sidebar mt-2">24</p>
+                                </div>
+                                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                    </svg>
+                                </div>
                             </div>
-                            <span>60%</span>
+                            <p class="text-success text-sm mt-3 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                </svg>
+                                2 new this week
+                            </p>
+                        </div>
+                        
+                        <!-- Active Tasks -->
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-secondary text-sm font-medium">Active Tasks</p>
+                                    <p class="text-3xl font-bold text-sidebar mt-2">18</p>
+                                </div>
+                                <div class="w-12 h-12 bg-executing/10 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-executing" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-executing text-sm mt-3 flex items-center gap-1">
+                                <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                3 executing now
+                            </p>
+                        </div>
+                        
+                        <!-- Online Devices -->
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-secondary text-sm font-medium">Online Devices</p>
+                                    <p class="text-3xl font-bold text-sidebar mt-2">21</p>
+                                </div>
+                                <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-success text-sm mt-3 flex items-center gap-1">
+                                <span class="w-2 h-2 bg-success rounded-full animate-pulse"></span>
+                                87.5% online rate
+                            </p>
+                        </div>
+                        
+                        <!-- Completed Today -->
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-secondary text-sm font-medium">Completed Today</p>
+                                    <p class="text-3xl font-bold text-sidebar mt-2">47</p>
+                                </div>
+                                <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-success text-sm mt-3 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                </svg>
+                                12% increase
+                            </p>
                         </div>
                     </div>
                     
-                    <!-- Actions -->
-                    <div class="task-actions">
-                        <button class="btn btn-delete" id="detailDeleteBtn">Delete</button>
-                    </div>
-                </div>
-                
-                <!-- Robot Location Map -->
-                <div class="robot-location">
-                    <h3>Current Robot Location</h3>
-                    <div class="map-snippet">
-                        <div class="map-placeholder">
-                            <div class="building-layout">
-                                <div class="floor floor-1">
-                                    <span class="floor-label">1st Floor</span>
-                                    <div class="room">Lobby</div>
-                                    <div class="room">Conference Hall</div>
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-8">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Quick Actions</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <a href="#" onclick="showPage('task-list'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
+                                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                    </svg>
                                 </div>
-                                <div class="floor floor-2">
-                                    <span class="floor-label">2nd Floor</span>
-                                    <div class="room">Offices</div>
-                                    <div class="elevator active">Elevator</div>
+                                <span class="font-medium text-text-primary">View Tasks</span>
+                            </a>
+                            
+                            <a href="#" onclick="showPage('task-queue'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
+                                <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center group-hover:bg-warning/20 transition-colors">
+                                    <svg class="w-5 h-5 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                    </svg>
                                 </div>
-                                <div class="floor floor-3">
-                                    <span class="floor-label">3rd Floor</span>
-                                    <div class="room">Executive Suite</div>
-                                    <div class="room">Meeting Rooms</div>
+                                <span class="font-medium text-text-primary">Task Queue</span>
+                            </a>
+                            
+                            <a href="#" onclick="showPage('device-list'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
+                                <div class="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center group-hover:bg-success/20 transition-colors">
+                                    <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                    </svg>
                                 </div>
-                                <div class="robot-marker">🤖</div>
-                            </div>
-                        </div>
-                        <div class="location-details">
-                            <p>Robot #7 is currently in the elevator on the 2nd floor, en route to the 3rd floor for package delivery.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Task Steps -->
-                <div class="task-steps">
-                    <div class="task-steps-header">
-                        <h3>Task Steps</h3>
-                        <button class="btn-view-toggle" id="viewToggleBtn" title="Toggle View">
-                            <span class="icon-table" style="display: none;">📊</span>
-                            <span class="icon-tree">🌳</span>
-                        </button>
-                    </div>
-                    <div class="steps-table-container" id="tableView" style="display: none;">
-                        <table class="steps-table">
-                            <thead>
-                                <tr>
-                                    <th>Step</th>
-                                    <th>Status</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Duration</th>
-                                    <th>Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1. Leave Charging Station</td>
-                                    <td>
-                                        <span class="status-badge completed">Completed</span>
-                                    </td>
-                                    <td>14:32:15</td>
-                                    <td>14:32:47</td>
-                                    <td>32s</td>
-                                    <td>Robot left charging station successfully</td>
-                                </tr>
-                                <tr>
-                                    <td>2. Navigate to Elevator</td>
-                                    <td>
-                                        <span class="status-badge completed">Completed</span>
-                                    </td>
-                                    <td>14:32:47</td>
-                                    <td>14:33:20</td>
-                                    <td>33s</td>
-                                    <td>Robot navigated to elevator on 1st floor</td>
-                                </tr>
-                                <tr>
-                                    <td>3. Wait for Elevator</td>
-                                    <td>
-                                        <span class="status-badge completed">Completed</span>
-                                    </td>
-                                    <td>14:33:20</td>
-                                    <td>14:34:05</td>
-                                    <td>45s</td>
-                                    <td>Robot waited for elevator to arrive</td>
-                                </tr>
-                                <tr>
-                                    <td>4. Take Elevator to 3rd Floor</td>
-                                    <td>
-                                        <span class="status-badge executing">Executing</span>
-                                    </td>
-                                    <td>14:34:05</td>
-                                    <td>-</td>
-                                    <td>25s</td>
-                                    <td>Robot is currently in elevator</td>
-                                </tr>
-                                <tr>
-                                    <td>5. Navigate to Room 301</td>
-                                    <td>
-                                        <span class="status-badge pending">Pending</span>
-                                    </td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>Robot will navigate to Room 301</td>
-                                </tr>
-                                <tr>
-                                    <td>6. Deliver Package</td>
-                                    <td>
-                                        <span class="status-badge pending">Pending</span>
-                                    </td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>Robot will deliver package to recipient</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="steps-tree-container" id="treeView">
-                        <div class="tree-root">
-                            <div class="tree-node">
-                                <div class="node-content">
-                                    <span class="node-icon">🚀</span>
-                                    <span class="node-text">Start Task: Package Delivery to Floor 3</span>
-                                    <span class="node-status completed">✓</span>
+                                <span class="font-medium text-text-primary">Devices</span>
+                            </a>
+                            
+                            <a href="#" onclick="showPage('models'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
+                                <div class="w-10 h-10 bg-executing/10 rounded-lg flex items-center justify-center group-hover:bg-executing/20 transition-colors">
+                                    <svg class="w-5 h-5 text-executing" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                    </svg>
                                 </div>
-                                <div class="tree-children">
-                                    <div class="tree-node">
-                                        <div class="node-content">
-                                            <span class="node-icon">🔋</span>
-                                            <span class="node-text">1. Leave Charging Station</span>
-                                            <span class="node-status completed">✓</span>
-                                        </div>
-                                        <div class="node-details">
-                                            <span class="detail-item">14:32:15 - 14:32:47 (32s)</span>
-                                            <span class="detail-desc">Robot left charging station successfully</span>
-                                        </div>
-                                    </div>
-                                    <div class="tree-node">
-                                        <div class="node-content">
-                                            <span class="node-icon">🧭</span>
-                                            <span class="node-text">2. Navigate to Elevator</span>
-                                            <span class="node-status completed">✓</span>
-                                        </div>
-                                        <div class="node-details">
-                                            <span class="detail-item">14:32:47 - 14:33:20 (33s)</span>
-                                            <span class="detail-desc">Robot navigated to elevator on 1st floor</span>
-                                        </div>
-                                    </div>
-                                    <div class="tree-node">
-                                        <div class="node-content">
-                                            <span class="node-icon">⏳</span>
-                                            <span class="node-text">3. Wait for Elevator</span>
-                                            <span class="node-status completed">✓</span>
-                                        </div>
-                                        <div class="node-details">
-                                            <span class="detail-item">14:33:20 - 14:34:05 (45s)</span>
-                                            <span class="detail-desc">Robot waited for elevator to arrive</span>
-                                        </div>
-                                    </div>
-                                    <div class="tree-node">
-                                        <div class="node-content">
-                                            <span class="node-icon">🛗</span>
-                                            <span class="node-text">4. Take Elevator to 3rd Floor</span>
-                                            <span class="node-status executing">⚡</span>
-                                        </div>
-                                        <div class="node-details">
-                                            <span class="detail-item">14:34:05 - (25s)</span>
-                                            <span class="detail-desc">Robot is currently in elevator</span>
-                                        </div>
-                                        <div class="tree-children">
-                                            <div class="tree-node">
-                                                <div class="node-content">
-                                                    <span class="node-icon">🚶</span>
-                                                    <span class="node-text">5. Navigate to Room 301</span>
-                                                    <span class="node-status pending">⏳</span>
-                                                </div>
-                                                <div class="node-details">
-                                                    <span class="detail-item">Pending</span>
-                                                    <span class="detail-desc">Robot will navigate to Room 301</span>
-                                                </div>
-                                            </div>
-                                            <div class="tree-node">
-                                                <div class="node-content">
-                                                    <span class="node-icon">📦</span>
-                                                    <span class="node-text">6. Deliver Package</span>
-                                                    <span class="node-status pending">⏳</span>
-                                                </div>
-                                                <div class="node-details">
-                                                    <span class="detail-item">Pending</span>
-                                                    <span class="detail-desc">Robot will deliver package to recipient</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Task Queue Page -->
-            <section id="task-queue-page" class="page">
-                <div class="page-header">
-                    <h2>Task Queue</h2>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary">Add to Queue</button>
-                        <button class="btn btn-secondary">Refresh</button>
-                    </div>
-                </div>
-                
-                <!-- Queue Info -->
-                <div class="queue-info">
-                    <div class="queue-stats">
-                        <div class="stat-card">
-                            <span class="stat-label">Pending Tasks</span>
-                            <span class="stat-value">12</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-label">In Progress</span>
-                            <span class="stat-value">3</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-label">Completed Today</span>
-                            <span class="stat-value">28</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Search and Filter -->
-                <div class="search-filter">
-                    <div class="search">
-                        <input type="text" placeholder="Search queue...">
-                        <button class="btn-search">🔍</button>
-                    </div>
-                    <div class="filter">
-                        <select>
-                            <option value="all">All Priorities</option>
-                            <option value="high">High</option>
-                            <option value="normal">Normal</option>
-                            <option value="low">Low</option>
-                        </select>
-                        <select>
-                            <option value="all">All Robots</option>
-                            <option value="robot1">Robot #1</option>
-                            <option value="robot2">Robot #2</option>
-                            <option value="robot3">Robot #3</option>
-                            <option value="robot4">Robot #4</option>
-                            <option value="robot5">Robot #5</option>
-                        </select>
-                        <select>
-                            <option value="all">All 工作域</option>
-                            <option value="c11">C11</option>
-                            <option value="c12">C12</option>
-                            <option value="c13">C13</option>
-                            <option value="复材车间">复材车间</option>
-                            <option value="零件加工中心">零件加工中心</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Queue Table -->
-                <div class="task-table-container">
-                    <table class="task-table">
-                        <thead>
-                            <tr>
-                                <th>Queue Position</th>
-                                <th>Task ID</th>
-                                <th>Task Type</th>
-                                <th>Task Name</th>
-                                <th>Status</th>
-                                <th>Priority</th>
-                                <th>Assigned Robot</th>
-                                <th>工作域</th>
-                                <th>Created</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="task-row running" data-task-id="q2">
-                                <td>1</td>
-                                <td>Task #Q1002</td>
-                                <td>12-3</td>
-                                <td>Room Cleaning - Meeting Room A</td>
-                                <td>
-                                    <span class="status-badge running">Running</span>
-                                </td>
-                                <td>
-                                    <span class="priority-badge normal">Normal</span>
-                                </td>
-                                <td>Robot #7</td>
-                                <td>C12</td>
-                                <td>14:25:00</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Remove</button>
-                                </td>
-                            </tr>
-                            <tr class="task-row pending" data-task-id="q1">
-                                <td>
-                                    <span class="queue-pos">2</span>
-                                    <div class="position-controls">
-                                        <button class="btn-move-up" title="Move Up">↑</button>
-                                        <button class="btn-move-down" title="Move Down">↓</button>
-                                    </div>
-                                </td>
-                                <td>Task #Q1001</td>
-                                <td>飞速达</td>
-                                <td>Package Delivery to Floor 5</td>
-                                <td>
-                                    <span class="status-badge pending">Pending</span>
-                                </td>
-                                <td>
-                                    <span class="priority-badge high">High</span>
-                                </td>
-                                <td>Robot #3</td>
-                                <td>C11</td>
-                                <td>14:30:00</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Remove</button>
-                                </td>
-                            </tr>
-                            <tr class="task-row pending" data-task-id="q3">
-                                <td>
-                                    <span class="queue-pos">3</span>
-                                    <div class="position-controls">
-                                        <button class="btn-move-up" title="Move Up">↑</button>
-                                        <button class="btn-move-down" title="Move Down">↓</button>
-                                    </div>
-                                </td>
-                                <td>Task #Q1003</td>
-                                <td>机场巡检</td>
-                                <td>Airport Patrol - Terminal 1</td>
-                                <td>
-                                    <span class="status-badge pending">Pending</span>
-                                </td>
-                                <td>
-                                    <span class="priority-badge low">Low</span>
-                                </td>
-                                <td>Robot #9</td>
-                                <td>复材车间</td>
-                                <td>14:20:00</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Remove</button>
-                                </td>
-                            </tr>
-                            <tr class="task-row pending" data-task-id="q4">
-                                <td>
-                                    <span class="queue-pos">4</span>
-                                    <div class="position-controls">
-                                        <button class="btn-move-up" title="Move Up">↑</button>
-                                        <button class="btn-move-down" title="Move Down">↓</button>
-                                    </div>
-                                </td>
-                                <td>Task #Q1004</td>
-                                <td>配送</td>
-                                <td>Warehouse Transfer</td>
-                                <td>
-                                    <span class="status-badge pending">Pending</span>
-                                </td>
-                                <td>
-                                    <span class="priority-badge normal">Normal</span>
-                                </td>
-                                <td>Robot #5</td>
-                                <td>零件加工中心</td>
-                                <td>14:15:00</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-delete">Remove</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Pagination -->
-                <div class="pagination">
-                    <button class="btn-page">Previous</button>
-                    <button class="btn-page active">1</button>
-                    <button class="btn-page">2</button>
-                    <button class="btn-page">3</button>
-                    <button class="btn-page">Next</button>
-                </div>
-            </section>
-            
-            <!-- Devices Module Pages -->
-            <!-- Device List Page -->
-            <section id="device-list-page" class="page">
-                <div class="page-header">
-                    <h2>Device List</h2>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary">Add New Device</button>
-                        <button class="btn btn-secondary">Refresh</button>
-                    </div>
-                </div>
-                
-                <!-- Search and Filter -->
-                <div class="search-filter">
-                    <div class="search">
-                        <input type="text" placeholder="Search devices...">
-                        <button class="btn-search">🔍</button>
-                    </div>
-                    <div class="filter">
-                        <select>
-                            <option value="all">All Types</option>
-                            <option value="robot">Robots</option>
-                            <option value="elevator">Elevators</option>
-                            <option value="door">Doors</option>
-                        </select>
-                        <select>
-                            <option value="all">All Statuses</option>
-                            <option value="online">Online</option>
-                            <option value="offline">Offline</option>
-                            <option value="maintenance">Maintenance</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Device Table -->
-                <div class="task-table-container">
-                    <table class="task-table">
-                        <thead>
-                            <tr>
-                                <th>Device ID</th>
-                                <th>Device Name</th>
-                                <th>Model</th>
-                                <th>Brand</th>
-                                <th>Status</th>
-                                <th>Battery</th>
-                                <th>Current Task</th>
-                                <th>Location</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Tianti Series Robots -->
-                            <tr class="device-row" data-device-id="1">
-                                <td>TZ123_001</td>
-                                <td>天体0号</td>
-                                <td>抱箱机器人</td>
-                                <td>TZC123</td>
-                                <td>Tianti</td>
-                                <td>
-                                    <span class="status-badge online">Online</span>
-                                </td>
-                                <td>85%</td>
-                                <td>Package Delivery</td>
-                                <td>2nd Floor, Office Area</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-edit">Edit</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <tr class="device-row" data-device-id="2">
-                                <td>TZ122_002</td>
-                                <td>天体1号</td>
-                                <td>12-3蜂巢车</td>
-                                <td>TZC122</td>
-                                <td>Tianti</td>
-                                <td>
-                                    <span class="status-badge online">Online</span>
-                                </td>
-                                <td>92%</td>
-                                <td>Cleaning Task</td>
-                                <td>3rd Floor, Conference Area</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-edit">Edit</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <!-- Other Brand Robots -->
-                            <tr class="device-row" data-device-id="3">
-                                <td>XG-001</td>
-                                <td>XG-R1</td>
-                                <td>MIR-100</td>
-                                <td>XG-R1</td>
-                                <td>仙工</td>
-                                <td>
-                                    <span class="status-badge online">Online</span>
-                                </td>
-                                <td>78%</td>
-                                <td>Warehouse Transfer</td>
-                                <td>1st Floor, Warehouse</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-edit">Edit</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <tr class="device-row" data-device-id="4">
-                                <td>MIR-001</td>
-                                <td>MiR200</td>
-                                <td>MIR-100</td>
-                                <td>MiR200</td>
-                                <td>MiR</td>
-                                <td>
-                                    <span class="status-badge offline">Offline</span>
-                                </td>
-                                <td>0%</td>
-                                <td>N/A</td>
-                                <td>Basement, Maintenance Area</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-edit">Edit</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <!-- Elevator -->
-                            <tr class="device-row" data-device-id="5">
-                                <td>ELV-001</td>
-                                <td>Elevator-1</td>
-                                <td>ELEV-200</td>
-                                <td>Gen2</td>
-                                <td>Otis</td>
-                                <td>
-                                    <span class="status-badge online">Online</span>
-                                </td>
-                                <td>N/A</td>
-                                <td>Idle</td>
-                                <td>Main Lobby</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-edit">Edit</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                            <!-- Door -->
-                            <tr class="device-row" data-device-id="6">
-                                <td>DR-001</td>
-                                <td>Main Entrance</td>
-                                <td>Door</td>
-                                <td>AS2000</td>
-                                <td>Assa Abloy</td>
-                                <td>
-                                    <span class="status-badge online">Online</span>
-                                </td>
-                                <td>N/A</td>
-                                <td>Idle</td>
-                                <td>Ground Floor</td>
-                                <td>
-                                    <button class="btn-view-details">View Details</button>
-                                    <button class="btn-edit">Edit</button>
-                                    <button class="btn-delete">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Pagination -->
-                <div class="pagination">
-                    <button class="btn-page">Previous</button>
-                    <button class="btn-page active">1</button>
-                    <button class="btn-page">2</button>
-                    <button class="btn-page">3</button>
-                    <button class="btn-page">Next</button>
-                </div>
-            </section>
-            
-            <!-- Device Details Page -->
-            <section id="device-details-page" class="page">
-                <div class="page-header">
-                    <button class="btn btn-back" id="back-to-device-list">← Back to Device List</button>
-                    <h2>Device Details</h2>
-                </div>
-                
-                <!-- 1st Part: Basic Info -->
-                <div class="device-basic-info">
-                    <div class="device-image">
-                        <img id="device-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=autonomous%20mobile%20robot%20for%20indoor%20delivery%20in%20office%20environment%2C%20modern%20design%2C%20white%20and%20blue%20color%2C%20professional%20photography&image_size=portrait_4_3" alt="Device Image">
-                    </div>
-                    <div class="basic-info-content">
-                        <h3>Basic Information</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <label>Device ID:</label>
-                                <span>TZ123_001</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Device Name:</label>
-                                <span>天体0号</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Model:</label>
-                                <span>抱箱机器人</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Brand:</label>
-                                <span>Tianti</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Status:</label>
-                                <span class="status-badge online">Online</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Battery Level:</label>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 85%;"></div>
-                                </div>
-                                <span>85%</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Location:</label>
-                                <span>2nd Floor, Office Area</span>
-                            </div>
-                        </div>
-                        <!-- Actions -->
-                        <div class="device-actions">
-                            <button class="btn btn-primary">Edit Device</button>
-                            <button class="btn btn-secondary">Reboot</button>
-                            <button class="btn btn-delete">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 2nd Part: Real-time Info Window -->
-                <div class="real-time-info">
-                    <h3>Real-time Information</h3>
-                    <div class="info-card">
-                        <div class="info-row">
-                            <div class="info-section">
-                                <h4>Connection & Mission</h4>
-                                <div class="info-item">
-                                    <label>Connection State:</label>
-                                    <span class="status-value connected">Online</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>Current Mission:</label>
-                                    <span>Moving to Dock 5</span>
-                                </div>
-                            </div>
-                            <div class="info-section">
-                                <h4>Location</h4>
-                                <div class="info-item">
-                                    <label>Current Location:</label>
-                                    <span>2nd Floor, Office Area</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>Coordinates:</label>
-                                    <span>X: 12.5, Y: 8.3, Floor: 2</span>
-                                </div>
-                                <div class="map-snippet">
-                                    <div class="building-layout">
-                                        <div class="floor floor-1">
-                                            <span class="floor-label">1st Floor</span>
-                                            <div class="room">Lobby</div>
-                                            <div class="room">Conference Hall</div>
-                                        </div>
-                                        <div class="floor floor-2">
-                                            <span class="floor-label">2nd Floor</span>
-                                            <div class="room">Offices</div>
-                                            <div class="room active">Office Area</div>
-                                        </div>
-                                        <div class="floor floor-3">
-                                            <span class="floor-label">3rd Floor</span>
-                                            <div class="room">Executive Suite</div>
-                                            <div class="room">Meeting Rooms</div>
-                                        </div>
-                                        <div class="robot-marker">🤖</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-section">
-                                <h4>Battery & Power</h4>
-                                <div class="info-item">
-                                    <label>State of Charge:</label>
-                                    <span>85%</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>Status:</label>
-                                    <span>Discharging</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>Time Remaining:</label>
-                                    <span>2h 30m</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>Temperature:</label>
-                                    <span>25°C</span>
-                                </div>
-                            </div>
-                            <div class="info-section">
-                                <h4>Movement & Safety</h4>
-                                <div class="info-item">
-                                    <label>Current Speed:</label>
-                                    <span>0.8 m/s</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>Direction:</label>
-                                    <span>North</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>Safety Status:</label>
-                                    <span class="status-value connected">Normal</span>
-                                </div>
-                                <div class="info-item">
-                                    <label>E-Stop:</label>
-                                    <span>Not Active</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Real-time Graphs -->
-                <div class="real-time-graphs">
-                    <div class="graph-row">
-                        <div class="graph-section">
-                            <h4>Velocity Over Time</h4>
-                            <div class="graph-container">
-                                <canvas id="velocityChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="graph-section">
-                            <h4>Acceleration & Angular Acceleration</h4>
-                            <div class="graph-container">
-                                <canvas id="accelerationChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 3rd Part: Static Specifications -->
-                <div class="static-specs">
-                    <h3>Static Specifications</h3>
-                    <div class="specs-grid">
-                        <div class="specs-section">
-                            <h4>Physical Dimensions</h4>
-                            <div class="info-item">
-                                <label>Length x Width x Height:</label>
-                                <span>500mm x 400mm x 350mm</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Turn Radius:</label>
-                                <span>Zero (Differential Drive)</span>
-                            </div>
-                        </div>
-                        <div class="specs-section">
-                            <h4>Operational Capabilities</h4>
-                            <div class="info-item">
-                                <label>Max Speed (Laden):</label>
-                                <span>1.2 m/s</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Max Speed (Unladen):</label>
-                                <span>1.5 m/s</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Max Payload:</label>
-                                <span>50 kg</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Lift Height:</label>
-                                <span>Not applicable</span>
-                            </div>
-                        </div>
-                        <div class="specs-section">
-                            <h4>Interfaces & Connectivity</h4>
-                            <div class="info-item">
-                                <label>Communication Protocol:</label>
-                                <span>WiFi 5GHz, Ethernet</span>
-                            </div>
-                            <div class="info-item">
-                                <label>I/O Ports:</label>
-                                <span>2x USB, 1x RS-485</span>
-                            </div>
-                            <div class="info-item">
-                                <label>IP Address:</label>
-                                <span>192.168.1.101</span>
-                            </div>
-                            <div class="info-item">
-                                <label>MAC Address:</label>
-                                <span>00:1B:44:11:3A:B7</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 4th Part: Statistics -->
-                <div class="device-statistics">
-                    <h3>Statistics</h3>
-                    <div class="stats-grid">
-                        <div class="stats-section">
-                            <h4>Odometry Data</h4>
-                            <div class="info-item">
-                                <label>Total Distance Traveled:</label>
-                                <span>1,245 meters</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Total Operating Time:</label>
-                                <span>48 hours</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Average Speed:</label>
-                                <span>0.6 m/s</span>
-                            </div>
-                        </div>
-                        <div class="stats-section">
-                            <h4>Performance Metrics</h4>
-                            <div class="info-item">
-                                <label>Mission Success Rate:</label>
-                                <span>98.5%</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Average Mission Time:</label>
-                                <span>8.5 minutes</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Maintenance Intervals:</label>
-                                <span>Every 500 hours</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Recent Activity -->
-                <div class="task-steps">
-                    <h3>Recent Activity</h3>
-                    <div class="steps-table-container">
-                        <table class="steps-table">
-                            <thead>
-                                <tr>
-                                    <th>Time</th>
-                                    <th>Activity</th>
-                                    <th>Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2026-02-24 14:30:00</td>
-                                    <td>Status Change</td>
-                                    <td>Changed from 'Maintenance' to 'Online'</td>
-                                </tr>
-                                <tr>
-                                    <td>2026-02-24 14:25:00</td>
-                                    <td>Maintenance</td>
-                                    <td>Firmware updated to v1.2.3</td>
-                                </tr>
-                                <tr>
-                                    <td>2026-02-24 10:15:00</td>
-                                    <td>Task Completed</td>
-                                    <td>Completed task #12345</td>
-                                </tr>
-                                <tr>
-                                    <td>2026-02-24 08:00:00</td>
-                                    <td>System Boot</td>
-                                    <td>System started successfully</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Models Module Pages -->
-            <!-- Model List Page -->
-            <section id="model-list-page" class="page">
-                <div class="page-header">
-                    <h2>Model List</h2>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" id="addModelBtn">Add New Model</button>
-                        <button class="btn btn-secondary">Refresh</button>
-                    </div>
-                </div>
-                
-                <!-- Base Model Categories -->
-                <div class="base-model-categories">
-                    <div class="base-model-section">
-                        <h3>天体机器人</h3>
-                        <div class="model-grid">
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <h4>抱箱机器人</h4>
-                                    <span class="model-id">TBT-001</span>
-                                </div>
-                                <div class="model-body">
-                                    <div class="model-info">
-                                        <span class="info-label">Base Model:</span>
-                                        <span class="info-value">天体机器人</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Description:</span>
-                                        <span class="info-value">Box carrying robot for indoor delivery</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Status:</span>
-                                        <span class="status-badge active">Active</span>
-                                    </div>
-                                </div>
-                                <div class="model-actions">
-                                    <button class="btn-view-model">View Details</button>
-                                </div>
-                            </div>
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <h4>12-3蜂巢车</h4>
-                                    <span class="model-id">TBT-002</span>
-                                </div>
-                                <div class="model-body">
-                                    <div class="model-info">
-                                        <span class="info-label">Base Model:</span>
-                                        <span class="info-value">天体机器人</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Description:</span>
-                                        <span class="info-value">Hive transport vehicle for warehouse</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Status:</span>
-                                        <span class="status-badge active">Active</span>
-                                    </div>
-                                </div>
-                                <div class="model-actions">
-                                    <button class="btn-view-model">View Details</button>
-                                </div>
-                            </div>
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <h4>新疆机场行李运送车</h4>
-                                    <span class="model-id">TBT-003</span>
-                                </div>
-                                <div class="model-body">
-                                    <div class="model-info">
-                                        <span class="info-label">Base Model:</span>
-                                        <span class="info-value">天体机器人</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Description:</span>
-                                        <span class="info-value">Airport luggage transport vehicle</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Status:</span>
-                                        <span class="status-badge active">Active</span>
-                                    </div>
-                                </div>
-                                <div class="model-actions">
-                                    <button class="btn-view-model">View Details</button>
-                                </div>
-                            </div>
+                                <span class="font-medium text-text-primary">Models</span>
+                            </a>
                         </div>
                     </div>
                     
-                    <div class="base-model-section">
-                        <h3>米尔机器人</h3>
-                        <div class="model-grid">
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <h4>MIR-100</h4>
-                                    <span class="model-id">MIR-001</span>
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Recent Activity</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-3 rounded-lg hover:bg-bg-light transition-colors">
+                                <div class="w-10 h-10 bg-success/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
                                 </div>
-                                <div class="model-body">
-                                    <div class="model-info">
-                                        <span class="info-label">Base Model:</span>
-                                        <span class="info-value">米尔机器人</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Description:</span>
-                                        <span class="info-value">Standard industrial robot</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Status:</span>
-                                        <span class="status-badge active">Active</span>
-                                    </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-text-primary">Task #12345 completed</p>
+                                    <p class="text-sm text-text-secondary mt-1">Package delivery to Floor 3 - Robot #7</p>
                                 </div>
-                                <div class="model-actions">
-                                    <button class="btn-view-model">View Details</button>
-                                </div>
+                                <span class="text-sm text-text-light">2 min ago</span>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="base-model-section">
-                        <h3>电梯</h3>
-                        <div class="model-grid">
-                            <div class="model-card">
-                                <div class="model-header">
-                                    <h4>ELEV-200</h4>
-                                    <span class="model-id">ELV-001</span>
+                            
+                            <div class="flex items-start gap-4 p-3 rounded-lg hover:bg-bg-light transition-colors">
+                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                    </svg>
                                 </div>
-                                <div class="model-body">
-                                    <div class="model-info">
-                                        <span class="info-label">Base Model:</span>
-                                        <span class="info-value">电梯</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Description:</span>
-                                        <span class="info-value">Standard elevator system</span>
-                                    </div>
-                                    <div class="model-info">
-                                        <span class="info-label">Status:</span>
-                                        <span class="status-badge active">Active</span>
-                                    </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-text-primary">Device TZ123_001 came online</p>
+                                    <p class="text-sm text-text-secondary mt-1">Robot 天体0号 connected from 2nd Floor</p>
                                 </div>
-                                <div class="model-actions">
-                                    <button class="btn-view-model">View Details</button>
+                                <span class="text-sm text-text-light">15 min ago</span>
+                            </div>
+                            
+                            <div class="flex items-start gap-4 p-3 rounded-lg hover:bg-bg-light transition-colors">
+                                <div class="w-10 h-10 bg-warning/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                    </svg>
                                 </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-text-primary">Low battery warning</p>
+                                    <p class="text-sm text-text-secondary mt-1">Robot XG-R1 battery at 15% - returning to charger</p>
+                                </div>
+                                <span class="text-sm text-text-light">32 min ago</span>
+                            </div>
+                            
+                            <div class="flex items-start gap-4 p-3 rounded-lg hover:bg-bg-light transition-colors">
+                                <div class="w-10 h-10 bg-executing/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-executing" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-text-primary">New task started</p>
+                                    <p class="text-sm text-text-secondary mt-1">Airport luggage transport - Robot #9</p>
+                                </div>
+                                <span class="text-sm text-text-light">1 hour ago</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Add Model Modal -->
-            <div id="addModelModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Add New Model</h3>
-                        <button class="modal-close" id="closeModelModal">&times;</button>
+                
+                <!-- Task List Page -->
+                <div id="task-list" class="page-content">
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <button class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors flex items-center gap-2 font-medium">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Add New Task
+                            </button>
+                            <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                        <p class="text-text-secondary text-sm">Total: <span class="font-semibold text-text-primary">156 tasks</span></p>
                     </div>
-                    <div class="modal-body">
-                        <form id="addModelForm">
-                            <div class="form-group">
-                                <label for="modelName">Model Name:</label>
-                                <input type="text" id="modelName" name="modelName" required>
+
+                    <!-- Search and Filters -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-4 mb-6">
+                        <div class="flex flex-wrap gap-4">
+                            <!-- Search -->
+                            <div class="flex-1 min-w-[250px]">
+                                <div class="relative">
+                                    <input type="text" placeholder="Search tasks by name or ID..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                    <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="baseModel">Base Model:</label>
-                                <select id="baseModel" name="baseModel" required>
-                                    <option value="">Select Base Model</option>
-                                    <option value="天体机器人">天体机器人</option>
-                                    <option value="米尔机器人">米尔机器人</option>
-                                    <option value="电梯">电梯</option>
+                            <!-- Status Filter -->
+                            <div class="w-48">
+                                <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                                    <option>All Statuses</option>
+                                    <option>Pending</option>
+                                    <option>Assigned</option>
+                                    <option>En Route</option>
+                                    <option>Executing</option>
+                                    <option>Completed</option>
+                                    <option>Failed</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="modelDescription">Model Description:</label>
-                                <textarea id="modelDescription" name="modelDescription" rows="4" required></textarea>
+                            <!-- Robot Filter -->
+                            <div class="w-48">
+                                <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                                    <option>All Robots</option>
+                                    <option>Robot #1</option>
+                                    <option>Robot #2</option>
+                                    <option>Robot #3</option>
+                                    <option>Robot #4</option>
+                                    <option>Robot #5</option>
+                                </select>
                             </div>
-                            <div class="form-group">
-                                <label for="modelFile">Upload Model Description File:</label>
-                                <input type="file" id="modelFile" name="modelFile" accept=".txt,.pdf,.doc,.docx">
-                                <small>Supported formats: .txt, .pdf, .doc, .docx</small>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" id="cancelModelBtn">Cancel</button>
-                        <button class="btn btn-primary" id="saveModelBtn">Save Model</button>
+
+                    <!-- Task Table -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-bg-light sticky top-0">
+                                    <tr>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task ID</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Type</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Name</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Robot</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Work Area</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">ETA</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Priority</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-border-gray">
+                                    <!-- Row 1 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#12345</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Package Delivery to Floor 3</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">En Route</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #7</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C11</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">14:45:30</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 2 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#12346</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">12-3</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Room Service Delivery</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">Executing</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #3</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C12</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">14:50:00</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 3 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#12347</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">机场行李运输</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Airport Luggage Transport</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #9</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">复材车间</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">15:00:00</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white">Low</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 4 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#12348</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">配送</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Warehouse Inventory Move</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary text-white">Assigned</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #5</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C13</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">15:15:00</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 5 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#12349</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Document Delivery to Admin</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Completed</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #2</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C11</td>
+                                        <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="px-4 py-3 border-t border-border-gray flex items-center justify-between">
+                            <p class="text-sm text-text-secondary">Showing <span class="font-medium text-text-primary">1</span> to <span class="font-medium text-text-primary">5</span> of <span class="font-medium text-text-primary">156</span> results</p>
+                            <div class="flex items-center gap-1">
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Previous</button>
+                                <button class="px-3 py-1.5 text-sm rounded bg-primary text-white font-medium">1</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors">2</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors">3</button>
+                                <span class="px-2 text-text-secondary">...</span>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors">20</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Next</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Task Queue Page -->
+                <div id="task-queue" class="page-content">
+                    <h2 class="text-xl font-semibold text-sidebar mb-6">Task Queue</h2>
+                    <p class="text-text-secondary text-sm mb-8">Manage task priorities and queue order</p>
+                </div>
+                
+                <!-- Device List Page -->
+                <div id="device-list" class="page-content">
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <button onclick="openAddDeviceModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors flex items-center gap-2 font-medium">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Add New Device
+                            </button>
+                            <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                        <p class="text-text-secondary text-sm">Total: <span class="font-semibold text-text-primary">24 devices</span></p>
+                    </div>
+
+                    <!-- Search and Filters -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-4 mb-6">
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-[250px]">
+                                <div class="relative">
+                                    <input type="text" placeholder="Search devices..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                    <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="w-48">
+                                <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                                    <option>All Types</option>
+                                    <option>Robots</option>
+                                    <option>Elevators</option>
+                                    <option>Doors</option>
+                                </select>
+                            </div>
+                            <div class="w-48">
+                                <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                                    <option>All Statuses</option>
+                                    <option>Online</option>
+                                    <option>Offline</option>
+                                    <option>Maintenance</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Device Table -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-bg-light sticky top-0">
+                                    <tr>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Device ID</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Device Name</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Type</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Model</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Brand</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Battery</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Current Task</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Location</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-border-gray">
+                                    <!-- Row 1 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">TZ123_001</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">天体0号</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">Robot</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">TZC123</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Tianti</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Online</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-16 h-2 bg-border-gray rounded-full overflow-hidden">
+                                                    <div class="h-full bg-success rounded-full" style="width: 85%"></div>
+                                                </div>
+                                                <span class="text-xs font-medium text-text-primary">85%</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Task #12345</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">2nd Floor, Office</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 2 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">TZ122_002</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">天体1号</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">Robot</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">TZC122</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Tianti</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Online</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-16 h-2 bg-border-gray rounded-full overflow-hidden">
+                                                    <div class="h-full bg-success rounded-full" style="width: 92%"></div>
+                                                </div>
+                                                <span class="text-xs font-medium text-text-primary">92%</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Task #12346</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">1st Floor, Lobby</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 3 -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">XG-001</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">XG-R1</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">Robot</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">XG-R1</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">仙工</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Online</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-16 h-2 bg-border-gray rounded-full overflow-hidden">
+                                                    <div class="h-full bg-warning rounded-full" style="width: 45%"></div>
+                                                </div>
+                                                <span class="text-xs font-medium text-warning">45%</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Task #12347</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">3rd Floor, Suite</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 4 - Offline -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors bg-error/5">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">MIR-001</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">MiR200</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">Robot</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">MiR200</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">MiR</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">Offline</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-16 h-2 bg-border-gray rounded-full overflow-hidden">
+                                                    <div class="h-full bg-error rounded-full" style="width: 0%"></div>
+                                                </div>
+                                                <span class="text-xs font-medium text-error">0%</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                        <td class="px-4 py-3 text-sm text-text-light">Unknown</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 5 - Elevator -->
+                                    <tr class="hover:bg-bg-light cursor-pointer transition-colors">
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">ELV-001</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Elevator-1</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-executing/10 text-executing">Elevator</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Gen2</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Otis</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Online</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="text-xs text-text-light">N/A</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Building A</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="px-4 py-3 border-t border-border-gray flex items-center justify-between">
+                            <p class="text-sm text-text-secondary">Showing <span class="font-medium text-text-primary">1</span> to <span class="font-medium text-text-primary">5</span> of <span class="font-medium text-text-primary">24</span> devices</p>
+                            <div class="flex items-center gap-1">
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Previous</button>
+                                <button class="px-3 py-1.5 text-sm rounded bg-primary text-white font-medium">1</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors">2</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors">3</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Models Page -->
+                <div id="models" class="page-content">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-sidebar">Model Management</h2>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="relative">
+                                <input type="text" placeholder="Search models..." class="w-64 px-4 py-2 pl-10 border border-border-gray rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                                <svg class="w-5 h-5 text-text-secondary absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                            <select class="px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white">
+                                <option value="all">All Categories</option>
+                                <option value="tianti">天体机器人 (Tianti Robots)</option>
+                                <option value="mir">米尔机器人 (MiR Robots)</option>
+                                <option value="elevator">电梯 (Elevators)</option>
+                            </select>
+                            <select class="px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="openAddModelModal()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                                + Add New Model
+                            </button>
+                            <button class="px-4 py-2 bg-neutral text-white rounded-lg hover:bg-neutral/80 transition-colors font-medium">
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <section class="mb-8">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4 flex items-center gap-2">
+                            <span class="w-1 h-6 bg-primary rounded"></span>
+                            天体机器人 (Tianti Robots)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h4 class="text-lg font-semibold text-text-primary">抱箱机器人</h4>
+                                    <span class="px-2 py-1 bg-primary/10 text-primary text-xs font-semibold rounded">TBT-001</span>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">Box carrying robot for indoor delivery. Designed for warehouse and factory environments with high payload capacity.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-success/10 text-success text-xs font-semibold rounded-full">Active</span>
+                                    <button class="px-3 py-1 text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors text-sm">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h4 class="text-lg font-semibold text-text-primary">12-3蜂巢车</h4>
+                                    <span class="px-2 py-1 bg-primary/10 text-primary text-xs font-semibold rounded">TBT-002</span>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">Hive transport vehicle for warehouse. Optimized for narrow aisles and high-density storage systems.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-success/10 text-success text-xs font-semibold rounded-full">Active</span>
+                                    <button class="px-3 py-1 text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors text-sm">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h4 class="text-lg font-semibold text-text-primary">新疆机场行李运送车</h4>
+                                    <span class="px-2 py-1 bg-primary/10 text-primary text-xs font-semibold rounded">TBT-003</span>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">Airport luggage transport vehicle. Designed for airport terminals with advanced navigation and safety features.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-success/10 text-success text-xs font-semibold rounded-full">Active</span>
+                                    <button class="px-3 py-1 text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors text-sm">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="mb-8">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4 flex items-center gap-2">
+                            <span class="w-1 h-6 bg-success rounded"></span>
+                            米尔机器人 (MiR Robots)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h4 class="text-lg font-semibold text-text-primary">MiR-100</h4>
+                                    <span class="px-2 py-1 bg-success/10 text-success text-xs font-semibold rounded">MIR-001</span>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">Standard industrial robot for material handling. Supports various payload configurations.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-success/10 text-success text-xs font-semibold rounded-full">Active</span>
+                                    <button class="px-3 py-1 text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors text-sm">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h4 class="text-lg font-semibold text-text-primary">MiR-200</h4>
+                                    <span class="px-2 py-1 bg-success/10 text-success text-xs font-semibold rounded">MIR-002</span>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">Heavy-duty industrial robot with 200kg payload capacity. Ideal for manufacturing environments.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-success/10 text-success text-xs font-semibold rounded-full">Active</span>
+                                    <button class="px-3 py-1 text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors text-sm">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="mb-8">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4 flex items-center gap-2">
+                            <span class="w-1 h-6 bg-warning rounded"></span>
+                            电梯 (Elevators)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h4 class="text-lg font-semibold text-text-primary">ELEV-200</h4>
+                                    <span class="px-2 py-1 bg-warning/10 text-warning text-xs font-semibold rounded">ELV-001</span>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">Standard elevator system for building integration. Supports API control and scheduling.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-success/10 text-success text-xs font-semibold rounded-full">Active</span>
+                                    <button class="px-3 py-1 text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors text-sm">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="flex justify-center items-center gap-2 mt-8">
+                        <button class="px-4 py-2 border border-border-gray rounded-lg text-text-secondary hover:bg-bg-light transition-colors">Previous</button>
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg">1</button>
+                        <button class="px-4 py-2 border border-border-gray rounded-lg text-text-secondary hover:bg-bg-light transition-colors">2</button>
+                        <button class="px-4 py-2 border border-border-gray rounded-lg text-text-secondary hover:bg-bg-light transition-colors">3</button>
+                        <button class="px-4 py-2 border border-border-gray rounded-lg text-text-secondary hover:bg-bg-light transition-colors">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Reports Page -->
+                <div id="reports" class="page-content">
+                    <h2 class="text-xl font-semibold text-sidebar mb-6">Reports</h2>
+                    <p class="text-text-secondary text-sm mb-8">Generate and view system reports</p>
+                </div>
             </div>
-        </main>
             
             <!-- Footer -->
-            <footer class="footer">
-                <p>© 2026 Robot Management System</p>
+            <footer class="bg-white border-t border-border-gray px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-text-secondary">2026 Robot Management System. All rights reserved.</p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Documentation</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Support</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Privacy Policy</a>
+                    </div>
+                </div>
             </footer>
-        </div>
+        </main>
     </div>
     
     <!-- Add Device Modal -->
-    <div id="add-device-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Device</h3>
-                <span class="close-modal">&times;</span>
+    <div id="add-device-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/50" onclick="closeAddDeviceModal()"></div>
+        <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-border-gray">
+                <h3 class="text-lg font-semibold text-sidebar">Add New Device</h3>
+                <button onclick="closeAddDeviceModal()" class="text-text-secondary hover:text-text-primary transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
-            <div class="modal-body">
-                <div id="step-1">
-                    <div class="form-group">
-                        <label>模型:</label>
-                        <select id="new-device-model">
-                            <option value="">Select Model</option>
-                            <option value="抱箱机器人">抱箱机器人</option>
-                            <option value="12-3蜂巢车">12-3蜂巢车</option>
-                            <option value="新疆机场行李运送车">新疆机场行李运送车</option>
-                            <option value="MIR-100">MIR-100</option>
-                            <option value="ELEV-200">ELEV-200</option>
+            
+            <!-- Step 1 -->
+            <div id="modal-step-1" class="p-6">
+                <p class="text-text-secondary text-sm mb-4">Step 1: Verify Connection</p>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">Model</label>
+                        <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                            <option>Select a model...</option>
+                            <option>TZC123 - 抱箱机器人</option>
+                            <option>TZC122 - 12-3蜂巢车</option>
+                            <option>XG-R1 - 仙工搬运</option>
+                            <option>MiR200</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>连接口令:</label>
-                        <input type="password" id="connection-password" placeholder="Enter connection password">
-                    </div>
-                    <p class="hint">Please enter the connection password to verify your identity</p>
-                </div>
-                <div id="step-2" style="display: none;">
-                    <div class="form-group">
-                        <label>设备ID:</label>
-                        <input type="text" id="new-device-id" placeholder="Enter device ID">
-                    </div>
-                    <div class="form-group">
-                        <label>设备名称:</label>
-                        <input type="text" id="new-device-name" placeholder="Enter device name">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">连接口令 (Connection Password)</label>
+                        <input type="password" placeholder="Enter connection password" class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors">
+                        <p class="text-text-light text-xs mt-1">Please enter the connection password to verify your identity</p>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="btn-verify-password" class="btn btn-primary">验证</button>
-                <button id="btn-add-device-confirm" class="btn btn-primary" style="display: none;">添加设备</button>
-                <button class="btn btn-secondary close-modal-btn">取消</button>
+            
+            <!-- Step 2 (Hidden by default) -->
+            <div id="modal-step-2" class="hidden p-6">
+                <p class="text-text-secondary text-sm mb-4">Step 2: Enter Device Information</p>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">设备ID (Device ID)</label>
+                        <input type="text" placeholder="Enter device ID" class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">设备名称 (Device Name)</label>
+                        <input type="text" placeholder="Enter device name" class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-border-gray">
+                <button onclick="closeAddDeviceModal()" class="px-4 py-2 text-sm font-medium text-text-secondary border border-border-gray rounded hover:bg-bg-light transition-colors">Cancel</button>
+                <button id="modal-verify-btn" onclick="showStep2()" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded hover:bg-primary-dark transition-colors">验证 (Verify)</button>
+                <button id="modal-add-btn" class="hidden px-4 py-2 text-sm font-medium text-white bg-primary rounded hover:bg-primary-dark transition-colors">添加设备 (Add Device)</button>
             </div>
         </div>
     </div>
     
-    <script src="script.js"></script>
+    <!-- Add Model Modal -->
+    <div id="add-model-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/50" onclick="closeAddModelModal()"></div>
+        <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-border-gray">
+                <h3 class="text-lg font-semibold text-sidebar">Add New Model</h3>
+                <button onclick="closeAddModelModal()" class="text-text-secondary hover:text-text-primary transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-text-primary mb-2">Model Name <span class="text-error">*</span></label>
+                    <input type="text" class="w-full px-4 py-2 border border-border-gray rounded focus:outline-none focus:border-primary transition-colors" placeholder="Enter model name">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-text-primary mb-2">Base Model <span class="text-error">*</span></label>
+                    <select class="w-full px-4 py-2 border border-border-gray rounded focus:outline-none focus:border-primary transition-colors bg-white">
+                        <option value="">Select base model</option>
+                        <option value="tianti">天体机器人 (Tianti Robots)</option>
+                        <option value="mir">米尔机器人 (MiR Robots)</option>
+                        <option value="elevator">电梯 (Elevators)</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-text-primary mb-2">Model Description <span class="text-error">*</span></label>
+                    <textarea rows="3" class="w-full px-4 py-2 border border-border-gray rounded focus:outline-none focus:border-primary transition-colors resize-none" placeholder="Enter model description"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-text-primary mb-2">Upload Model Description File</label>
+                    <div class="border-2 border-dashed border-border-gray rounded-lg p-4 text-center hover:border-primary transition-colors cursor-pointer">
+                        <svg class="w-8 h-8 text-text-secondary mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p class="text-sm text-text-secondary">Click to upload or drag and drop</p>
+                        <p class="text-xs text-text-light mt-1">.txt, .pdf, .doc, .docx</p>
+                        <input type="file" class="hidden" accept=".txt,.pdf,.doc,.docx">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeAddModelModal()" class="px-4 py-2 border border-border-gray text-text-secondary rounded hover:bg-bg-light transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark transition-colors">
+                        Save Model
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show the selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update page title and description
+            const pageTitles = {
+                'dashboard': 'Welcome to Robot Management System',
+                'task-list': 'Task List',
+                'task-queue': 'Task Queue',
+                'device-list': 'Device List',
+                'models': 'Model Management',
+                'reports': 'Reports'
+            };
+            
+            const pageDescriptions = {
+                'dashboard': 'Monitor and manage your robot fleet efficiently',
+                'task-list': 'View and manage all tasks',
+                'task-queue': 'Manage task priorities and queue order',
+                'device-list': 'Manage and monitor all registered devices',
+                'models': 'Manage robot and device models',
+                'reports': 'Generate and view system reports'
+            };
+            
+            document.getElementById('page-title').textContent = pageTitles[pageId];
+            document.getElementById('page-description').textContent = pageDescriptions[pageId];
+        }
+        
+        // Toggle submenu
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const arrow = document.getElementById('tasks-arrow');
+            submenu.classList.toggle('expanded');
+            arrow.classList.toggle('rotate-180');
+        }
+        
+        // Toggle language dropdown
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        // Set language
+        function setLanguage(lang) {
+            const langNames = {
+                'en': 'English',
+                'zh': '中文',
+                'ja': '日本語'
+            };
+            document.getElementById('current-lang').textContent = langNames[lang];
+            document.getElementById('language-dropdown').classList.add('hidden');
+            
+            // Update active state in dropdown
+            const buttons = document.querySelectorAll('#language-dropdown button');
+            buttons.forEach(btn => btn.classList.remove('bg-bg-light'));
+            event.target.closest('button').classList.add('bg-bg-light');
+        }
+        
+        // Add Device Modal
+        function openAddDeviceModal() {
+            document.getElementById('add-device-modal').classList.remove('hidden');
+        }
+        
+        function closeAddDeviceModal() {
+            document.getElementById('add-device-modal').classList.add('hidden');
+            // Reset to step 1
+            document.getElementById('modal-step-1').classList.remove('hidden');
+            document.getElementById('modal-step-2').classList.add('hidden');
+            document.getElementById('modal-verify-btn').classList.remove('hidden');
+            document.getElementById('modal-add-btn').classList.add('hidden');
+        }
+        
+        function showStep2() {
+            document.getElementById('modal-step-1').classList.add('hidden');
+            document.getElementById('modal-step-2').classList.remove('hidden');
+            document.getElementById('modal-verify-btn').classList.add('hidden');
+            document.getElementById('modal-add-btn').classList.remove('hidden');
+        }
+        
+        // Add Model Modal
+        function openAddModelModal() {
+            document.getElementById('add-model-modal').classList.remove('hidden');
+        }
+        
+        function closeAddModelModal() {
+            document.getElementById('add-model-modal').classList.add('hidden');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('language-dropdown');
+            const button = e.target.closest('button');
+            if (!button || !button.onclick?.toString().includes('toggleLanguageDropdown')) {
+                if (!e.target.closest('#language-dropdown')) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        });
+    </script>
 </body>
 </html>

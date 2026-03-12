@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Details - Robot Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3498db',
+                        'primary-dark': '#2980b9',
+                        'sidebar': '#2c3e50',
+                        'sidebar-dark': '#233140',
+                        'success': '#27ae60',
+                        'warning': '#f39c12',
+                        'error': '#e74c3c',
+                        'executing': '#9b59b6',
+                        'neutral': '#95a5a6',
+                        'text-primary': '#333333',
+                        'text-secondary': '#666666',
+                        'text-light': '#999999',
+                        'bg-light': '#f8f9fa',
+                        'border-gray': '#e0e0e0'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+        .nav-item { transition: all 0.3s ease; }
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .submenu.expanded { max-height: 200px; }
+    </style>
+</head>
+<body class="bg-bg-light min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col">
+            <div class="p-5 border-b border-white/10">
+                <h1 class="text-white text-lg font-semibold leading-tight">Robot Management<br>System</h1>
+            </div>
+            <nav class="flex-1 py-4 overflow-y-auto">
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span>Tasks</span>
+                        </div>
+                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="tasks-submenu" class="submenu bg-sidebar-dark">
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Task List</a>
+                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Task Queue</a>
+                    </div>
+                </div>
+                <a href="device-list.html" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors bg-primary">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                    </svg>
+                    <span>Devices</span>
+                </a>
+                <a href="#" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    <span>Models</span>
+                </a>
+                <a href="#" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-white/10">
+                <p class="text-white/50 text-xs">Version 1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
+            <!-- Header -->
+            <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                <div>
+                    <h2 class="text-xl font-semibold text-sidebar">Device Details</h2>
+                    <p class="text-text-secondary text-sm mt-1">TZ123_001 - 天体0号</p>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
+                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
+                        <span id="current-lang" class="text-sm font-medium">中文</span>
+                        <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
+                        <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors">English (EN)</button>
+                        <button onclick="setLanguage('zh')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors bg-bg-light">中文 (ZH)</button>
+                        <button onclick="setLanguage('ja')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors">日本語 (JA)</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="flex-1 p-6">
+                <!-- Back Button -->
+                <a href="device-list.html" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-border-gray bg-white hover:bg-bg-light transition-colors text-text-primary mb-6">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Device List
+                </a>
+
+                <!-- Basic Information -->
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                    <div class="flex flex-col lg:flex-row gap-6">
+                        <!-- Device Image -->
+                        <div class="lg:w-48 flex-shrink-0">
+                            <div class="w-full h-48 bg-bg-light rounded-lg flex items-center justify-center border border-border-gray">
+                                <svg class="w-24 h-24 text-text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Device Info -->
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-sidebar">Basic Information</h3>
+                                <div class="flex items-center gap-2">
+                                    <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">Edit Device</button>
+                                    <button class="px-3 py-1.5 text-xs font-medium text-warning border border-warning rounded hover:bg-warning hover:text-white transition-colors">Reboot</button>
+                                    <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs text-text-secondary mb-1">Device ID</label>
+                                    <p class="text-sm font-medium text-text-primary">TZ123_001</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-text-secondary mb-1">Device Name</label>
+                                    <p class="text-sm font-medium text-text-primary">天体0号</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-text-secondary mb-1">Model</label>
+                                    <p class="text-sm font-medium text-text-primary">抱箱机器人</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-text-secondary mb-1">Brand</label>
+                                    <p class="text-sm font-medium text-text-primary">Tianti</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-text-secondary mb-1">Status</label>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Online</span>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-text-secondary mb-1">Battery Level</label>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-20 h-2 bg-border-gray rounded-full overflow-hidden">
+                                            <div class="h-full bg-success rounded-full" style="width: 85%"></div>
+                                        </div>
+                                        <span class="text-sm font-medium text-text-primary">85%</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-2 md:col-span-3">
+                                    <label class="block text-xs text-text-secondary mb-1">Location</label>
+                                    <p class="text-sm font-medium text-text-primary">2nd Floor, Office Area</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Information -->
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-sidebar mb-4">Real-time Information</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Connection & Mission -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+                                </svg>
+                                Connection & Mission
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Connection State</span>
+                                    <span class="text-sm font-medium text-success">Online</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Current Mission</span>
+                                    <span class="text-sm font-medium text-text-primary">Moving to Dock 5</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Location
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Current Location</span>
+                                    <span class="text-sm font-medium text-text-primary">2nd Floor</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">工作域</span>
+                                    <span class="text-sm font-medium text-text-primary">Office Area</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Coordinates</span>
+                                    <span class="text-sm font-medium text-text-primary">X: 12.5, Y: 8.3</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Battery & Power -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                Battery & Power
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">State of Charge</span>
+                                    <span class="text-sm font-medium text-text-primary">85%</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Status</span>
+                                    <span class="text-sm font-medium text-warning">Discharging</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Time Remaining</span>
+                                    <span class="text-sm font-medium text-text-primary">2h 30m</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Temperature</span>
+                                    <span class="text-sm font-medium text-text-primary">25°C</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Movement & Safety -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+                                Movement & Safety
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Current Speed</span>
+                                    <span class="text-sm font-medium text-text-primary">0.8 m/s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Direction</span>
+                                    <span class="text-sm font-medium text-text-primary">North</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Safety Status</span>
+                                    <span class="text-sm font-medium text-success">Normal</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">E-Stop Status</span>
+                                    <span class="text-sm font-medium text-success">Not Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Graphs -->
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-sidebar mb-4">Real-time Graphs</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-sm font-medium text-text-secondary mb-3">Velocity Over Time</h4>
+                            <div class="h-48">
+                                <canvas id="velocityChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-text-secondary mb-3">Acceleration & Angular Acceleration</h4>
+                            <div class="h-48">
+                                <canvas id="accelerationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Static Specifications -->
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-sidebar mb-4">Static Specifications</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Physical Dimensions -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3">Physical Dimensions</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <span class="text-xs text-text-secondary">Length x Width x Height</span>
+                                    <p class="text-sm font-medium text-text-primary">500mm x 400mm x 350mm</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-text-secondary">Turn Radius</span>
+                                    <p class="text-sm font-medium text-text-primary">Zero (Differential Drive)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Operational Capabilities -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3">Operational Capabilities</h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Max Speed (Laden)</span>
+                                    <span class="text-sm font-medium text-text-primary">1.2 m/s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Max Speed (Unladen)</span>
+                                    <span class="text-sm font-medium text-text-primary">1.5 m/s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Max Payload</span>
+                                    <span class="text-sm font-medium text-text-primary">50 kg</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">Lift Height</span>
+                                    <span class="text-sm font-medium text-text-primary">N/A</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interfaces & Connectivity -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3">Interfaces & Connectivity</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <span class="text-xs text-text-secondary">Communication Protocol</span>
+                                    <p class="text-sm font-medium text-text-primary">WiFi 5GHz, Ethernet</p>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-text-secondary">I/O Ports</span>
+                                    <p class="text-sm font-medium text-text-primary">2x USB, 1x RS-485</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">IP Address</span>
+                                    <span class="text-sm font-medium text-text-primary">192.168.1.101</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-text-secondary">MAC Address</span>
+                                    <span class="text-sm font-medium text-text-primary">00:1B:44:11:3A:B7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-sidebar mb-4">Statistics</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Odometry Data -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3">Odometry Data</h4>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-primary">1,245</p>
+                                    <p class="text-xs text-text-secondary">Total Distance (m)</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-primary">48</p>
+                                    <p class="text-xs text-text-secondary">Operating Time (h)</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-primary">0.6</p>
+                                    <p class="text-xs text-text-secondary">Average Speed (m/s)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div class="bg-bg-light rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-sidebar mb-3">Performance Metrics</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-border-gray">
+                                            <th class="text-left py-2 text-text-secondary font-medium">Task Type</th>
+                                            <th class="text-right py-2 text-text-secondary font-medium">Success Rate</th>
+                                            <th class="text-right py-2 text-text-secondary font-medium">Avg Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-border-gray">
+                                            <td class="py-2 text-text-primary">飞速达</td>
+                                            <td class="py-2 text-right text-success font-medium">98.5%</td>
+                                            <td class="py-2 text-right text-text-primary">12.3 min</td>
+                                        </tr>
+                                        <tr class="border-b border-border-gray">
+                                            <td class="py-2 text-text-primary">配送</td>
+                                            <td class="py-2 text-right text-success font-medium">99.1%</td>
+                                            <td class="py-2 text-right text-text-primary">8.5 min</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 text-text-primary">机场行李</td>
+                                            <td class="py-2 text-right text-success font-medium">97.8%</td>
+                                            <td class="py-2 text-right text-text-primary">15.2 min</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6">
+                    <h3 class="text-lg font-semibold text-sidebar mb-4">Recent Activity</h3>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-bg-light">
+                                <tr>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Time</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Activity</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border-gray">
+                                <tr class="hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 14:30</td>
+                                    <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success/10 text-success">Status Change</span></td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">Changed from Maintenance to Online</td>
+                                </tr>
+                                <tr class="hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 14:25</td>
+                                    <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning/10 text-warning">Maintenance</span></td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">Firmware updated to v1.2.3</td>
+                                </tr>
+                                <tr class="hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 10:15</td>
+                                    <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">Task Completed</span></td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">Completed task #12345 successfully</td>
+                                </tr>
+                                <tr class="hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 09:45</td>
+                                    <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-executing/10 text-executing">System Boot</span></td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">System started after scheduled maintenance</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="bg-white border-t border-border-gray px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-text-secondary">2026 Robot Management System. All rights reserved.</p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Documentation</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Support</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const arrow = document.getElementById('tasks-arrow');
+            submenu.classList.toggle('expanded');
+            arrow.classList.toggle('rotate-180');
+        }
+        function toggleLanguageDropdown() {
+            document.getElementById('language-dropdown').classList.toggle('hidden');
+        }
+        function setLanguage(lang) {
+            const langNames = { 'en': 'English', 'zh': '中文', 'ja': '日本語' };
+            document.getElementById('current-lang').textContent = langNames[lang];
+            document.getElementById('language-dropdown').classList.add('hidden');
+        }
+
+        // Charts
+        const velocityCtx = document.getElementById('velocityChart').getContext('2d');
+        const accelerationCtx = document.getElementById('accelerationChart').getContext('2d');
+
+        function generateData(points, min, max) {
+            const data = [];
+            for (let i = 0; i < points; i++) {
+                data.push(Math.random() * (max - min) + min);
+            }
+            return data;
+        }
+
+        const labels = Array.from({length: 60}, (_, i) => i + 's');
+
+        new Chart(velocityCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Velocity (m/s)',
+                    data: generateData(60, 0, 1.5),
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 0, max: 2, ticks: { callback: value => value + ' m/s' } },
+                    x: { ticks: { maxTicksLimit: 10 } }
+                }
+            }
+        });
+
+        new Chart(accelerationCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Acceleration',
+                    data: generateData(60, -1.5, 1.5),
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    pointRadius: 0
+                }, {
+                    label: 'Angular Acceleration',
+                    data: generateData(60, -1, 1),
+                    borderColor: '#27ae60',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } } },
+                scales: {
+                    y: { min: -2, max: 2 },
+                    x: { ticks: { maxTicksLimit: 10 } }
+                }
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('button')?.onclick?.toString().includes('toggleLanguageDropdown')) {
+                if (!e.target.closest('#language-dropdown')) {
+                    document.getElementById('language-dropdown').classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

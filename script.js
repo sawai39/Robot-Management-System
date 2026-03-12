@@ -1,5 +1,54 @@
 // Robot Management System - Task Module Script
+
+// Global current language
+let currentLang = 'zh';
+
+// Toggle submenu
+function toggleSubmenu(id) {
+    const submenu = document.getElementById(id);
+    const arrow = document.getElementById('tasks-arrow');
+    submenu.classList.toggle('expanded');
+    arrow.classList.toggle('rotate-180');
+}
+
+// Toggle language dropdown
+function toggleLanguageDropdown() {
+    const dropdown = document.getElementById('languageDropdown');
+    dropdown.classList.toggle('hidden');
+}
+
+// Set language
+function setLanguage(lang) {
+    const langNames = {
+        'en': 'English',
+        'zh': '中文'
+    };
+    document.getElementById('current-lang').textContent = langNames[lang];
+    document.getElementById('languageDropdown').classList.add('hidden');
     
+    // Update global language variable
+    currentLang = lang;
+    
+    // Update page title
+    updatePageTitle();
+    
+    // Update active state in dropdown
+    const buttons = document.querySelectorAll('#languageDropdown button');
+    buttons.forEach(btn => btn.classList.remove('bg-bg-light'));
+    event.target.closest('button').classList.add('bg-bg-light');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('languageDropdown');
+    const button = e.target.closest('button');
+    if (!button || !button.onclick?.toString().includes('toggleLanguageDropdown')) {
+        if (!e.target.closest('#languageDropdown')) {
+            dropdown.classList.add('hidden');
+        }
+    }
+});
+
 // DOM Elements
 const taskListPage = document.getElementById('task-list-page');
 const taskDetailsPage = document.getElementById('task-details-page');
@@ -392,187 +441,45 @@ const translations = {
         'acceleration': '加速度',
         'angular-acceleration': '角加速度',
         'view-table': '表格视图',
-        'view-tree': '树形视图'
-    },
-    ja: {
-        'sidebar-title': 'ロボット管理システム',
-        'nav-tasks': 'タスク',
-        'nav-robots': 'ロボット',
-        'nav-dashboard': 'ダッシュボード',
-        'nav-reports': 'レポート',
-        'nav-devices': 'デバイス',
-        'nav-task-list': 'タスクリスト',
-        'nav-task-queue': 'タスクキュー',
-        'task-list-title': 'タスクリスト',
-        'task-queue-title': 'タスクキュー',
-        'btn-add-to-queue': 'キューに追加',
-        'queue-pending': '保留中タスク',
-        'queue-in-progress': '進行中',
-        'queue-completed-today': '本日完了',
-        'queue-position': 'キュー位置',
-        'queue-search': 'キューを検索...',
-        'btn-add-task': '新しいタスクを追加',
-        'btn-refresh': '更新',
-        'search-placeholder': 'タスクを検索...',
-        'device-list-title': 'デバイスリスト',
-        'btn-add-device': '新しいデバイスを追加',
-        'search-devices-placeholder': 'デバイスを検索...',
-        'table-device-id': 'デバイスID',
-        'table-device-name': 'デバイス名',
-        'table-type': 'タイプ',
-        'table-model': 'モデル',
-        'table-brand': 'ブランド',
-        'table-status': 'ステータス',
-        'table-battery': 'バッテリー',
-        'table-current-task': '現在のタスク',
-        'table-location': '場所',
-        'table-ip': 'IPアドレス',
-        'device-details-title': 'デバイスの詳細',
-        'btn-back-device-list': '← デバイスリストに戻る',
-        'info-device-id': 'デバイスID:',
-        'info-device-name': 'デバイス名:',
-        'info-type': 'タイプ:',
-        'info-model': 'モデル:',
-        'info-brand': 'ブランド:',
-        'info-base-status': '基本ステータス:',
-        'info-run-status': '実行ステータス:',
-        'info-drive-type': '駆動タイプ:',
-        'info-current-task': '現在のタスク:',
-        'info-location': '場所:',
-        'info-map-code': 'マップコード:',
-        'info-localization': 'ローカリゼーション値:',
-        'info-current-marker': '現在のマーカー:',
-        'info-ip': 'IPアドレス:',
-        'info-mac': 'MACアドレス:',
-        'info-firmware': 'ファームウェアバージョン:',
-        'info-battery': 'バッテリーレベル:',
-        'info-last-maintenance': '最終メンテナンス:',
-        'info-next-maintenance': '次のメンテナンス:',
-        'btn-edit-device': 'デバイスを編集',
-        'btn-reboot': '再起動',
-        'device-status-title': 'デバイスステータス',
-        'status-connection': '接続:',
-        'status-cpu': 'CPU使用率:',
-        'status-memory': 'メモリ使用率:',
-        'status-disk': 'ディスク使用率:',
-        'activity-title': '最近のアクティビティ',
-        'table-time': '時間',
-        'table-activity': 'アクティビティ',
-        'table-details': '詳細',
-        'filter-status': 'すべてのステータス',
-        'filter-robot': 'すべてのロボット',
-        'table-task-id': 'タスクID',
-        'table-task-type': 'タスクタイプ',
-        'table-task-name': 'タスク名',
-        'table-status': 'ステータス',
-        'table-robot': 'ロボット',
-        'table-location': '現在の場所',
-        'table-eta': '到着予定時間',
-        'table-priority': '優先度',
-        'table-actions': 'アクション',
-        'btn-view-details': '詳細を表示',
-        'btn-delete': '削除',
-        'task-details-title': 'タスクの詳細',
-        'btn-back': '← タスクリストに戻る',
-        'info-task-id': 'タスクID:',
-        'info-task-type': 'タスクタイプ:',
-        'info-task-name': 'タスク名:',
-        'info-status': 'ステータス:',
-        'info-priority': '優先度:',
-        'info-robot': 'ロボット:',
-        'info-location': '現在の場所:',
-        'info-eta': '到着予定時間:',
-        'info-start-time': '開始時間:',
-        'info-duration': '推定所要時間:',
-        'info-progress': '進捗:',
-        'location-title': 'ロボットの現在位置',
-        'steps-title': 'タスクステップ',
-        'steps-step': 'ステップ',
-        'steps-status': 'ステータス',
-        'steps-start': '開始時間',
-        'steps-end': '終了時間',
-        'steps-duration': '所要時間',
-        'steps-details': '詳細',
-        'footer': '© 2026 ロボット管理システム',
-        'status-pending': '保留中',
-        'status-assigned': '割り当て済み',
-        'status-en-route': '途中',
-        'status-executing': '実行中',
-        'status-running': '実行中',
-        'status-completed': '完了',
-        'status-failed': '失敗',
-        'status-cancelled': 'キャンセル',
-        'filter-all-work-areas': 'すべての工作域',
-        'priority-high': '高',
-        'priority-normal': '通常',
-        'priority-low': '低',
-        'btn-move-up': '上へ',
-        'btn-move-down': '下へ',
-        'basic-info-title': '基本情報',
-        'real-time-info-title': 'リアルタイム情報',
-        'static-specs-title': '静的仕様',
-        'statistics-title': '統計',
-        'connection-mission': '接続とミッション',
-        'location': '場所',
-        'battery-power': 'バッテリーと電源',
-        'movement-safety': '移動と安全',
-        'connection-state': '接続状態:',
-        'current-mission': '現在のタスク:',
-        'current-location': '現在地:',
-        'coordinates': '座標:',
-        'state-of-charge': '充電状態:',
-        'battery-status': '状態:',
-        'time-remaining': '残り時間:',
-        'temperature': '温度:',
-        'current-speed': '現在の速度:',
-        'direction': '方向:',
-        'safety-status': '安全状態:',
-        'e-stop': '緊急停止:',
-        'physical-dimensions': '物理サイズ',
-        'operational-capabilities': '動作能力',
-        'interfaces-connectivity': 'インターフェースと接続',
-        'length-width-height': '縦x横x高さ:',
-        'turn-radius': '旋回半径:',
-        'max-speed-laden': '最大速度(積載時):',
-        'max-speed-unladen': '最大速度(無負荷):',
-        'max-payload': '最大積載量:',
-        'lift-height': 'リフト高さ:',
-        'communication-protocol': '通信プロトコル:',
-        'io-ports': 'I/Oポート:',
-        'odometry-data': 'オドメトリデータ',
-        'performance-metrics': 'パフォーマンス指標',
-        'total-distance': '総走行距離:',
-        'total-operating-time': '総稼働時間:',
-        'average-speed': '平均速度:',
-        'mission-success-rate': 'ミッション成功率:',
-        'average-mission-time': '平均ミッション時間:',
-        'maintenance-intervals': 'メンテナンス間隔:',
-        'task-type': 'タスクタイプ',
-        'success-rate': '成功率',
-        'avg-time': '平均時間',
-        'velocity-over-time': '速度の時間推移',
-        'acceleration': '加速度',
-        'angular-acceleration': '角加速度',
-        'view-table': 'テーブルビュー',
-        'view-tree': 'ツリービュー',
-        'model-list-title': 'モデルリスト',
-        'btn-add-model': '新規モデル追加',
-        'search-models-placeholder': 'モデルを検索...',
-        'base-model-title': 'ベースモデル',
-        'model-id': 'モデルID',
-        'model-name': 'モデル名',
-        'model-description': '説明',
-        'model-status': 'ステータス',
-        'model-active': 'アクティブ',
-        'model-inactive': '非アクティブ',
-        'select-base-model': 'ベースモデルを選択',
-        'upload-model-file': 'モデル説明ファイルをアップロード',
-        'supported-formats': '対応フォーマット: .txt, .pdf, .doc, .docx',
-        'btn-save-model': 'モデルを保存',
-        'btn-cancel': 'キャンセル',
-        'btn-view-details': '詳細を表示'
+        'view-tree': '树形视图',
+        'model-list-title': '模型列表',
+        'btn-add-model': '添加新模型',
+        'search-models-placeholder': '搜索模型...',
+        'base-model-title': '基础模型',
+        'model-id': '模型ID',
+        'model-name': '模型名称',
+        'model-description': '描述',
+        'model-status': '状态',
+        'model-active': '激活',
+        'model-inactive': '未激活',
+        'select-base-model': '选择基础模型',
+        'upload-model-file': '上传模型描述文件',
+        'supported-formats': '支持格式: .txt, .pdf, .doc, .docx',
+        'btn-save-model': '保存模型',
+        'btn-cancel': '取消'
     }
 };
+
+// Update page title based on current page and language
+function updatePageTitle() {
+    const pageTitleElement = document.getElementById('page-title');
+    if (!pageTitleElement) return;
+    
+    // Check which page is active
+    if (taskListPage.classList.contains('active')) {
+        pageTitleElement.textContent = translations[currentLang]['task-list-title'];
+    } else if (taskQueuePage && taskQueuePage.classList.contains('active')) {
+        pageTitleElement.textContent = translations[currentLang]['task-queue-title'];
+    } else if (deviceListPage.classList.contains('active')) {
+        pageTitleElement.textContent = translations[currentLang]['device-list-title'];
+    } else if (deviceDetailsPage.classList.contains('active')) {
+        pageTitleElement.textContent = translations[currentLang]['device-details-title'];
+    } else if (modelListPage && modelListPage.classList.contains('active')) {
+        pageTitleElement.textContent = translations[currentLang]['model-list-title'];
+    } else if (taskDetailsPage.classList.contains('active')) {
+        pageTitleElement.textContent = translations[currentLang]['task-details-title'];
+    }
+}
 
 // Initialize the application
 function init() {
@@ -583,6 +490,9 @@ function init() {
     
     // Setup view toggle for task steps
     setupViewToggle();
+    
+    // Update page title
+    updatePageTitle();
 }
 
 // Setup view toggle between table and tree view
@@ -1217,10 +1127,8 @@ function setupEventListeners() {
             showDeviceList();
             
             // Update active navigation
-            if (tasksNav) tasksNav.classList.remove('active');
-            if (modelsNav) modelsNav.classList.remove('active');
-            devicesNav.classList.add('active');
-            if (tasksSubmenu) tasksSubmenu.classList.remove('open');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('bg-primary'));
+            devicesNav.classList.add('bg-primary');
         });
     }
     
@@ -1231,24 +1139,8 @@ function setupEventListeners() {
             showModelList();
             
             // Update active navigation
-            if (tasksNav) tasksNav.classList.remove('active');
-            if (devicesNav) devicesNav.classList.remove('active');
-            modelsNav.classList.add('active');
-            if (tasksSubmenu) tasksSubmenu.classList.remove('open');
-        });
-    }
-    
-    // Tasks navigation (main tab)
-    if (tasksNav) {
-        tasksNav.addEventListener('click', (e) => {
-            e.preventDefault();
-            showTaskList();
-            
-            // Update active navigation
-            if (devicesNav) devicesNav.classList.remove('active');
-            if (modelsNav) modelsNav.classList.remove('active');
-            tasksNav.classList.add('active');
-            if (tasksSubmenu) tasksSubmenu.classList.toggle('open');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('bg-primary'));
+            modelsNav.classList.add('bg-primary');
         });
     }
     
@@ -1259,8 +1151,8 @@ function setupEventListeners() {
             showTaskList();
             
             // Update active sub-navigation
-            taskListNav.classList.add('active');
-            if (taskQueueNav) taskQueueNav.classList.remove('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('bg-primary'));
+            taskListNav.classList.add('bg-primary');
         });
     }
     
@@ -1271,10 +1163,20 @@ function setupEventListeners() {
             showTaskQueue();
             
             // Update active sub-navigation
-            taskQueueNav.classList.add('active');
-            if (taskListNav) taskListNav.classList.remove('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('bg-primary'));
+            taskQueueNav.classList.add('bg-primary');
         });
     }
+    
+    // Language options
+    const languageOptions = document.querySelectorAll('.language-dropdown a');
+    languageOptions.forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.preventDefault();
+            const lang = option.dataset.lang;
+            setLanguage(lang);
+        });
+    });
     
     // Task Queue position controls
     setupQueuePositionControls();
@@ -1302,6 +1204,27 @@ function setupQueuePositionControls() {
     
     // Initial button state update
     updatePositionButtonStates();
+}
+
+// Add Device Modal functions
+function openAddDeviceModal() {
+    document.getElementById('add-device-modal').classList.remove('hidden');
+}
+
+function closeAddDeviceModal() {
+    document.getElementById('add-device-modal').classList.add('hidden');
+    // Reset to step 1
+    document.getElementById('modal-step-1').classList.remove('hidden');
+    document.getElementById('modal-step-2').classList.add('hidden');
+    document.getElementById('modal-verify-btn').classList.remove('hidden');
+    document.getElementById('modal-add-btn').classList.add('hidden');
+}
+
+function showStep2() {
+    document.getElementById('modal-step-1').classList.add('hidden');
+    document.getElementById('modal-step-2').classList.remove('hidden');
+    document.getElementById('modal-verify-btn').classList.add('hidden');
+    document.getElementById('modal-add-btn').classList.remove('hidden');
 }
 
 // Move task position in queue
@@ -2170,38 +2093,38 @@ function showDeviceDetails(deviceId) {
     if (basicInfoGrid) {
         basicInfoGrid.innerHTML = `
             <div class="info-item">
-                <label>Device ID:</label>
+                <label>${translations[currentLang]['info-device-id']}</label>
                 <span>${device.id}</span>
             </div>
             <div class="info-item">
-                <label>Device Name:</label>
+                <label>${translations[currentLang]['info-device-name']}</label>
                 <span>${device.name}</span>
             </div>
             <div class="info-item">
-                <label>Type:</label>
+                <label>${translations[currentLang]['info-type']}</label>
                 <span>${device.type}</span>
             </div>
             <div class="info-item">
-                <label>Model:</label>
+                <label>${translations[currentLang]['info-model']}</label>
                 <span>${device.model}</span>
             </div>
             <div class="info-item">
-                <label>Brand:</label>
+                <label>${translations[currentLang]['info-brand']}</label>
                 <span>${device.brand}</span>
             </div>
             <div class="info-item">
-                <label>Status:</label>
+                <label>${translations[currentLang]['info-status']}</label>
                 <span class="status-badge ${device.status}">${device.status.charAt(0).toUpperCase() + device.status.slice(1)}</span>
             </div>
             <div class="info-item">
-                <label>Battery Level:</label>
+                <label>${translations[currentLang]['info-battery']}</label>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${device.battery || 0}%;"></div>
                 </div>
                 <span>${device.battery || 'N/A'}%</span>
             </div>
             <div class="info-item">
-                <label>Location:</label>
+                <label>${translations[currentLang]['info-location']}</label>
                 <span>${device.location}</span>
             </div>
         `;
@@ -2214,68 +2137,68 @@ function showDeviceDetails(deviceId) {
         infoCard.innerHTML = `
             <div class="info-row">
                 <div class="info-section">
-                    <h4>Connection & Mission</h4>
+                    <h4>${translations[currentLang]['connection-mission']}</h4>
                     <div class="info-item">
-                        <label>Connection State:</label>
+                        <label>${translations[currentLang]['connection-state']}</label>
                         <span class="status-value ${device.realTime.connection === 'Online' ? 'connected' : ''}">${device.realTime.connection}</span>
                     </div>
                     <div class="info-item">
-                        <label>Current Mission:</label>
+                        <label>${translations[currentLang]['current-mission']}</label>
                         <span>${device.realTime.mission}</span>
                     </div>
                 </div>
                 <div class="info-section">
-                    <h4>Location</h4>
+                    <h4>${translations[currentLang]['location']}</h4>
                     <div class="info-item">
-                        <label>Current Location:</label>
+                        <label>${translations[currentLang]['current-location']}</label>
                         <span>${device.location}</span>
                     </div>
                     <div class="info-item">
-                        <label>工作域:</label>
+                        <label>${translations[currentLang]['table-work-area']}</label>
                         <span>2nd Floor, Office Area</span>
                     </div>
                     <div class="info-item">
-                        <label>Coordinates:</label>
+                        <label>${translations[currentLang]['coordinates']}</label>
                         <span>${device.realTime.coordinates}</span>
                     </div>
                 </div>
             </div>
             <div class="info-row">
                 <div class="info-section">
-                    <h4>Battery & Power</h4>
+                    <h4>${translations[currentLang]['battery-power']}</h4>
                     <div class="info-item">
-                        <label>State of Charge:</label>
+                        <label>${translations[currentLang]['state-of-charge']}</label>
                         <span>${device.battery || 'N/A'}%</span>
                     </div>
                     <div class="info-item">
-                        <label>Status:</label>
+                        <label>${translations[currentLang]['battery-status']}</label>
                         <span>${device.realTime.batteryStatus}</span>
                     </div>
                     <div class="info-item">
-                        <label>Time Remaining:</label>
+                        <label>${translations[currentLang]['time-remaining']}</label>
                         <span>${device.realTime.timeRemaining}</span>
                     </div>
                     <div class="info-item">
-                        <label>Temperature:</label>
+                        <label>${translations[currentLang]['temperature']}</label>
                         <span>${device.realTime.temperature}</span>
                     </div>
                 </div>
                 <div class="info-section">
-                    <h4>Movement & Safety</h4>
+                    <h4>${translations[currentLang]['movement-safety']}</h4>
                     <div class="info-item">
-                        <label>Current Speed:</label>
+                        <label>${translations[currentLang]['current-speed']}</label>
                         <span>${device.realTime.speed}</span>
                     </div>
                     <div class="info-item">
-                        <label>Direction:</label>
+                        <label>${translations[currentLang]['direction']}</label>
                         <span>${device.realTime.direction}</span>
                     </div>
                     <div class="info-item">
-                        <label>Safety Status:</label>
+                        <label>${translations[currentLang]['safety-status']}</label>
                         <span class="status-value ${device.realTime.safetyStatus === 'Normal' ? 'connected' : ''}">${device.realTime.safetyStatus}</span>
                     </div>
                     <div class="info-item">
-                        <label>E-Stop:</label>
+                        <label>${translations[currentLang]['e-stop']}</label>
                         <span>${device.realTime.eStop}</span>
                     </div>
                 </div>
@@ -2288,51 +2211,51 @@ function showDeviceDetails(deviceId) {
     if (specsGrid) {
         specsGrid.innerHTML = `
             <div class="specs-section">
-                <h4>Physical Dimensions</h4>
+                <h4>${translations[currentLang]['physical-dimensions']}</h4>
                 <div class="info-item">
-                    <label>Length x Width x Height:</label>
+                    <label>${translations[currentLang]['length-width-height']}</label>
                     <span>${device.specs.dimensions}</span>
                 </div>
                 <div class="info-item">
-                    <label>Turn Radius:</label>
+                    <label>${translations[currentLang]['turn-radius']}</label>
                     <span>${device.specs.turnRadius}</span>
                 </div>
             </div>
             <div class="specs-section">
-                <h4>Operational Capabilities</h4>
+                <h4>${translations[currentLang]['operational-capabilities']}</h4>
                 <div class="info-item">
-                    <label>Max Speed (Laden):</label>
+                    <label>${translations[currentLang]['max-speed-laden']}</label>
                     <span>${device.specs.maxSpeedLaden}</span>
                 </div>
                 <div class="info-item">
-                    <label>Max Speed (Unladen):</label>
+                    <label>${translations[currentLang]['max-speed-unladen']}</label>
                     <span>${device.specs.maxSpeedUnladen}</span>
                 </div>
                 <div class="info-item">
-                    <label>Max Payload:</label>
+                    <label>${translations[currentLang]['max-payload']}</label>
                     <span>${device.specs.maxPayload}</span>
                 </div>
                 <div class="info-item">
-                    <label>Lift Height:</label>
+                    <label>${translations[currentLang]['lift-height']}</label>
                     <span>${device.specs.liftHeight}</span>
                 </div>
             </div>
             <div class="specs-section">
-                <h4>Interfaces & Connectivity</h4>
+                <h4>${translations[currentLang]['interfaces-connectivity']}</h4>
                 <div class="info-item">
-                    <label>Communication Protocol:</label>
+                    <label>${translations[currentLang]['communication-protocol']}</label>
                     <span>${device.specs.communication}</span>
                 </div>
                 <div class="info-item">
-                    <label>I/O Ports:</label>
+                    <label>${translations[currentLang]['io-ports']}</label>
                     <span>${device.specs.ioPorts}</span>
                 </div>
                 <div class="info-item">
-                    <label>IP Address:</label>
+                    <label>${translations[currentLang]['info-ip']}</label>
                     <span>${device.ip}</span>
                 </div>
                 <div class="info-item">
-                    <label>MAC Address:</label>
+                    <label>${translations[currentLang]['info-mac']}</label>
                     <span>${device.mac}</span>
                 </div>
             </div>
@@ -2344,28 +2267,28 @@ function showDeviceDetails(deviceId) {
     if (statsGrid) {
         statsGrid.innerHTML = `
             <div class="stats-section">
-                <h4>Odometry Data</h4>
+                <h4>${translations[currentLang]['odometry-data']}</h4>
                 <div class="info-item">
-                    <label>Total Distance Traveled:</label>
+                    <label>${translations[currentLang]['total-distance']}</label>
                     <span>${device.stats.distance}</span>
                 </div>
                 <div class="info-item">
-                    <label>Total Operating Time:</label>
+                    <label>${translations[currentLang]['total-operating-time']}</label>
                     <span>${device.stats.operatingTime}</span>
                 </div>
                 <div class="info-item">
-                    <label>Average Speed:</label>
+                    <label>${translations[currentLang]['average-speed']}</label>
                     <span>${device.stats.averageSpeed}</span>
                 </div>
             </div>
             <div class="stats-section">
-                <h4>Performance Metrics</h4>
+                <h4>${translations[currentLang]['performance-metrics']}</h4>
                 <table class="task-metrics-table">
                     <thead>
                         <tr>
-                            <th>Task Type</th>
-                            <th>Success Rate</th>
-                            <th>Avg Time</th>
+                            <th>${translations[currentLang]['task-type']}</th>
+                            <th>${translations[currentLang]['success-rate']}</th>
+                            <th>${translations[currentLang]['avg-time']}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -2410,7 +2333,6 @@ function showDeviceDetails(deviceId) {
     }
     
     // Update language for the new elements
-    const currentLang = 'zh'; // In a real app, we would track the current language
     setLanguage(currentLang);
 }
 
@@ -2448,16 +2370,45 @@ function setupLanguageSwitcher() {
 
 // Set language
 function setLanguage(lang) {
+    currentLang = lang;
+    
+    // Update language dropdown
+    const langNames = {
+        'en': 'English',
+        'zh': '中文'
+    };
+    document.getElementById('current-lang').textContent = langNames[lang];
+    
+    // Update language dropdown active state
+    const languageOptions = document.querySelectorAll('.language-dropdown a');
+    languageOptions.forEach(option => {
+        option.classList.remove('bg-bg-light');
+        if (option.dataset.lang === lang) {
+            option.classList.add('bg-bg-light');
+        }
+    });
+    
+    // Close language dropdown
+    document.getElementById('languageDropdown').classList.add('hidden');
+    
     // Update sidebar title
     document.querySelector('.sidebar-header h1').textContent = translations[lang]['sidebar-title'];
     
     // Update navigation links
-    const navLinks = document.querySelectorAll('.nav > ul > li > a');
-    navLinks[0].textContent = translations[lang]['nav-tasks'];
-    navLinks[1].textContent = translations[lang]['nav-devices'];
-    navLinks[2].textContent = translations[lang]['nav-models'] || '模型';
-    navLinks[3].textContent = translations[lang]['nav-dashboard'];
-    navLinks[4].textContent = translations[lang]['nav-reports'];
+    const navGroupButton = document.querySelector('.nav-group button span');
+    if (navGroupButton) {
+        navGroupButton.textContent = translations[lang]['nav-tasks'];
+    }
+    
+    const devicesNavSpan = document.querySelector('.devices-nav span');
+    if (devicesNavSpan) {
+        devicesNavSpan.textContent = translations[lang]['nav-devices'];
+    }
+    
+    const modelsNavSpan = document.querySelector('.models-nav span');
+    if (modelsNavSpan) {
+        modelsNavSpan.textContent = translations[lang]['nav-models'] || '模型';
+    }
     
     // Update sub-navigation links
     if (taskListNav) {
@@ -2550,9 +2501,9 @@ function setLanguage(lang) {
     if (deviceTableHeaders.length > 0) {
         deviceTableHeaders[0].textContent = translations[lang]['table-device-id'];
         deviceTableHeaders[1].textContent = translations[lang]['table-device-name'];
-        deviceTableHeaders[2].textContent = translations[lang]['table-type'];
-        deviceTableHeaders[3].textContent = translations[lang]['table-model'];
-        deviceTableHeaders[4].textContent = translations[lang]['table-brand'];
+        deviceTableHeaders[2].textContent = translations[lang]['table-model'];
+        deviceTableHeaders[3].textContent = translations[lang]['table-brand'];
+        deviceTableHeaders[4].textContent = translations[lang]['table-type'];
         deviceTableHeaders[5].textContent = translations[lang]['table-status'];
         deviceTableHeaders[6].textContent = translations[lang]['table-battery'];
         deviceTableHeaders[7].textContent = translations[lang]['table-current-task'];
@@ -2652,7 +2603,7 @@ function setLanguage(lang) {
         }
         
         // Update device action buttons
-        const deviceActionButtons = document.querySelectorAll('#device-details-page .task-actions button');
+        const deviceActionButtons = document.querySelectorAll('#device-details-page .device-actions button');
         if (deviceActionButtons.length > 0) {
             deviceActionButtons[0].textContent = translations[lang]['btn-edit-device'];
             deviceActionButtons[1].textContent = translations[lang]['btn-reboot'];
