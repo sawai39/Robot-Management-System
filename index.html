@@ -453,12 +453,6 @@
                 
                 <!-- Task List Page -->
                 <div id="task-list" class="page-content">
-                    <!-- Page Header -->
-                    <div class="mb-6">
-                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.taskList.title">Task List</h1>
-                        <p class="text-text-secondary mt-1" data-i18n="page.taskList.desc">View and manage all tasks</p>
-                    </div>
-                    
                     <!-- Action Buttons -->
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-3">
@@ -663,12 +657,6 @@
                 
                 <!-- Task Queue Page -->
                 <div id="task-queue" class="page-content">
-                    <!-- Page Header -->
-                    <div class="mb-6">
-                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.taskQueue.title">Task Queue</h1>
-                        <p class="text-text-secondary mt-1" data-i18n="page.taskQueue.desc">Manage task priorities and execution order</p>
-                    </div>
-                    
                     <!-- Stats Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <!-- Pending Tasks -->
@@ -1052,12 +1040,6 @@
                 
                 <!-- Device List Page -->
                 <div id="device-list" class="page-content">
-                    <!-- Page Header -->
-                    <div class="mb-6">
-                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.deviceList.title">Device List</h1>
-                        <p class="text-text-secondary mt-1" data-i18n="page.deviceList.desc">View and manage all devices</p>
-                    </div>
-                    
                     <!-- Action Buttons -->
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-3">
@@ -1446,12 +1428,6 @@
                 
                 <!-- Task Details Page -->
                 <div id="task-details" class="page-content">
-                    <!-- Page Header -->
-                    <div class="mb-6">
-                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.taskDetails.title">Task Details</h1>
-                        <p class="text-text-secondary mt-1" data-i18n="page.taskDetails.desc">View task detailed information</p>
-                    </div>
-                    
                     <!-- Back Button -->
                     <a href="#" onclick="showPage('task-list'); return false;" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-border-gray bg-white hover:bg-bg-light transition-colors text-text-primary mb-6">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1818,12 +1794,6 @@
                 
                 <!-- Device Details Page -->
                 <div id="device-details" class="page-content">
-                    <!-- Page Header -->
-                    <div class="mb-6">
-                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.deviceDetails.title">Device Details</h1>
-                        <p class="text-text-secondary mt-1" data-i18n="page.deviceDetails.desc">View device detailed information</p>
-                    </div>
-                    
                     <!-- Back Button -->
                     <a href="#" onclick="showPage('device-list'); return false;" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-border-gray bg-white hover:bg-bg-light transition-colors text-text-primary mb-6">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2901,6 +2871,8 @@
         // Initialize translations on page load
         document.addEventListener('DOMContentLoaded', function() {
             applyTranslations(currentLang);
+            // Set initial page title for dashboard
+            showPage('dashboard');
         });
     </script>
 </body>
