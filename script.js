@@ -29,6 +29,9 @@ function setLanguage(lang) {
     // Update global language variable
     currentLang = lang;
     
+    // Update all translations
+    updateAllTranslations();
+    
     // Update page title
     updatePageTitle();
     
@@ -36,6 +39,27 @@ function setLanguage(lang) {
     const buttons = document.querySelectorAll('#languageDropdown button');
     buttons.forEach(btn => btn.classList.remove('bg-bg-light'));
     event.target.closest('button').classList.add('bg-bg-light');
+}
+
+// Update all elements with data-i18n attribute
+function updateAllTranslations() {
+    // Update text content
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[currentLang] && translations[currentLang][key]) {
+            element.textContent = translations[currentLang][key];
+        }
+    });
+    
+    // Update title attributes (for tooltips)
+    const titleElements = document.querySelectorAll('[data-i18n-title]');
+    titleElements.forEach(element => {
+        const key = element.getAttribute('data-i18n-title');
+        if (translations[currentLang] && translations[currentLang][key]) {
+            element.title = translations[currentLang][key];
+        }
+    });
 }
 
 // Close dropdown when clicking outside
