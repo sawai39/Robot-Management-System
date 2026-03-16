@@ -143,21 +143,42 @@ The Robot Management System is a comprehensive web-based platform designed to ma
 **Description:**  
 A persistent sidebar navigation panel that provides access to all major modules of the system.
 
+**Navigation Structure:**
+
+| Module | Sub-navigation |
+|--------|----------------|
+| **Apollo** | Site Monitoring (场域监控) |
+| **Tasks (任务)** | Task List (任务列表), Task Queue (任务队列), Task Chain (任务链) |
+| **RouteNet (路网)** | Map Edit (地图管理), RouteNet Edit (路网编辑) |
+| **Devices (设备)** | Device List (设备列表), Device Model (设备模型) |
+| **System (系统)** | Role-Permission (角色-权限), Role Management (角色管理), User-Role (人员-角色), User Management (用户管理) |
+
 **Components:**
+- **Apollo Module** (expandable submenu)
+  - Site Monitoring (场域监控)
 - **Tasks Module** (expandable submenu)
-  - Task List
-  - Task Queue
-- **Devices Module**
-- **Models Module**
-- **Dashboard Module** (placeholder)
-- **Reports Module** (placeholder)
+  - Task List (任务列表)
+  - Task Queue (任务队列)
+  - Task Chain (任务链)
+- **RouteNet Module** (expandable submenu)
+  - Map Edit (地图管理)
+  - RouteNet Edit (路网编辑)
+- **Devices Module** (expandable submenu)
+  - Device List (设备列表)
+  - Device Model (设备模型)
+- **System Module** (expandable submenu)
+  - Role-Permission (角色-权限)
+  - Role Management (角色管理)
+  - User-Role (人员-角色)
+  - User Management (用户管理)
 
 **Functional Requirements:**
 - FR-NAV-001: Sidebar shall display system title "Robot Management System"
 - FR-NAV-002: Active navigation item shall be highlighted with blue background
-- FR-NAV-003: Tasks module shall expand/collapse to show sub-navigation items
+- FR-NAV-003: All modules shall expand/collapse to show sub-navigation items
 - FR-NAV-004: Navigation items shall change appearance on hover
 - FR-NAV-005: Sidebar shall remain visible at all times (fixed position)
+- FR-NAV-006: Navigation shall support bilingual labels (English and Chinese)
 
 **Non-Functional Requirements:**
 - NFR-NAV-001: Navigation transitions shall complete within 300ms
@@ -172,13 +193,14 @@ A persistent sidebar navigation panel that provides access to all major modules 
 #### 3.1.2 Sub-navigation
 
 **Description:**  
-Expandable submenu for the Tasks module providing access to Task List and Task Queue.
+Expandable submenu for each module providing access to specific features.
 
 **Functional Requirements:**
-- FR-SUBNAV-001: Submenu shall expand on click or hover
+- FR-SUBNAV-001: Submenu shall expand on click
 - FR-SUBNAV-002: Active sub-item shall be highlighted
 - FR-SUBNAV-003: Submenu shall have darker background (#233140)
 - FR-SUBNAV-004: Sub-items shall be indented to show hierarchy
+- FR-SUBNAV-005: Only one submenu shall be expanded at a time (accordion behavior)
 
 ---
 
@@ -645,10 +667,9 @@ Global language selection control for switching between supported languages.
 **Functional Requirements:**
 
 **Language Options:**
-- FR-MLANG-001: System shall support three languages:
+- FR-MLANG-001: System shall support two languages:
   - English (en)
   - Chinese (zh) - Default
-  - Japanese (ja)
 - FR-MLANG-002: Language button shall display globe icon
 - FR-MLANG-003: Dropdown shall appear on click
 - FR-MLANG-004: Dropdown shall close when clicking outside
@@ -656,8 +677,9 @@ Global language selection control for switching between supported languages.
 
 **Translation Scope:**
 - FR-MLANG-006: All UI text shall be translatable:
+  - System name
   - Navigation items
-  - Page titles
+  - Page titles and descriptions
   - Button labels
   - Table headers
   - Status badges
@@ -669,19 +691,213 @@ Global language selection control for switching between supported languages.
 - FR-MLANG-007: Selected language shall persist during session
 - FR-MLANG-008: Default language shall be Chinese (zh)
 
-**Translation Examples:**
+#### 3.5.2 Translation Specifications
 
-| English | Chinese | Japanese |
-|---------|---------|----------|
-| Task List | 任务列表 | タスクリスト |
-| Device List | 设备列表 | デバイスリスト |
-| Model List | 模型列表 | モデルリスト |
-| View Details | 查看详情 | 詳細を表示 |
-| Delete | 删除 | 削除 |
-| Pending | 待处理 | 保留中 |
-| Completed | 已完成 | 完了 |
-| Online | 在线 | オンライン |
-| Offline | 离线 | オフライン |
+**System Name:**
+| English | Chinese |
+|---------|---------|
+| Robot Management System | 机器人调度系统 |
+
+**Navigation Translations:**
+| English | Chinese |
+|---------|---------|
+| Apollo | Apollo |
+| Site Monitoring | 场域监控 |
+| Tasks | 任务 |
+| Task List | 任务列表 |
+| Task Queue | 任务队列 |
+| Task Chain | 任务链 |
+| RouteNet | 路网 |
+| Map Edit | 地图管理 |
+| RouteNet Edit | 路网编辑 |
+| Devices | 设备 |
+| Device List | 设备列表 |
+| Device Model | 设备模型 |
+| System | 系统 |
+| Role-Permission | 角色-权限 |
+| Role Management | 角色管理 |
+| User-Role | 人员-角色 |
+| User Management | 用户管理 |
+
+**Dashboard Translations:**
+| English | Chinese |
+|---------|---------|
+| Total Robots | 机器人总数 |
+| Active Tasks | 活动任务 |
+| Online Devices | 在线设备 |
+| Completed Today | 今日完成 |
+| Quick Actions | 快捷操作 |
+| Recent Activity | 最近活动 |
+| new this week | 本周新增 |
+| executing now | 正在执行 |
+| online rate | 在线率 |
+| increase | 增长 |
+
+**Task List Page Translations:**
+
+*Buttons:*
+| English | Chinese |
+|---------|---------|
+| Add New Task | 新建任务 |
+| Refresh | 刷新 |
+| Search | 搜索 |
+| View Details | 查看详情 |
+| Delete | 删除 |
+
+*Search & Filter Area:*
+| English | Chinese |
+|---------|---------|
+| Search tasks... | 搜索任务... |
+| All Statuses | 所有状态 |
+| All Robots | 所有机器人 |
+| Pending | 待处理 |
+| Assigned | 已分配 |
+| En Route | 在途中 |
+| Executing | 执行中 |
+| Completed | 已完成 |
+| Failed | 失败 |
+
+*Table Headers:*
+| English | Chinese |
+|---------|---------|
+| Task ID | 任务ID |
+| Task Type | 任务类型 |
+| Task Name | 任务名称 |
+| Status | 状态 |
+| Robot | 机器人 |
+| Work Area | 工作区域 |
+| ETA | 预计到达 |
+| Priority | 优先级 |
+| Actions | 操作 |
+
+*Priority Labels:*
+| English | Chinese |
+|---------|---------|
+| High | 高 |
+| Normal | 普通 |
+| Low | 低 |
+
+**Task Queue Page Translations:**
+
+*Statistics Cards:*
+| English | Chinese |
+|---------|---------|
+| Pending Tasks | 待处理任务 |
+| In Progress | 进行中 |
+| Completed Today | 今日完成 |
+
+*Buttons:*
+| English | Chinese |
+|---------|---------|
+| Add to Queue | 添加到队列 |
+| Remove | 移除 |
+| Move Up | 上移 |
+| Move Down | 下移 |
+
+*Search & Filter Area:*
+| English | Chinese |
+|---------|---------|
+| All Priorities | 所有优先级 |
+| All Work Areas | 所有工作区域 |
+
+*Table Headers:*
+| English | Chinese |
+|---------|---------|
+| Queue Position | 队列位置 |
+| Created | 创建时间 |
+| Assigned Robot | 分配机器人 |
+
+**Device List Page Translations:**
+
+*Buttons:*
+| English | Chinese |
+|---------|---------|
+| Add New Device | 新建设备 |
+| Edit | 编辑 |
+
+*Search & Filter Area:*
+| English | Chinese |
+|---------|---------|
+| Search devices... | 搜索设备... |
+| All Types | 所有类型 |
+| Robots | 机器人 |
+| Elevators | 电梯 |
+| Doors | 门 |
+| Online | 在线 |
+| Offline | 离线 |
+| Maintenance | 维护中 |
+
+*Table Headers:*
+| English | Chinese |
+|---------|---------|
+| Device ID | 设备ID |
+| Device Name | 设备名称 |
+| Model | 型号 |
+| Brand | 品牌 |
+| Battery | 电量 |
+| Current Task | 当前任务 |
+| Location | 位置 |
+
+**Device Model Page Translations:**
+
+*Buttons:*
+| English | Chinese |
+|---------|---------|
+| Add New Model | 新建模型 |
+| Save Model | 保存模型 |
+
+*Model Card:*
+| English | Chinese |
+|---------|---------|
+| Model Name | 模型名称 |
+| Model ID | 模型ID |
+| Base Model | 基础模型 |
+| Description | 描述 |
+| Active | 激活 |
+| Inactive | 未激活 |
+
+**Modal Translations:**
+
+*Add Device Modal:*
+| English | Chinese |
+|---------|---------|
+| Add New Device | 添加新设备 |
+| Select Model | 选择型号 |
+| Connection Password | 连接密码 |
+| Enter the password provided with the device | 输入设备提供的密码 |
+| Verify | 验证 |
+| Device ID | 设备ID |
+| Device Name | 设备名称 |
+| Add | 添加 |
+| Cancel | 取消 |
+
+*Add Model Modal:*
+| English | Chinese |
+|---------|---------|
+| Add New Model | 添加新模型 |
+| Model Name | 模型名称 |
+| Base Model | 基础模型 |
+| Model Description | 模型描述 |
+| Upload Model Description File | 上传模型描述文件 |
+| Save | 保存 |
+
+**Common Button Translations:**
+| English | Chinese |
+|---------|---------|
+| Save | 保存 |
+| Cancel | 取消 |
+| Confirm | 确认 |
+| Close | 关闭 |
+| Verify | 验证 |
+| Add | 添加 |
+| Search | 搜索 |
+| Reset | 重置 |
+| Submit | 提交 |
+
+**Footer Translations:**
+| English | Chinese |
+|---------|---------|
+| Version | 版本 |
 
 ---
 

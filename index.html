@@ -90,13 +90,33 @@
         <aside class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col">
             <!-- Logo/Title -->
             <div class="p-5 border-b border-white/10">
-                <h1 class="text-white text-lg font-semibold leading-tight">
+                <h1 class="text-white text-lg font-semibold leading-tight" data-i18n="system.name">
                     Robot Management<br>System
                 </h1>
             </div>
             
             <!-- Navigation -->
             <nav class="flex-1 py-4 overflow-y-auto">
+                <!-- Apollo - Expandable -->
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('apollo-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span data-i18n="nav.apollo">Apollo</span>
+                        </div>
+                        <svg id="apollo-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="apollo-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" onclick="showPage('site-monitoring'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.siteMonitoring">Site Monitoring</span>
+                        </a>
+                    </div>
+                </div>
+                
                 <!-- Tasks - Expandable -->
                 <div class="nav-group">
                     <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
@@ -104,7 +124,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                             </svg>
-                            <span>Tasks</span>
+                            <span data-i18n="nav.tasks">Tasks</span>
                         </div>
                         <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -112,50 +132,97 @@
                     </button>
                     <div id="tasks-submenu" class="submenu bg-sidebar-dark">
                         <a href="#" onclick="showPage('task-list'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
-                            Task List
+                            <span data-i18n="nav.taskList">Task List</span>
                         </a>
                         <a href="#" onclick="showPage('task-queue'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
-                            Task Queue
+                            <span data-i18n="nav.taskQueue">Task Queue</span>
+                        </a>
+                        <a href="#" onclick="showPage('task-chain'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.taskChain">Task Chain</span>
                         </a>
                     </div>
                 </div>
                 
-                <!-- Devices -->
-                <a href="#" onclick="showPage('device-list'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-                    </svg>
-                    <span>Devices</span>
-                </a>
+                <!-- RouteNet - Expandable -->
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('routenet-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span data-i18n="nav.routeNet">RouteNet</span>
+                        </div>
+                        <svg id="routenet-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="routenet-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" onclick="showPage('map-edit'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.mapEdit">Map Edit</span>
+                        </a>
+                        <a href="#" onclick="showPage('routenet-edit'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.routeNetEdit">RouteNet Edit</span>
+                        </a>
+                    </div>
+                </div>
                 
-                <!-- Models -->
-                <a href="#" onclick="showPage('models'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                    </svg>
-                    <span>Models</span>
-                </a>
+                <!-- Devices - Expandable -->
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('devices-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                            </svg>
+                            <span data-i18n="nav.devices">Devices</span>
+                        </div>
+                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="devices-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" onclick="showPage('device-list'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.deviceList">Device List</span>
+                        </a>
+                        <a href="#" onclick="showPage('device-model'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.deviceModel">Device Model</span>
+                        </a>
+                    </div>
+                </div>
                 
-                <!-- Dashboard -->
-                <a href="#" onclick="showPage('dashboard'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                    </svg>
-                    <span>Dashboard</span>
-                </a>
-                
-                <!-- Reports -->
-                <a href="#" onclick="showPage('reports'); return false;" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span>Reports</span>
-                </a>
+                <!-- System - Expandable -->
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('system-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span data-i18n="nav.system">System</span>
+                        </div>
+                        <svg id="system-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="system-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" onclick="showPage('role-permission'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.rolePermission">Role-Permission</span>
+                        </a>
+                        <a href="#" onclick="showPage('role-management'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.roleManagement">Role Management</span>
+                        </a>
+                        <a href="#" onclick="showPage('user-role'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.userRole">User-Role</span>
+                        </a>
+                        <a href="#" onclick="showPage('user-management'); return false;" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
+                            <span data-i18n="nav.userManagement">User Management</span>
+                        </a>
+                    </div>
+                </div>
             </nav>
             
             <!-- Sidebar Footer -->
             <div class="p-4 border-t border-white/10">
-                <p class="text-white/50 text-xs">Version 1.0.0</p>
+                <p class="text-white/50 text-xs"><span data-i18n="footer.version">Version</span> 1.0.0</p>
             </div>
         </aside>
         
@@ -190,10 +257,6 @@
                             <span>中文</span>
                             <span class="text-text-light text-xs">(ZH)</span>
                         </button>
-                        <button onclick="setLanguage('ja')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors flex items-center gap-2">
-                            <span>日本語</span>
-                            <span class="text-text-light text-xs">(JA)</span>
-                        </button>
                     </div>
                 </div>
             </header>
@@ -208,7 +271,7 @@
                         <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-text-secondary text-sm font-medium">Total Robots</p>
+                                    <p class="text-text-secondary text-sm font-medium" data-i18n="dashboard.totalRobots">Total Robots</p>
                                     <p class="text-3xl font-bold text-sidebar mt-2">24</p>
                                 </div>
                                 <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -221,7 +284,7 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                 </svg>
-                                2 new this week
+                                <span data-i18n="dashboard.newThisWeek">2 new this week</span>
                             </p>
                         </div>
                         
@@ -229,7 +292,7 @@
                         <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-text-secondary text-sm font-medium">Active Tasks</p>
+                                    <p class="text-text-secondary text-sm font-medium" data-i18n="dashboard.activeTasks">Active Tasks</p>
                                     <p class="text-3xl font-bold text-sidebar mt-2">18</p>
                                 </div>
                                 <div class="w-12 h-12 bg-executing/10 rounded-lg flex items-center justify-center">
@@ -242,7 +305,7 @@
                                 <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                 </svg>
-                                3 executing now
+                                <span data-i18n="dashboard.executingNow">3 executing now</span>
                             </p>
                         </div>
                         
@@ -250,7 +313,7 @@
                         <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-text-secondary text-sm font-medium">Online Devices</p>
+                                    <p class="text-text-secondary text-sm font-medium" data-i18n="dashboard.onlineDevices">Online Devices</p>
                                     <p class="text-3xl font-bold text-sidebar mt-2">21</p>
                                 </div>
                                 <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
@@ -261,7 +324,7 @@
                             </div>
                             <p class="text-success text-sm mt-3 flex items-center gap-1">
                                 <span class="w-2 h-2 bg-success rounded-full animate-pulse"></span>
-                                87.5% online rate
+                                <span data-i18n="dashboard.onlineRate">87.5% online rate</span>
                             </p>
                         </div>
                         
@@ -269,7 +332,7 @@
                         <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray hover:shadow-md transition-shadow">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-text-secondary text-sm font-medium">Completed Today</p>
+                                    <p class="text-text-secondary text-sm font-medium" data-i18n="dashboard.completedToday">Completed Today</p>
                                     <p class="text-3xl font-bold text-sidebar mt-2">47</p>
                                 </div>
                                 <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center">
@@ -282,31 +345,31 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                                 </svg>
-                                12% increase
+                                <span data-i18n="dashboard.increase">12% increase</span>
                             </p>
                         </div>
                     </div>
                     
                     <!-- Quick Actions -->
                     <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-8">
-                        <h3 class="text-lg font-semibold text-sidebar mb-4">Quick Actions</h3>
+                        <h3 class="text-lg font-semibold text-sidebar mb-4" data-i18n="dashboard.quickActions">Quick Actions</h3>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <a href="#" onclick="showPage('task-list'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
+                            <a href="#" onclick="showPage('site-monitoring'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
                                 <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                     <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-text-primary" data-i18n="nav.siteMonitoring">Site Monitoring</span>
+                            </a>
+                            
+                            <a href="#" onclick="showPage('task-list'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
+                                <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center group-hover:bg-warning/20 transition-colors">
+                                    <svg class="w-5 h-5 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                     </svg>
                                 </div>
-                                <span class="font-medium text-text-primary">View Tasks</span>
-                            </a>
-                            
-                            <a href="#" onclick="showPage('task-queue'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
-                                <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center group-hover:bg-warning/20 transition-colors">
-                                    <svg class="w-5 h-5 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                                    </svg>
-                                </div>
-                                <span class="font-medium text-text-primary">Task Queue</span>
+                                <span class="font-medium text-text-primary" data-i18n="nav.taskList">Task List</span>
                             </a>
                             
                             <a href="#" onclick="showPage('device-list'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
@@ -315,23 +378,23 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                                     </svg>
                                 </div>
-                                <span class="font-medium text-text-primary">Devices</span>
+                                <span class="font-medium text-text-primary" data-i18n="nav.devices">Devices</span>
                             </a>
                             
-                            <a href="#" onclick="showPage('models'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
+                            <a href="#" onclick="showPage('device-model'); return false;" class="flex items-center gap-3 p-4 rounded-lg border border-border-gray hover:border-primary hover:bg-primary/5 transition-colors group">
                                 <div class="w-10 h-10 bg-executing/10 rounded-lg flex items-center justify-center group-hover:bg-executing/20 transition-colors">
                                     <svg class="w-5 h-5 text-executing" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                                     </svg>
                                 </div>
-                                <span class="font-medium text-text-primary">Models</span>
+                                <span class="font-medium text-text-primary" data-i18n="nav.deviceModel">Device Model</span>
                             </a>
                         </div>
                     </div>
                     
                     <!-- Recent Activity -->
                     <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6">
-                        <h3 class="text-lg font-semibold text-sidebar mb-4">Recent Activity</h3>
+                        <h3 class="text-lg font-semibold text-sidebar mb-4" data-i18n="dashboard.recentActivity">Recent Activity</h3>
                         <div class="space-y-4">
                             <div class="flex items-start gap-4 p-3 rounded-lg hover:bg-bg-light transition-colors">
                                 <div class="w-10 h-10 bg-success/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -397,16 +460,16 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                Add New Task
+                                <span data-i18n="taskList.addNewTask">Add New Task</span>
                             </button>
                             <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                 </svg>
-                                Refresh
+                                <span data-i18n="taskList.refresh">Refresh</span>
                             </button>
                         </div>
-                        <p class="text-text-secondary text-sm">Total: <span class="font-semibold text-text-primary">156 tasks</span></p>
+                        <p class="text-text-secondary text-sm" data-i18n="taskList.total">Total: <span class="font-semibold text-text-primary">156 tasks</span></p>
                     </div>
 
                     <!-- Search and Filters -->
@@ -415,7 +478,7 @@
                             <!-- Search -->
                             <div class="flex-1 min-w-[250px]">
                                 <div class="relative">
-                                    <input type="text" placeholder="Search tasks by name or ID..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                    <input type="text" data-i18n-placeholder="taskList.searchPlaceholder" placeholder="Search tasks by name or ID..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
                                     <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -426,19 +489,19 @@
                             <!-- Status Filter -->
                             <div class="w-48">
                                 <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                    <option>All Statuses</option>
-                                    <option>Pending</option>
-                                    <option>Assigned</option>
-                                    <option>En Route</option>
-                                    <option>Executing</option>
-                                    <option>Completed</option>
-                                    <option>Failed</option>
+                                    <option data-i18n="taskList.allStatuses">All Statuses</option>
+                                    <option data-i18n="taskList.pending">Pending</option>
+                                    <option data-i18n="taskList.assigned">Assigned</option>
+                                    <option data-i18n="taskList.enRoute">En Route</option>
+                                    <option data-i18n="taskList.executing">Executing</option>
+                                    <option data-i18n="taskList.completed">Completed</option>
+                                    <option data-i18n="taskList.failed">Failed</option>
                                 </select>
                             </div>
                             <!-- Robot Filter -->
                             <div class="w-48">
                                 <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                    <option>All Robots</option>
+                                    <option data-i18n="taskList.allRobots">All Robots</option>
                                     <option>Robot #1</option>
                                     <option>Robot #2</option>
                                     <option>Robot #3</option>
@@ -455,15 +518,15 @@
                             <table class="w-full">
                                 <thead class="bg-bg-light sticky top-0">
                                     <tr>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task ID</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Type</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Name</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Robot</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Work Area</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">ETA</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Priority</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Actions</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.taskId">Task ID</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.taskType">Task Type</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.taskName">Task Name</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.status">Status</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.robot">Robot</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.workArea">Work Area</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.eta">ETA</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.priority">Priority</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.actions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-border-gray">
@@ -473,18 +536,18 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Package Delivery to Floor 3</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">En Route</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white" data-i18n="taskList.enRoute">En Route</span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Robot #7</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">C11</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">14:45:30</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white" data-i18n="taskList.normal">Normal</span>
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
-                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors" data-i18n="taskList.viewDetails">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors" data-i18n="taskList.delete">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -494,18 +557,18 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">12-3</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Room Service Delivery</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">Executing</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white" data-i18n="taskList.executing">Executing</span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Robot #3</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">C12</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">14:50:00</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white" data-i18n="taskList.high">High</span>
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
-                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors" data-i18n="taskList.viewDetails">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors" data-i18n="taskList.delete">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -515,18 +578,18 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">机场行李运输</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Airport Luggage Transport</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white" data-i18n="taskList.pending">Pending</span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Robot #9</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">复材车间</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">15:00:00</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white">Low</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white" data-i18n="taskList.low">Low</span>
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
-                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors" data-i18n="taskList.viewDetails">View Details</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors" data-i18n="taskList.delete">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -536,7 +599,7 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">配送</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Warehouse Inventory Move</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary text-white">Assigned</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary text-white" data-i18n="taskList.assigned">Assigned</span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Robot #5</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">C13</td>
@@ -546,7 +609,7 @@
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
                                             </div>
                                         </td>
@@ -567,7 +630,7 @@
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
                                             </div>
                                         </td>
@@ -594,8 +657,385 @@
                 
                 <!-- Task Queue Page -->
                 <div id="task-queue" class="page-content">
-                    <h2 class="text-xl font-semibold text-sidebar mb-6">Task Queue</h2>
-                    <p class="text-text-secondary text-sm mb-8">Manage task priorities and queue order</p>
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <!-- Pending Tasks -->
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-secondary text-sm font-medium">Pending Tasks</p>
+                                    <p class="text-4xl font-bold text-warning mt-2">12</p>
+                                </div>
+                                <div class="w-14 h-14 bg-warning/10 rounded-lg flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-text-secondary text-sm mt-3">Waiting in queue</p>
+                        </div>
+
+                        <!-- In Progress -->
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-secondary text-sm font-medium">In Progress</p>
+                                    <p class="text-4xl font-bold text-executing mt-2">3</p>
+                                </div>
+                                <div class="w-14 h-14 bg-executing/10 rounded-lg flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-executing" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-text-secondary text-sm mt-3">Currently running</p>
+                        </div>
+
+                        <!-- Completed Today -->
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-text-secondary text-sm font-medium">Completed Today</p>
+                                    <p class="text-4xl font-bold text-success mt-2">28</p>
+                                </div>
+                                <div class="w-14 h-14 bg-success/10 rounded-lg flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-success text-sm mt-3 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                </svg>
+                                12% increase
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <button class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors flex items-center gap-2 font-medium">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Add to Queue
+                            </button>
+                            <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                        <p class="text-text-secondary text-sm">Queue Position: Running tasks at top, pending below</p>
+                    </div>
+
+                    <!-- Search and Filters -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-4 mb-6">
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-[200px]">
+                                <div class="relative">
+                                    <input type="text" placeholder="Search queue..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                    <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="w-44">
+                                <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                                    <option>All Priorities</option>
+                                    <option>High</option>
+                                    <option>Normal</option>
+                                    <option>Low</option>
+                                </select>
+                            </div>
+                            <div class="w-44">
+                                <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                                    <option>All Robots</option>
+                                    <option>Robot #1</option>
+                                    <option>Robot #2</option>
+                                    <option>Robot #3</option>
+                                    <option>Robot #4</option>
+                                    <option>Robot #5</option>
+                                </select>
+                            </div>
+                            <div class="w-44">
+                                <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
+                                    <option>All Work Areas</option>
+                                    <option>C11</option>
+                                    <option>C12</option>
+                                    <option>C13</option>
+                                    <option>C14</option>
+                                    <option>复材车间</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Queue Table -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-bg-light sticky top-0">
+                                    <tr>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm w-20">Position</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task ID</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Type</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Name</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Priority</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Assigned Robot</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Work Area</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Created</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-border-gray">
+                                    <!-- Running Task 1 -->
+                                    <tr class="bg-blue-50 hover:bg-blue-100 transition-colors">
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-executing text-white font-bold text-sm">1</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#Q1002</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">12-3</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Room Service Delivery</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">
+                                                <svg class="w-3 h-3 mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                </svg>
+                                                Running
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #7</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C12</td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">14:20:00</td>
+                                        <td class="px-4 py-3">
+                                            <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                        </td>
+                                    </tr>
+                                    <!-- Running Task 2 -->
+                                    <tr class="bg-blue-50 hover:bg-blue-100 transition-colors">
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-executing text-white font-bold text-sm">2</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#Q1005</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Package Delivery</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">
+                                                <svg class="w-3 h-3 mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                </svg>
+                                                Running
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #3</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C11</td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">14:15:00</td>
+                                        <td class="px-4 py-3">
+                                            <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                        </td>
+                                    </tr>
+                                    <!-- Running Task 3 -->
+                                    <tr class="bg-blue-50 hover:bg-blue-100 transition-colors">
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-executing text-white font-bold text-sm">3</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#Q1008</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">配送</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Warehouse Move</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">
+                                                <svg class="w-3 h-3 mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                </svg>
+                                                Running
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white">Low</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #9</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C13</td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">14:10:00</td>
+                                        <td class="px-4 py-3">
+                                            <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Separator -->
+                                    <tr class="bg-bg-light">
+                                        <td colspan="10" class="px-4 py-2">
+                                            <div class="flex items-center gap-2 text-text-secondary text-sm">
+                                                <div class="flex-1 h-px bg-border-gray"></div>
+                                                <span>Pending Tasks</span>
+                                                <div class="flex-1 h-px bg-border-gray"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Pending Task 1 -->
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">4</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#Q1001</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Package Delivery to Floor 3</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #3</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C11</td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">14:25:00</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors opacity-50 cursor-not-allowed" disabled title="Cannot move up - first pending task">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move down">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Pending Task 2 -->
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">5</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#Q1003</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">机场行李运输</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Airport Luggage Transport</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white">Low</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #9</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">复材车间</td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">14:30:00</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move up">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move down">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Pending Task 3 -->
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">6</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#Q1004</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">配送</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Warehouse Inventory Move</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #5</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C14</td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">14:35:00</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move up">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move down">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Pending Task 4 -->
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">7</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-primary font-medium">#Q1006</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">12-3</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Equipment Transport</td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">Robot #4</td>
+                                        <td class="px-4 py-3 text-sm text-text-primary">C15</td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">14:40:00</td>
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move up">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors opacity-50 cursor-not-allowed" disabled title="Cannot move down - last pending task">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                    </svg>
+                                                </button>
+                                                <button onclick="showPage('task-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="px-4 py-3 border-t border-border-gray flex items-center justify-between">
+                            <p class="text-sm text-text-secondary">Showing <span class="font-medium text-text-primary">1</span> to <span class="font-medium text-text-primary">7</span> of <span class="font-medium text-text-primary">15</span> tasks</p>
+                            <div class="flex items-center gap-1">
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Previous</button>
+                                <button class="px-3 py-1.5 text-sm rounded bg-primary text-white font-medium">1</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors">2</button>
+                                <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Next</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Device List Page -->
@@ -694,7 +1134,7 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">2nd Floor, Office</td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
                                             </div>
@@ -724,7 +1164,7 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">1st Floor, Lobby</td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
                                             </div>
@@ -754,7 +1194,7 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">3rd Floor, Suite</td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
                                             </div>
@@ -784,7 +1224,7 @@
                                         <td class="px-4 py-3 text-sm text-text-light">Unknown</td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
                                             </div>
@@ -809,7 +1249,7 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">Building A</td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
+                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
                                                 <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
                                             </div>
@@ -986,6 +1426,738 @@
                     </div>
                 </div>
                 
+                <!-- Task Details Page -->
+                <div id="task-details" class="page-content">
+                    <!-- Back Button -->
+                    <a href="#" onclick="showPage('task-list'); return false;" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-border-gray bg-white hover:bg-bg-light transition-colors text-text-primary mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Back to Task List
+                    </a>
+
+                    <!-- Task Information Card -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-sidebar">Task Information</h3>
+                            <button class="px-4 py-2 text-sm font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete Task</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Task ID</label>
+                                <p class="text-sm text-text-primary font-medium">#12345</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Task Type</label>
+                                <p class="text-sm text-text-primary">飞速达</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Task Name</label>
+                                <p class="text-sm text-text-primary">Package Delivery to Floor 3</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Status</label>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">En Route</span>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Priority</label>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Robot</label>
+                                <p class="text-sm text-text-primary">Robot #7</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Current Location</label>
+                                <p class="text-sm text-text-primary">Elevator, 2nd Floor</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Work Area</label>
+                                <p class="text-sm text-text-primary">C11</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">ETA</label>
+                                <p class="text-sm text-text-primary">14:45:30</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Start Time</label>
+                                <p class="text-sm text-text-primary">14:32:15</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Estimated Duration</label>
+                                <p class="text-sm text-text-primary">13 min 15 sec</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-text-secondary uppercase tracking-wide mb-1">Progress</label>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 h-2 bg-border-gray rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 60%"></div>
+                                    </div>
+                                    <span class="text-sm font-medium text-text-primary">60%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Robot Location Map -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Current Robot Location</h3>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Building Map -->
+                            <div class="lg:col-span-2 bg-bg-light rounded-lg p-4 relative" style="min-height: 300px;">
+                                <!-- Floor 3 -->
+                                <div class="absolute top-4 left-4 right-4 h-24 bg-white rounded border-2 border-border-gray p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-text-secondary">3rd Floor</span>
+                                        <span class="text-xs text-text-light">Executive Suite</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Room 301</div>
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Room 302</div>
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Room 303</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Floor 2 - Active -->
+                                <div class="absolute top-36 left-4 right-4 h-24 bg-white rounded border-2 border-primary p-3 shadow-md">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-primary">2nd Floor</span>
+                                        <span class="text-xs text-text-light">Offices</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Office A</div>
+                                        <div class="w-16 h-12 bg-primary/20 rounded text-xs flex items-center justify-center text-primary font-medium border-2 border-primary">Elev</div>
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Office B</div>
+                                    </div>
+                                    <!-- Robot Marker -->
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <div class="relative">
+                                            <div class="w-8 h-8 bg-executing rounded-full flex items-center justify-center animate-pulse-custom">
+                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                                                <span class="text-xs font-medium text-executing bg-white px-2 py-0.5 rounded shadow">Robot #7</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Floor 1 -->
+                                <div class="absolute bottom-4 left-4 right-4 h-24 bg-white rounded border-2 border-border-gray p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-text-secondary">1st Floor</span>
+                                        <span class="text-xs text-text-light">Lobby</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Lobby</div>
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Conference</div>
+                                        <div class="flex-1 h-12 bg-bg-light rounded text-xs flex items-center justify-center text-text-light">Reception</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Location Details -->
+                            <div class="space-y-4">
+                                <div class="bg-bg-light rounded-lg p-4">
+                                    <h4 class="text-sm font-semibold text-sidebar mb-3">Location Details</h4>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label class="block text-xs text-text-secondary mb-1">Current Floor</label>
+                                            <p class="text-sm font-medium text-text-primary">2nd Floor</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-text-secondary mb-1">Area</label>
+                                            <p class="text-sm font-medium text-text-primary">Elevator Area</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-text-secondary mb-1">Coordinates</label>
+                                            <p class="text-sm font-medium text-text-primary">X: 45.2, Y: 32.8</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs text-text-secondary mb-1">Last Updated</label>
+                                            <p class="text-sm font-medium text-text-primary">14:34:30</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-primary">In Transit</p>
+                                            <p class="text-xs text-text-secondary mt-1">Robot is currently taking the elevator to the 3rd floor</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task Steps -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-sidebar">Task Steps</h3>
+                            <div class="flex items-center gap-2">
+                                <button onclick="setView('table')" id="table-view-btn" class="px-3 py-1.5 text-sm font-medium rounded border border-border-gray bg-bg-light text-text-primary transition-colors">Table View</button>
+                                <button onclick="setView('tree')" id="tree-view-btn" class="px-3 py-1.5 text-sm font-medium rounded border border-primary bg-primary text-white transition-colors">Tree View</button>
+                            </div>
+                        </div>
+
+                        <!-- Table View -->
+                        <div id="table-view" class="hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-bg-light">
+                                        <tr>
+                                            <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Step</th>
+                                            <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
+                                            <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Start Time</th>
+                                            <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">End Time</th>
+                                            <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Duration</th>
+                                            <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-border-gray">
+                                        <tr class="hover:bg-bg-light transition-colors">
+                                            <td class="px-4 py-3 text-sm text-text-primary">1. Leave Charging Station</td>
+                                            <td class="px-4 py-3"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Completed</span></td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">14:32:15</td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">14:32:47</td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">32s</td>
+                                            <td class="px-4 py-3 text-sm text-text-secondary">Robot left charging station successfully</td>
+                                        </tr>
+                                        <tr class="hover:bg-bg-light transition-colors">
+                                            <td class="px-4 py-3 text-sm text-text-primary">2. Navigate to Elevator</td>
+                                            <td class="px-4 py-3"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Completed</span></td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">14:32:47</td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">14:33:20</td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">33s</td>
+                                            <td class="px-4 py-3 text-sm text-text-secondary">Robot navigated to elevator on 1st floor</td>
+                                        </tr>
+                                        <tr class="hover:bg-bg-light transition-colors">
+                                            <td class="px-4 py-3 text-sm text-text-primary">3. Wait for Elevator</td>
+                                            <td class="px-4 py-3"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Completed</span></td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">14:33:20</td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">14:34:05</td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">45s</td>
+                                            <td class="px-4 py-3 text-sm text-text-secondary">Robot waited for elevator to arrive</td>
+                                        </tr>
+                                        <tr class="bg-executing/5">
+                                            <td class="px-4 py-3 text-sm text-text-primary font-medium">4. Take Elevator to 3rd Floor</td>
+                                            <td class="px-4 py-3"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">Executing</span></td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">14:34:05</td>
+                                            <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                            <td class="px-4 py-3 text-sm text-text-primary">25s</td>
+                                            <td class="px-4 py-3 text-sm text-text-secondary">Robot is currently in elevator</td>
+                                        </tr>
+                                        <tr class="hover:bg-bg-light transition-colors">
+                                            <td class="px-4 py-3 text-sm text-text-primary">5. Navigate to Room 301</td>
+                                            <td class="px-4 py-3"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span></td>
+                                            <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                            <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                            <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                            <td class="px-4 py-3 text-sm text-text-secondary">Robot will navigate to Room 301</td>
+                                        </tr>
+                                        <tr class="hover:bg-bg-light transition-colors">
+                                            <td class="px-4 py-3 text-sm text-text-primary">6. Deliver Package</td>
+                                            <td class="px-4 py-3"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span></td>
+                                            <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                            <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                            <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                            <td class="px-4 py-3 text-sm text-text-secondary">Robot will deliver package to recipient</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tree View -->
+                        <div id="tree-view">
+                            <div class="space-y-2">
+                                <!-- Step 1 - Completed -->
+                                <div class="flex items-start gap-3">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full bg-success flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="w-0.5 h-full bg-border-gray mt-2"></div>
+                                    </div>
+                                    <div class="flex-1 pb-4">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="font-medium text-text-primary">1. Leave Charging Station</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-success text-white">Completed</span>
+                                        </div>
+                                        <p class="text-sm text-text-secondary">14:32:15 - 14:32:47 (32s)</p>
+                                        <p class="text-sm text-text-light mt-1">Robot left charging station successfully</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 - Completed -->
+                                <div class="flex items-start gap-3">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full bg-success flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="w-0.5 h-full bg-border-gray mt-2"></div>
+                                    </div>
+                                    <div class="flex-1 pb-4">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="font-medium text-text-primary">2. Navigate to Elevator</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-success text-white">Completed</span>
+                                        </div>
+                                        <p class="text-sm text-text-secondary">14:32:47 - 14:33:20 (33s)</p>
+                                        <p class="text-sm text-text-light mt-1">Robot navigated to elevator on 1st floor</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 - Completed -->
+                                <div class="flex items-start gap-3">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full bg-success flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="w-0.5 h-full bg-border-gray mt-2"></div>
+                                    </div>
+                                    <div class="flex-1 pb-4">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="font-medium text-text-primary">3. Wait for Elevator</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-success text-white">Completed</span>
+                                        </div>
+                                        <p class="text-sm text-text-secondary">14:33:20 - 14:34:05 (45s)</p>
+                                        <p class="text-sm text-text-light mt-1">Robot waited for elevator to arrive</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4 - Executing -->
+                                <div class="flex items-start gap-3">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full bg-executing flex items-center justify-center executing-indicator">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="w-0.5 h-full bg-border-gray mt-2"></div>
+                                    </div>
+                                    <div class="flex-1 pb-4">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="font-medium text-text-primary">4. Take Elevator to 3rd Floor</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-executing text-white">Executing</span>
+                                        </div>
+                                        <p class="text-sm text-text-secondary">14:34:05 - Present (25s)</p>
+                                        <p class="text-sm text-text-light mt-1">Robot is currently in elevator</p>
+                                        
+                                        <!-- Nested Steps -->
+                                        <div class="mt-4 ml-4 pl-4 border-l-2 border-executing/30 space-y-3">
+                                            <div class="flex items-start gap-2">
+                                                <div class="w-6 h-6 rounded-full bg-warning/20 flex items-center justify-center mt-0.5">
+                                                    <svg class="w-4 h-4 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <span class="text-sm text-text-primary">5. Navigate to Room 301</span>
+                                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-start gap-2">
+                                                <div class="w-6 h-6 rounded-full bg-warning/20 flex items-center justify-center mt-0.5">
+                                                    <svg class="w-4 h-4 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <span class="text-sm text-text-primary">6. Deliver Package</span>
+                                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Device Details Page -->
+                <div id="device-details" class="page-content">
+                    <!-- Back Button -->
+                    <a href="#" onclick="showPage('device-list'); return false;" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-border-gray bg-white hover:bg-bg-light transition-colors text-text-primary mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Back to Device List
+                    </a>
+
+                    <!-- Basic Information -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                        <div class="flex flex-col lg:flex-row gap-6">
+                            <!-- Device Image -->
+                            <div class="lg:w-48 flex-shrink-0">
+                                <div class="w-full h-48 bg-bg-light rounded-lg flex items-center justify-center border border-border-gray">
+                                    <svg class="w-24 h-24 text-text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Device Info -->
+                            <div class="flex-1">
+                                <div class="flex items-start justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-sidebar">Basic Information</h3>
+                                    <div class="flex items-center gap-2">
+                                        <button class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">Edit Device</button>
+                                        <button class="px-3 py-1.5 text-xs font-medium text-warning border border-warning rounded hover:bg-warning hover:text-white transition-colors">Reboot</button>
+                                        <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-xs text-text-secondary mb-1">Device ID</label>
+                                        <p class="text-sm font-medium text-text-primary">TZ123_001</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-text-secondary mb-1">Device Name</label>
+                                        <p class="text-sm font-medium text-text-primary">天体0号</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-text-secondary mb-1">Model</label>
+                                        <p class="text-sm font-medium text-text-primary">抱箱机器人</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-text-secondary mb-1">Brand</label>
+                                        <p class="text-sm font-medium text-text-primary">Tianti</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-text-secondary mb-1">Status</label>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Online</span>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-text-secondary mb-1">Battery Level</label>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-20 h-2 bg-border-gray rounded-full overflow-hidden">
+                                                <div class="h-full bg-success rounded-full" style="width: 85%"></div>
+                                            </div>
+                                            <span class="text-sm font-medium text-text-primary">85%</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-2 md:col-span-3">
+                                        <label class="block text-xs text-text-secondary mb-1">Location</label>
+                                        <p class="text-sm font-medium text-text-primary">2nd Floor, Office Area</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-time Information -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Real-time Information</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Connection & Mission -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+                                    </svg>
+                                    Connection & Mission
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Connection State</span>
+                                        <span class="text-sm font-medium text-success">Online</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Current Mission</span>
+                                        <span class="text-sm font-medium text-text-primary">Moving to Dock 5</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    Location
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Current Location</span>
+                                        <span class="text-sm font-medium text-text-primary">2nd Floor</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">工作域</span>
+                                        <span class="text-sm font-medium text-text-primary">Office Area</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Coordinates</span>
+                                        <span class="text-sm font-medium text-text-primary">X: 12.5, Y: 8.3</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Battery & Power -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    Battery & Power
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">State of Charge</span>
+                                        <span class="text-sm font-medium text-text-primary">85%</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Status</span>
+                                        <span class="text-sm font-medium text-warning">Discharging</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Time Remaining</span>
+                                        <span class="text-sm font-medium text-text-primary">2h 30m</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Temperature</span>
+                                        <span class="text-sm font-medium text-text-primary">25°C</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Movement & Safety -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                    </svg>
+                                    Movement & Safety
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Current Speed</span>
+                                        <span class="text-sm font-medium text-text-primary">0.8 m/s</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Direction</span>
+                                        <span class="text-sm font-medium text-text-primary">North</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Safety Status</span>
+                                        <span class="text-sm font-medium text-success">Normal</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">E-Stop Status</span>
+                                        <span class="text-sm font-medium text-success">Not Active</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real-time Graphs -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Real-time Graphs</h3>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-sm font-medium text-text-secondary mb-3">Velocity Over Time</h4>
+                                <div class="h-48">
+                                    <canvas id="velocityChart"></canvas>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-text-secondary mb-3">Acceleration & Angular Acceleration</h4>
+                                <div class="h-48">
+                                    <canvas id="accelerationChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Static Specifications -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Static Specifications</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Physical Dimensions -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3">Physical Dimensions</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <span class="text-xs text-text-secondary">Length x Width x Height</span>
+                                        <p class="text-sm font-medium text-text-primary">500mm x 400mm x 350mm</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-text-secondary">Turn Radius</span>
+                                        <p class="text-sm font-medium text-text-primary">Zero (Differential Drive)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Operational Capabilities -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3">Operational Capabilities</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Max Speed (Laden)</span>
+                                        <span class="text-sm font-medium text-text-primary">1.2 m/s</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Max Speed (Unladen)</span>
+                                        <span class="text-sm font-medium text-text-primary">1.5 m/s</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Max Payload</span>
+                                        <span class="text-sm font-medium text-text-primary">50 kg</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">Lift Height</span>
+                                        <span class="text-sm font-medium text-text-primary">N/A</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Interfaces & Connectivity -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3">Interfaces & Connectivity</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <span class="text-xs text-text-secondary">Communication Protocol</span>
+                                        <p class="text-sm font-medium text-text-primary">WiFi 5GHz, Ethernet</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-text-secondary">I/O Ports</span>
+                                        <p class="text-sm font-medium text-text-primary">2x USB, 1x RS-485</p>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">IP Address</span>
+                                        <span class="text-sm font-medium text-text-primary">192.168.1.101</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-text-secondary">MAC Address</span>
+                                        <span class="text-sm font-medium text-text-primary">00:1B:44:11:3A:B7</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Statistics</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Odometry Data -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3">Odometry Data</h4>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="text-center">
+                                        <p class="text-2xl font-bold text-primary">1,245</p>
+                                        <p class="text-xs text-text-secondary">Total Distance (m)</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-2xl font-bold text-primary">48</p>
+                                        <p class="text-xs text-text-secondary">Operating Time (h)</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-2xl font-bold text-primary">0.6</p>
+                                        <p class="text-xs text-text-secondary">Average Speed (m/s)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Performance Metrics -->
+                            <div class="bg-bg-light rounded-lg p-4">
+                                <h4 class="text-sm font-semibold text-sidebar mb-3">Performance Metrics</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm">
+                                        <thead>
+                                            <tr class="border-b border-border-gray">
+                                                <th class="text-left py-2 text-text-secondary font-medium">Task Type</th>
+                                                <th class="text-right py-2 text-text-secondary font-medium">Success Rate</th>
+                                                <th class="text-right py-2 text-text-secondary font-medium">Avg Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b border-border-gray">
+                                                <td class="py-2 text-text-primary">飞速达</td>
+                                                <td class="py-2 text-right text-success font-medium">98.5%</td>
+                                                <td class="py-2 text-right text-text-primary">12.3 min</td>
+                                            </tr>
+                                            <tr class="border-b border-border-gray">
+                                                <td class="py-2 text-text-primary">配送</td>
+                                                <td class="py-2 text-right text-success font-medium">99.1%</td>
+                                                <td class="py-2 text-right text-text-primary">8.5 min</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-2 text-text-primary">机场行李</td>
+                                                <td class="py-2 text-right text-success font-medium">97.8%</td>
+                                                <td class="py-2 text-right text-text-primary">15.2 min</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">Recent Activity</h3>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-bg-light">
+                                    <tr>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Time</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Activity</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-border-gray">
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 14:30</td>
+                                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success/10 text-success">Status Change</span></td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">Changed from Maintenance to Online</td>
+                                    </tr>
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 14:25</td>
+                                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning/10 text-warning">Maintenance</span></td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">Firmware updated to v1.2.3</td>
+                                    </tr>
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 10:15</td>
+                                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">Task Completed</span></td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">Completed task #12345 successfully</td>
+                                    </tr>
+                                    <tr class="hover:bg-bg-light transition-colors">
+                                        <td class="px-4 py-3 text-sm text-text-primary">2026-03-12 09:45</td>
+                                        <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-executing/10 text-executing">System Boot</span></td>
+                                        <td class="px-4 py-3 text-sm text-text-secondary">System started after scheduled maintenance</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Reports Page -->
                 <div id="reports" class="page-content">
                     <h2 class="text-xl font-semibold text-sidebar mb-6">Reports</h2>
@@ -1125,38 +2297,63 @@
             const pages = document.querySelectorAll('.page-content');
             pages.forEach(page => page.classList.remove('active'));
             
-            // Show the selected page
-            document.getElementById(pageId).classList.add('active');
-            
-            // Update page title and description
-            const pageTitles = {
-                'dashboard': 'Welcome to Robot Management System',
-                'task-list': 'Task List',
-                'task-queue': 'Task Queue',
-                'device-list': 'Device List',
-                'models': 'Model Management',
-                'reports': 'Reports'
+            // Map new navigation IDs to existing pages
+            const pageMapping = {
+                'site-monitoring': 'dashboard',
+                'task-chain': 'task-list',
+                'map-edit': 'task-list',
+                'routenet-edit': 'task-list',
+                'device-model': 'models',
+                'role-permission': 'task-list',
+                'role-management': 'task-list',
+                'user-role': 'task-list',
+                'user-management': 'task-list'
             };
             
-            const pageDescriptions = {
-                'dashboard': 'Monitor and manage your robot fleet efficiently',
-                'task-list': 'View and manage all tasks',
-                'task-queue': 'Manage task priorities and queue order',
-                'device-list': 'Manage and monitor all registered devices',
-                'models': 'Manage robot and device models',
-                'reports': 'Generate and view system reports'
-            };
+            const targetPageId = pageMapping[pageId] || pageId;
             
-            document.getElementById('page-title').textContent = pageTitles[pageId];
-            document.getElementById('page-description').textContent = pageDescriptions[pageId];
+            const targetPage = document.getElementById(targetPageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Update page title and description using translations
+            const titleKey = `page.${pageId}.title`;
+            const descKey = `page.${pageId}.desc`;
+            const fallbackTitleKey = `page.${targetPageId}.title`;
+            const fallbackDescKey = `page.${targetPageId}.desc`;
+            
+            const title = translations[currentLang]?.[titleKey] || translations[currentLang]?.[fallbackTitleKey] || 'Robot Management System';
+            const desc = translations[currentLang]?.[descKey] || translations[currentLang]?.[fallbackDescKey] || '';
+            
+            document.getElementById('page-title').textContent = title;
+            document.getElementById('page-description').textContent = desc;
         }
         
-        // Toggle submenu
+        // Toggle submenu with accordion behavior
         function toggleSubmenu(id) {
+            const allSubmenus = document.querySelectorAll('.submenu');
             const submenu = document.getElementById(id);
-            const arrow = document.getElementById('tasks-arrow');
+            const arrowId = id.replace('-submenu', '-arrow');
+            const arrow = document.getElementById(arrowId);
+            
+            // Close all other submenus
+            allSubmenus.forEach(sm => {
+                if (sm.id !== id) {
+                    sm.classList.remove('expanded');
+                    const otherArrowId = sm.id.replace('-submenu', '-arrow');
+                    const otherArrow = document.getElementById(otherArrowId);
+                    if (otherArrow) {
+                        otherArrow.classList.remove('rotate-180');
+                    }
+                }
+            });
+            
+            // Toggle current submenu
             submenu.classList.toggle('expanded');
-            arrow.classList.toggle('rotate-180');
+            if (arrow) {
+                arrow.classList.toggle('rotate-180');
+            }
         }
         
         // Toggle language dropdown
@@ -1165,12 +2362,362 @@
             dropdown.classList.toggle('hidden');
         }
         
+        // Translation system
+        const translations = {
+            en: {
+                // System
+                'system.name': 'Robot Management<br>System',
+                
+                // Navigation
+                'nav.apollo': 'Apollo',
+                'nav.siteMonitoring': 'Site Monitoring',
+                'nav.tasks': 'Tasks',
+                'nav.taskList': 'Task List',
+                'nav.taskQueue': 'Task Queue',
+                'nav.taskChain': 'Task Chain',
+                'nav.routeNet': 'RouteNet',
+                'nav.mapEdit': 'Map Edit',
+                'nav.routeNetEdit': 'RouteNet Edit',
+                'nav.devices': 'Devices',
+                'nav.deviceList': 'Device List',
+                'nav.deviceModel': 'Device Model',
+                'nav.system': 'System',
+                'nav.rolePermission': 'Role-Permission',
+                'nav.roleManagement': 'Role Management',
+                'nav.userRole': 'User-Role',
+                'nav.userManagement': 'User Management',
+                
+                // Page titles
+                'page.dashboard.title': 'Welcome to Robot Management System',
+                'page.dashboard.desc': 'Monitor and manage your robot fleet efficiently',
+                'page.siteMonitoring.title': 'Site Monitoring',
+                'page.siteMonitoring.desc': 'Real-time site monitoring and surveillance',
+                'page.taskList.title': 'Task List',
+                'page.taskList.desc': 'View and manage all tasks',
+                'page.taskQueue.title': 'Task Queue',
+                'page.taskQueue.desc': 'Manage task priorities and queue order',
+                'page.taskChain.title': 'Task Chain',
+                'page.taskChain.desc': 'Manage task chains and workflows',
+                'page.deviceList.title': 'Device List',
+                'page.deviceList.desc': 'Manage and monitor all registered devices',
+                'page.deviceModel.title': 'Device Model',
+                'page.deviceModel.desc': 'Manage robot and device models',
+                'page.mapEdit.title': 'Map Edit',
+                'page.mapEdit.desc': 'Manage site maps and layouts',
+                'page.routeNetEdit.title': 'RouteNet Edit',
+                'page.routeNetEdit.desc': 'Edit and configure route networks',
+                'page.rolePermission.title': 'Role-Permission',
+                'page.rolePermission.desc': 'Configure role permissions',
+                'page.roleManagement.title': 'Role Management',
+                'page.roleManagement.desc': 'Manage system roles',
+                'page.userRole.title': 'User-Role',
+                'page.userRole.desc': 'Assign roles to users',
+                'page.userManagement.title': 'User Management',
+                'page.userManagement.desc': 'Manage system users',
+                
+                // Dashboard
+                'dashboard.totalRobots': 'Total Robots',
+                'dashboard.activeTasks': 'Active Tasks',
+                'dashboard.onlineDevices': 'Online Devices',
+                'dashboard.completedToday': 'Completed Today',
+                'dashboard.quickActions': 'Quick Actions',
+                'dashboard.recentActivity': 'Recent Activity',
+                'dashboard.newThisWeek': '2 new this week',
+                'dashboard.executingNow': '3 executing now',
+                'dashboard.onlineRate': '87.5% online rate',
+                'dashboard.increase': '12% increase',
+                
+                // Navigation additional
+                'nav.deviceModel': 'Device Model',
+                
+                // Task List
+                'taskList.searchPlaceholder': 'Search tasks...',
+                'taskList.allStatuses': 'All Statuses',
+                'taskList.pending': 'Pending',
+                'taskList.assigned': 'Assigned',
+                'taskList.enRoute': 'En Route',
+                'taskList.executing': 'Executing',
+                'taskList.completed': 'Completed',
+                'taskList.failed': 'Failed',
+                'taskList.allRobots': 'All Robots',
+                'taskList.addNewTask': 'Add New Task',
+                'taskList.refresh': 'Refresh',
+                'taskList.taskId': 'Task ID',
+                'taskList.taskType': 'Task Type',
+                'taskList.taskName': 'Task Name',
+                'taskList.status': 'Status',
+                'taskList.robot': 'Robot',
+                'taskList.workArea': 'Work Area',
+                'taskList.eta': 'ETA',
+                'taskList.priority': 'Priority',
+                'taskList.actions': 'Actions',
+                'taskList.viewDetails': 'View Details',
+                'taskList.delete': 'Delete',
+                'taskList.high': 'High',
+                'taskList.normal': 'Normal',
+                'taskList.low': 'Low',
+                
+                // Task Queue
+                'taskQueue.pendingTasks': 'Pending Tasks',
+                'taskQueue.inProgress': 'In Progress',
+                'taskQueue.completedToday': 'Completed Today',
+                'taskQueue.addToQueue': 'Add to Queue',
+                'taskQueue.queuePosition': 'Queue Position',
+                'taskQueue.created': 'Created',
+                'taskQueue.remove': 'Remove',
+                'taskQueue.moveUp': 'Move Up',
+                'taskQueue.moveDown': 'Move Down',
+                'taskQueue.allPriorities': 'All Priorities',
+                'taskQueue.allWorkAreas': 'All Work Areas',
+                
+                // Device List
+                'deviceList.searchPlaceholder': 'Search devices...',
+                'deviceList.allTypes': 'All Types',
+                'deviceList.robots': 'Robots',
+                'deviceList.elevators': 'Elevators',
+                'deviceList.doors': 'Doors',
+                'deviceList.allStatuses': 'All Statuses',
+                'deviceList.online': 'Online',
+                'deviceList.offline': 'Offline',
+                'deviceList.maintenance': 'Maintenance',
+                'deviceList.addNewDevice': 'Add New Device',
+                'deviceList.deviceId': 'Device ID',
+                'deviceList.deviceName': 'Device Name',
+                'deviceList.model': 'Model',
+                'deviceList.brand': 'Brand',
+                'deviceList.battery': 'Battery',
+                'deviceList.currentTask': 'Current Task',
+                'deviceList.location': 'Location',
+                'deviceList.edit': 'Edit',
+                
+                // Models
+                'models.addNewModel': 'Add New Model',
+                'models.modelName': 'Model Name',
+                'models.modelId': 'Model ID',
+                'models.baseModel': 'Base Model',
+                'models.description': 'Description',
+                'models.active': 'Active',
+                'models.inactive': 'Inactive',
+                
+                // Buttons
+                'btn.save': 'Save',
+                'btn.cancel': 'Cancel',
+                'btn.confirm': 'Confirm',
+                'btn.close': 'Close',
+                'btn.verify': 'Verify',
+                'btn.add': 'Add',
+                'btn.search': 'Search',
+                'btn.reset': 'Reset',
+                'btn.submit': 'Submit',
+                
+                // Modal
+                'modal.addDevice': 'Add New Device',
+                'modal.selectModel': 'Select Model',
+                'modal.connectionPassword': 'Connection Password',
+                'modal.passwordHint': 'Enter the password provided with the device',
+                'modal.deviceId': 'Device ID',
+                'modal.deviceName': 'Device Name',
+                'modal.addModel': 'Add New Model',
+                'modal.modelDescription': 'Model Description',
+                'modal.uploadFile': 'Upload Model Description File',
+                'modal.saveModel': 'Save Model',
+                
+                // Footer
+                'footer.version': 'Version'
+            },
+            zh: {
+                // System
+                'system.name': '机器人调度<br>系统',
+                
+                // Navigation
+                'nav.apollo': 'Apollo',
+                'nav.siteMonitoring': '场域监控',
+                'nav.tasks': '任务',
+                'nav.taskList': '任务列表',
+                'nav.taskQueue': '任务队列',
+                'nav.taskChain': '任务链',
+                'nav.routeNet': '路网',
+                'nav.mapEdit': '地图管理',
+                'nav.routeNetEdit': '路网编辑',
+                'nav.devices': '设备',
+                'nav.deviceList': '设备列表',
+                'nav.deviceModel': '设备模型',
+                'nav.system': '系统',
+                'nav.rolePermission': '角色-权限',
+                'nav.roleManagement': '角色管理',
+                'nav.userRole': '人员-角色',
+                'nav.userManagement': '用户管理',
+                
+                // Page titles
+                'page.dashboard.title': '欢迎使用机器人调度系统',
+                'page.dashboard.desc': '高效监控和管理您的机器人车队',
+                'page.siteMonitoring.title': '场域监控',
+                'page.siteMonitoring.desc': '实时场域监控和监视',
+                'page.taskList.title': '任务列表',
+                'page.taskList.desc': '查看和管理所有任务',
+                'page.taskQueue.title': '任务队列',
+                'page.taskQueue.desc': '管理任务优先级和队列顺序',
+                'page.taskChain.title': '任务链',
+                'page.taskChain.desc': '管理任务链和工作流程',
+                'page.deviceList.title': '设备列表',
+                'page.deviceList.desc': '管理和监控所有注册设备',
+                'page.deviceModel.title': '设备模型',
+                'page.deviceModel.desc': '管理机器人和设备模型',
+                'page.mapEdit.title': '地图管理',
+                'page.mapEdit.desc': '管理场地图和布局',
+                'page.routeNetEdit.title': '路网编辑',
+                'page.routeNetEdit.desc': '编辑和配置路网',
+                'page.rolePermission.title': '角色-权限',
+                'page.rolePermission.desc': '配置角色权限',
+                'page.roleManagement.title': '角色管理',
+                'page.roleManagement.desc': '管理系统角色',
+                'page.userRole.title': '人员-角色',
+                'page.userRole.desc': '为用户分配角色',
+                'page.userManagement.title': '用户管理',
+                'page.userManagement.desc': '管理系统用户',
+                
+                // Dashboard
+                'dashboard.totalRobots': '机器人总数',
+                'dashboard.activeTasks': '活动任务',
+                'dashboard.onlineDevices': '在线设备',
+                'dashboard.completedToday': '今日完成',
+                'dashboard.quickActions': '快捷操作',
+                'dashboard.recentActivity': '最近活动',
+                'dashboard.newThisWeek': '本周新增 2 台',
+                'dashboard.executingNow': '正在执行 3 个',
+                'dashboard.onlineRate': '在线率 87.5%',
+                'dashboard.increase': '增长 12%',
+                
+                // Navigation additional
+                'nav.deviceModel': '设备模型',
+                
+                // Task List
+                'taskList.addNewTask': '新建任务',
+                'taskList.refresh': '刷新',
+                'taskList.total': '总计：156 个任务',
+                'taskList.searchPlaceholder': '搜索任务名称或ID...',
+                'taskList.allStatuses': '所有状态',
+                'taskList.allRobots': '所有机器人',
+                'taskList.pending': '待处理',
+                'taskList.assigned': '已分配',
+                'taskList.enRoute': '在途中',
+                'taskList.executing': '执行中',
+                'taskList.completed': '已完成',
+                'taskList.failed': '失败',
+                'taskList.taskId': '任务ID',
+                'taskList.taskType': '任务类型',
+                'taskList.taskName': '任务名称',
+                'taskList.status': '状态',
+                'taskList.robot': '机器人',
+                'taskList.workArea': '工作区域',
+                'taskList.eta': '预计到达',
+                'taskList.priority': '优先级',
+                'taskList.actions': '操作',
+                'taskList.viewDetails': '查看详情',
+                'taskList.delete': '删除',
+                'taskList.high': '高',
+                'taskList.normal': '普通',
+                'taskList.low': '低',
+                
+                // Task Queue
+                'taskQueue.pendingTasks': '待处理任务',
+                'taskQueue.inProgress': '进行中',
+                'taskQueue.completedToday': '今日完成',
+                'taskQueue.addToQueue': '添加到队列',
+                'taskQueue.queuePosition': '队列位置',
+                'taskQueue.created': '创建时间',
+                'taskQueue.remove': '移除',
+                'taskQueue.moveUp': '上移',
+                'taskQueue.moveDown': '下移',
+                'taskQueue.allPriorities': '所有优先级',
+                'taskQueue.allWorkAreas': '所有工作区域',
+                
+                // Device List
+                'deviceList.searchPlaceholder': '搜索设备...',
+                'deviceList.allTypes': '所有类型',
+                'deviceList.robots': '机器人',
+                'deviceList.elevators': '电梯',
+                'deviceList.doors': '门',
+                'deviceList.allStatuses': '所有状态',
+                'deviceList.online': '在线',
+                'deviceList.offline': '离线',
+                'deviceList.maintenance': '维护中',
+                'deviceList.addNewDevice': '添加新设备',
+                'deviceList.deviceId': '设备ID',
+                'deviceList.deviceName': '设备名称',
+                'deviceList.model': '型号',
+                'deviceList.brand': '品牌',
+                'deviceList.battery': '电量',
+                'deviceList.currentTask': '当前任务',
+                'deviceList.location': '位置',
+                'deviceList.edit': '编辑',
+                
+                // Models
+                'models.addNewModel': '添加新模型',
+                'models.modelName': '模型名称',
+                'models.modelId': '模型ID',
+                'models.baseModel': '基础模型',
+                'models.description': '描述',
+                'models.active': '激活',
+                'models.inactive': '未激活',
+                
+                // Buttons
+                'btn.save': '保存',
+                'btn.cancel': '取消',
+                'btn.confirm': '确认',
+                'btn.close': '关闭',
+                'btn.verify': '验证',
+                'btn.add': '添加',
+                'btn.search': '搜索',
+                'btn.reset': '重置',
+                'btn.submit': '提交',
+                
+                // Modal
+                'modal.addDevice': '添加新设备',
+                'modal.selectModel': '选择型号',
+                'modal.connectionPassword': '连接密码',
+                'modal.passwordHint': '输入设备提供的密码',
+                'modal.deviceId': '设备ID',
+                'modal.deviceName': '设备名称',
+                'modal.addModel': '添加新模型',
+                'modal.modelDescription': '模型描述',
+                'modal.uploadFile': '上传模型描述文件',
+                'modal.saveModel': '保存模型',
+                
+                // Footer
+                'footer.version': '版本'
+            }
+        };
+        
+        // Current language
+        let currentLang = 'zh';
+        
+        // Apply translations
+        function applyTranslations(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update placeholders
+            const placeholders = document.querySelectorAll('[data-i18n-placeholder]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+        }
+        
         // Set language
         function setLanguage(lang) {
+            currentLang = lang;
             const langNames = {
                 'en': 'English',
-                'zh': '中文',
-                'ja': '日本語'
+                'zh': '中文'
             };
             document.getElementById('current-lang').textContent = langNames[lang];
             document.getElementById('language-dropdown').classList.add('hidden');
@@ -1179,6 +2726,15 @@
             const buttons = document.querySelectorAll('#language-dropdown button');
             buttons.forEach(btn => btn.classList.remove('bg-bg-light'));
             event.target.closest('button').classList.add('bg-bg-light');
+            
+            // Apply translations
+            applyTranslations(lang);
+            
+            // Update page title based on current page
+            const activePage = document.querySelector('.page-content.active');
+            if (activePage) {
+                showPage(activePage.id);
+            }
         }
         
         // Add Device Modal
@@ -1220,6 +2776,11 @@
                     dropdown.classList.add('hidden');
                 }
             }
+        });
+        
+        // Initialize translations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTranslations(currentLang);
         });
     </script>
 </body>
