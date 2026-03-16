@@ -2318,10 +2318,15 @@
             }
             
             // Update page title and description using translations
-            const titleKey = `page.${pageId}.title`;
-            const descKey = `page.${pageId}.desc`;
-            const fallbackTitleKey = `page.${targetPageId}.title`;
-            const fallbackDescKey = `page.${targetPageId}.desc`;
+            // Convert hyphenated pageId to camelCase for translation keys
+            const toCamelCase = (str) => str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+            const camelPageId = toCamelCase(pageId);
+            const camelTargetPageId = toCamelCase(targetPageId);
+            
+            const titleKey = `page.${camelPageId}.title`;
+            const descKey = `page.${camelPageId}.desc`;
+            const fallbackTitleKey = `page.${camelTargetPageId}.title`;
+            const fallbackDescKey = `page.${camelTargetPageId}.desc`;
             
             const title = translations[currentLang]?.[titleKey] || translations[currentLang]?.[fallbackTitleKey] || 'Robot Management System';
             const desc = translations[currentLang]?.[descKey] || translations[currentLang]?.[fallbackDescKey] || '';
