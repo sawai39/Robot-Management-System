@@ -720,16 +720,16 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                Add to Queue
+                                <span data-i18n="taskQueue.addToQueue">Add to Queue</span>
                             </button>
                             <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                 </svg>
-                                Refresh
+                                <span data-i18n="taskList.refresh">Refresh</span>
                             </button>
                         </div>
-                        <p class="text-text-secondary text-sm">Queue Position: Running tasks at top, pending below</p>
+                        <p class="text-text-secondary text-sm" data-i18n="taskQueue.queuePosition">Queue Position: Running tasks at top, pending below</p>
                     </div>
 
                     <!-- Search and Filters -->
@@ -737,7 +737,7 @@
                         <div class="flex flex-wrap gap-4">
                             <div class="flex-1 min-w-[200px]">
                                 <div class="relative">
-                                    <input type="text" placeholder="Search queue..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                    <input type="text" data-i18n-placeholder="taskQueue.searchPlaceholder" placeholder="Search queue..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
                                     <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -747,15 +747,15 @@
                             </div>
                             <div class="w-44">
                                 <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                    <option>All Priorities</option>
-                                    <option>High</option>
-                                    <option>Normal</option>
-                                    <option>Low</option>
+                                    <option data-i18n="taskQueue.allPriorities">All Priorities</option>
+                                    <option data-i18n="taskList.high">High</option>
+                                    <option data-i18n="taskList.normal">Normal</option>
+                                    <option data-i18n="taskList.low">Low</option>
                                 </select>
                             </div>
                             <div class="w-44">
                                 <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                    <option>All Robots</option>
+                                    <option data-i18n="taskList.allRobots">All Robots</option>
                                     <option>Robot #1</option>
                                     <option>Robot #2</option>
                                     <option>Robot #3</option>
@@ -765,7 +765,7 @@
                             </div>
                             <div class="w-44">
                                 <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                    <option>All Work Areas</option>
+                                    <option data-i18n="taskQueue.allWorkAreas">All Work Areas</option>
                                     <option>C11</option>
                                     <option>C12</option>
                                     <option>C13</option>
@@ -782,16 +782,16 @@
                             <table class="w-full">
                                 <thead class="bg-bg-light sticky top-0">
                                     <tr>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm w-20">Position</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task ID</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Type</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Name</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Priority</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Assigned Robot</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Work Area</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Created</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Actions</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm w-20" data-i18n="taskQueue.position">Position</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.taskId">Task ID</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.taskType">Task Type</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.taskName">Task Name</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.status">Status</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.priority">Priority</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskQueue.assignedRobot">Assigned Robot</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.workArea">Work Area</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskQueue.created">Created</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="taskList.actions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-border-gray">
@@ -808,7 +808,7 @@
                                                 <svg class="w-3 h-3 mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                                 </svg>
-                                                Running
+                                                <span data-i18n="taskQueue.running">Running</span>
                                             </span>
                                         </td>
                                         <td class="px-4 py-3">
