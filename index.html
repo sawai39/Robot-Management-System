@@ -453,6 +453,12 @@
                 
                 <!-- Task List Page -->
                 <div id="task-list" class="page-content">
+                    <!-- Page Header -->
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.taskList.title">Task List</h1>
+                        <p class="text-text-secondary mt-1" data-i18n="page.taskList.desc">View and manage all tasks</p>
+                    </div>
+                    
                     <!-- Action Buttons -->
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-3">
@@ -657,6 +663,12 @@
                 
                 <!-- Task Queue Page -->
                 <div id="task-queue" class="page-content">
+                    <!-- Page Header -->
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.taskQueue.title">Task Queue</h1>
+                        <p class="text-text-secondary mt-1" data-i18n="page.taskQueue.desc">Manage task priorities and execution order</p>
+                    </div>
+                    
                     <!-- Stats Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <!-- Pending Tasks -->
@@ -1040,6 +1052,12 @@
                 
                 <!-- Device List Page -->
                 <div id="device-list" class="page-content">
+                    <!-- Page Header -->
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.deviceList.title">Device List</h1>
+                        <p class="text-text-secondary mt-1" data-i18n="page.deviceList.desc">View and manage all devices</p>
+                    </div>
+                    
                     <!-- Action Buttons -->
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-3">
@@ -1428,12 +1446,18 @@
                 
                 <!-- Task Details Page -->
                 <div id="task-details" class="page-content">
+                    <!-- Page Header -->
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.taskDetails.title">Task Details</h1>
+                        <p class="text-text-secondary mt-1" data-i18n="page.taskDetails.desc">View task detailed information</p>
+                    </div>
+                    
                     <!-- Back Button -->
                     <a href="#" onclick="showPage('task-list'); return false;" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-border-gray bg-white hover:bg-bg-light transition-colors text-text-primary mb-6">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
-                        Back to Task List
+                        <span data-i18n="taskDetails.backToList">Back to Task List</span>
                     </a>
 
                     <!-- Task Information Card -->
@@ -1794,12 +1818,18 @@
                 
                 <!-- Device Details Page -->
                 <div id="device-details" class="page-content">
+                    <!-- Page Header -->
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-semibold text-sidebar" data-i18n="page.deviceDetails.title">Device Details</h1>
+                        <p class="text-text-secondary mt-1" data-i18n="page.deviceDetails.desc">View device detailed information</p>
+                    </div>
+                    
                     <!-- Back Button -->
                     <a href="#" onclick="showPage('device-list'); return false;" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-border-gray bg-white hover:bg-bg-light transition-colors text-text-primary mb-6">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
-                        Back to Device List
+                        <span data-i18n="deviceDetails.backToList">Back to Device List</span>
                     </a>
 
                     <!-- Basic Information -->
@@ -2168,10 +2198,10 @@
             <!-- Footer -->
             <footer class="bg-white border-t border-border-gray px-6 py-4">
                 <div class="flex items-center justify-between">
-                    <p class="text-sm text-text-secondary">2026 Robot Management System. All rights reserved.</p>
+                    <p class="text-sm text-text-secondary" data-i18n="footer.copyright">2026 Robot Management System. All rights reserved.</p>
                     <div class="flex items-center gap-4">
-                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Documentation</a>
-                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Support</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors" data-i18n="footer.docs">Documentation</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors" data-i18n="footer.support">Support</a>
                         <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Privacy Policy</a>
                     </div>
                 </div>
@@ -2527,25 +2557,25 @@
             },
             zh: {
                 // System
-                'system.name': '机器人调度<br>系统',
+                'system.name': '机器人管理系统',
                 
                 // Navigation
                 'nav.apollo': 'Apollo',
                 'nav.siteMonitoring': '场域监控',
-                'nav.tasks': '任务',
+                'nav.tasks': '任务管理',
                 'nav.taskList': '任务列表',
                 'nav.taskQueue': '任务队列',
                 'nav.taskChain': '任务链',
-                'nav.routeNet': '路网',
-                'nav.mapEdit': '地图管理',
+                'nav.routeNet': '路网管理',
+                'nav.mapEdit': '地图编辑',
                 'nav.routeNetEdit': '路网编辑',
-                'nav.devices': '设备',
+                'nav.devices': '设备管理',
                 'nav.deviceList': '设备列表',
                 'nav.deviceModel': '设备模型',
-                'nav.system': '系统',
-                'nav.rolePermission': '角色-权限',
+                'nav.system': '系统管理',
+                'nav.rolePermission': '角色权限',
                 'nav.roleManagement': '角色管理',
-                'nav.userRole': '人员-角色',
+                'nav.userRole': '用户角色',
                 'nav.userManagement': '用户管理',
                 
                 // Page titles
@@ -2553,10 +2583,57 @@
                 'page.dashboard.desc': '高效监控和管理您的机器人车队',
                 'page.siteMonitoring.title': '场域监控',
                 'page.siteMonitoring.desc': '实时场域监控和监视',
+                // Page titles and descriptions
                 'page.taskList.title': '任务列表',
                 'page.taskList.desc': '查看和管理所有任务',
                 'page.taskQueue.title': '任务队列',
-                'page.taskQueue.desc': '管理任务优先级和队列顺序',
+                'page.taskQueue.desc': '管理任务优先级和执行顺序',
+                'page.taskDetails.title': '任务详情',
+                'page.taskDetails.desc': '查看任务详细信息',
+                'page.deviceList.title': '设备列表',
+                'page.deviceList.desc': '查看和管理所有设备',
+                'page.deviceDetails.title': '设备详情',
+                'page.deviceDetails.desc': '查看设备详细信息',
+                
+                // Task Details
+                'taskDetails.backToList': '返回任务列表',
+                'taskDetails.taskInfo': '任务信息',
+                'taskDetails.deleteTask': '删除任务',
+                'taskDetails.taskId': '任务ID',
+                'taskDetails.taskType': '任务类型',
+                'taskDetails.taskName': '任务名称',
+                'taskDetails.status': '状态',
+                'taskDetails.robot': '机器人',
+                'taskDetails.workArea': '工作区域',
+                'taskDetails.eta': '预计到达',
+                'taskDetails.priority': '优先级',
+                'taskDetails.created': '创建时间',
+                'taskDetails.description': '描述',
+                'taskDetails.executionLog': '执行日志',
+                'taskDetails.time': '时间',
+                'taskDetails.event': '事件',
+                'taskDetails.details': '详情',
+                'taskDetails.progress': '进度',
+                'taskDetails.route': '路线',
+                
+                // Device Details
+                'deviceDetails.backToList': '返回设备列表',
+                'deviceDetails.basicInfo': '基本信息',
+                'deviceDetails.deviceId': '设备ID',
+                'deviceDetails.deviceName': '设备名称',
+                'deviceDetails.type': '类型',
+                'deviceDetails.model': '型号',
+                'deviceDetails.brand': '品牌',
+                'deviceDetails.status': '状态',
+                'deviceDetails.battery': '电量',
+                'deviceDetails.currentTask': '当前任务',
+                'deviceDetails.location': '位置',
+                'deviceDetails.lastMaintenance': '上次维护',
+                'deviceDetails.firmwareVersion': '固件版本',
+                'deviceDetails.ipAddress': 'IP地址',
+                'deviceDetails.connectionStatus': '连接状态',
+                'deviceDetails.taskHistory': '任务历史',
+                'deviceDetails.maintenanceRecords': '维护记录',
                 'page.taskChain.title': '任务链',
                 'page.taskChain.desc': '管理任务链和工作流程',
                 'page.deviceList.title': '设备列表',
@@ -2697,7 +2774,10 @@
                 'modal.saveModel': '保存模型',
                 
                 // Footer
-                'footer.version': '版本'
+                'footer.version': '版本',
+                'footer.copyright': '2026 机器人管理系统 版权所有',
+                'footer.docs': '文档',
+                'footer.support': '支持'
             }
         };
         
