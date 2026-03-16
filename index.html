@@ -1047,16 +1047,16 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                Add New Device
+                                <span data-i18n="deviceList.addNewDevice">Add New Device</span>
                             </button>
                             <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                 </svg>
-                                Refresh
+                                <span data-i18n="taskList.refresh">Refresh</span>
                             </button>
                         </div>
-                        <p class="text-text-secondary text-sm">Total: <span class="font-semibold text-text-primary">24 devices</span></p>
+                        <p class="text-text-secondary text-sm" data-i18n="deviceList.total">Total: <span class="font-semibold text-text-primary">24 devices</span></p>
                     </div>
 
                     <!-- Search and Filters -->
@@ -1064,7 +1064,7 @@
                         <div class="flex flex-wrap gap-4">
                             <div class="flex-1 min-w-[250px]">
                                 <div class="relative">
-                                    <input type="text" placeholder="Search devices..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                    <input type="text" data-i18n-placeholder="deviceList.searchPlaceholder" placeholder="Search devices..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
                                     <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -1074,18 +1074,18 @@
                             </div>
                             <div class="w-48">
                                 <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                    <option>All Types</option>
-                                    <option>Robots</option>
-                                    <option>Elevators</option>
-                                    <option>Doors</option>
+                                    <option data-i18n="deviceList.allTypes">All Types</option>
+                                    <option data-i18n="deviceList.robots">Robots</option>
+                                    <option data-i18n="deviceList.elevators">Elevators</option>
+                                    <option data-i18n="deviceList.doors">Doors</option>
                                 </select>
                             </div>
                             <div class="w-48">
                                 <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                    <option>All Statuses</option>
-                                    <option>Online</option>
-                                    <option>Offline</option>
-                                    <option>Maintenance</option>
+                                    <option data-i18n="deviceList.allStatuses">All Statuses</option>
+                                    <option data-i18n="deviceList.online">Online</option>
+                                    <option data-i18n="deviceList.offline">Offline</option>
+                                    <option data-i18n="deviceList.maintenance">Maintenance</option>
                                 </select>
                             </div>
                         </div>
@@ -1097,16 +1097,16 @@
                             <table class="w-full">
                                 <thead class="bg-bg-light sticky top-0">
                                     <tr>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Device ID</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Device Name</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Type</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Model</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Brand</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Battery</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Current Task</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Location</th>
-                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Actions</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.deviceId">Device ID</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.deviceName">Device Name</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.type">Type</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.model">Model</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.brand">Brand</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.status">Status</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.battery">Battery</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.currentTask">Current Task</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.location">Location</th>
+                                        <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm" data-i18n="deviceList.actions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-border-gray">
@@ -1115,12 +1115,12 @@
                                         <td class="px-4 py-3 text-sm text-primary font-medium">TZ123_001</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">天体0号</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">Robot</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary" data-i18n="deviceList.robots">Robot</span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-text-primary">TZC123</td>
                                         <td class="px-4 py-3 text-sm text-text-primary">Tianti</td>
                                         <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Online</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white" data-i18n="deviceList.online">Online</span>
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
@@ -1134,9 +1134,9 @@
                                         <td class="px-4 py-3 text-sm text-text-primary">2nd Floor, Office</td>
                                         <td class="px-4 py-3">
                                             <div class="flex items-center gap-2">
-                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
-                                                <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">Edit</button>
-                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Delete</button>
+                                                <button onclick="showPage('device-details')" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors" data-i18n="deviceList.view">View</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors" data-i18n="deviceList.edit">Edit</button>
+                                                <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors" data-i18n="deviceList.delete">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
