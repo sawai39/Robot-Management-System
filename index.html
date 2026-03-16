@@ -2594,8 +2594,8 @@
                 // Task List
                 'taskList.addNewTask': '新建任务',
                 'taskList.refresh': '刷新',
-                'taskList.total': '总计：156 个任务',
-                'taskList.searchPlaceholder': '搜索任务名称或ID...',
+                'taskList.total': '共 {count} 个任务',
+                'taskList.searchPlaceholder': '按名称或ID搜索任务...',
                 'taskList.allStatuses': '所有状态',
                 'taskList.allRobots': '所有机器人',
                 'taskList.pending': '待处理',
@@ -2621,7 +2621,7 @@
                 
                 // Task Queue
                 'taskQueue.pendingTasks': '待处理任务',
-                'taskQueue.inProgress': '进行中',
+                'taskQueue.inProgress': '执行中',
                 'taskQueue.completedToday': '今日完成',
                 'taskQueue.addToQueue': '添加到队列',
                 'taskQueue.queuePosition': '队列位置',
@@ -2631,6 +2631,12 @@
                 'taskQueue.moveDown': '下移',
                 'taskQueue.allPriorities': '所有优先级',
                 'taskQueue.allWorkAreas': '所有工作区域',
+                'taskQueue.searchPlaceholder': '搜索队列...',
+                'taskQueue.position': '位置',
+                'taskQueue.assignedRobot': '分配机器人',
+                'taskQueue.waitingInQueue': '队列中等待',
+                'taskQueue.running': '正在运行',
+                'taskQueue.increase': '增长',
                 
                 // Device List
                 'deviceList.searchPlaceholder': '搜索设备...',
@@ -2642,15 +2648,21 @@
                 'deviceList.online': '在线',
                 'deviceList.offline': '离线',
                 'deviceList.maintenance': '维护中',
-                'deviceList.addNewDevice': '添加新设备',
+                'deviceList.addNewDevice': '添加设备',
                 'deviceList.deviceId': '设备ID',
                 'deviceList.deviceName': '设备名称',
+                'deviceList.type': '类型',
                 'deviceList.model': '型号',
                 'deviceList.brand': '品牌',
+                'deviceList.status': '状态',
                 'deviceList.battery': '电量',
                 'deviceList.currentTask': '当前任务',
                 'deviceList.location': '位置',
+                'deviceList.actions': '操作',
+                'deviceList.view': '查看',
                 'deviceList.edit': '编辑',
+                'deviceList.delete': '删除',
+                'deviceList.total': '共 {count} 台设备',
                 
                 // Models
                 'models.addNewModel': '添加新模型',
@@ -2698,7 +2710,7 @@
             elements.forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
+                    el.innerHTML = translations[lang][key];
                 }
             });
             
@@ -2734,6 +2746,34 @@
             const activePage = document.querySelector('.page-content.active');
             if (activePage) {
                 showPage(activePage.id);
+            }
+        }
+        
+        // Task Steps View Toggle
+        function setView(viewType) {
+            const tableView = document.getElementById('table-view');
+            const treeView = document.getElementById('tree-view');
+            const tableBtn = document.getElementById('table-view-btn');
+            const treeBtn = document.getElementById('tree-view-btn');
+            
+            if (viewType === 'table') {
+                tableView.classList.remove('hidden');
+                treeView.classList.add('hidden');
+                // Table button active
+                tableBtn.classList.remove('border-border-gray', 'bg-bg-light', 'text-text-primary');
+                tableBtn.classList.add('border-primary', 'bg-primary', 'text-white');
+                // Tree button inactive
+                treeBtn.classList.remove('border-primary', 'bg-primary', 'text-white');
+                treeBtn.classList.add('border-border-gray', 'bg-bg-light', 'text-text-primary');
+            } else {
+                treeView.classList.remove('hidden');
+                tableView.classList.add('hidden');
+                // Tree button active
+                treeBtn.classList.remove('border-border-gray', 'bg-bg-light', 'text-text-primary');
+                treeBtn.classList.add('border-primary', 'bg-primary', 'text-white');
+                // Table button inactive
+                tableBtn.classList.remove('border-primary', 'bg-primary', 'text-white');
+                tableBtn.classList.add('border-border-gray', 'bg-bg-light', 'text-text-primary');
             }
         }
         

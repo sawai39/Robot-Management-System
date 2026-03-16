@@ -74,6 +74,22 @@
             
             <nav class="flex-1 py-4 overflow-y-auto">
                 <div class="nav-group">
+                    <button onclick="toggleSubmenu('apollo-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>Apollo</span>
+                        </div>
+                        <svg id="apollo-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="apollo-submenu" class="submenu expanded bg-sidebar-dark">
+                        <a href="index.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">场域监控</a>
+                    </div>
+                </div>
+                <div class="nav-group">
                     <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
                         <div class="flex items-center gap-3">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,19 +101,67 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div id="tasks-submenu" class="submenu expanded bg-sidebar-dark">
-                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">
-                            任务列表
-                        </a>
-                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">
-                            任务队列
-                        </a>
+                    <div id="tasks-submenu" class="submenu bg-sidebar-dark">
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务列表</a>
+                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务队列</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务链</a>
                     </div>
                 </div>
-                
-                <a href="device-list.html" class="nav-item flex items-center gap-3 px-5 py-3 text-white hover:bg-white/10 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('routenet-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>路网管理</span>
+                        </div>
+                        <svg id="routenet-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="routenet-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">地图编辑</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">路网编辑</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('devices-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                            </svg>
+                            <span>设备管理</span>
+                        </div>
+                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="devices-submenu" class="submenu bg-sidebar-dark">
+                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备列表</a>
+                        <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备模型</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('system-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>系统管理</span>
+                        </div>
+                        <svg id="system-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="system-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色权限</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色管理</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户角色</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户管理</a>
+                    </div>
+                </div>
+            </nav>
                     </svg>
                     <span>设备管理</span>
                 </a>

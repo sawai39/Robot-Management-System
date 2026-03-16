@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Queue - Robot Management System</title>
+    <title>任务队列 - 机器人管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -47,10 +47,9 @@
 </head>
 <body class="bg-bg-light min-h-screen">
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         <aside class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col">
             <div class="p-5 border-b border-white/10">
-                <h1 class="text-white text-lg font-semibold leading-tight">Robot Management<br>System</h1>
+                <h1 class="text-white text-lg font-semibold leading-tight">机器人管理系统</h1>
             </div>
             <nav class="flex-1 py-4 overflow-y-auto">
                 <div class="nav-group">
@@ -66,7 +65,7 @@
                         </svg>
                     </button>
                     <div id="apollo-submenu" class="submenu bg-sidebar-dark">
-                        <a href="index.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Site Monitoring</a>
+                        <a href="index.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">场域监控</a>
                     </div>
                 </div>
                 <div class="nav-group">
@@ -75,16 +74,16 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                             </svg>
-                            <span>Tasks</span>
+                            <span>任务管理</span>
                         </div>
                         <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <div id="tasks-submenu" class="submenu expanded bg-sidebar-dark">
-                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Task List</a>
-                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">Task Queue</a>
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Task Chain</a>
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务列表</a>
+                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">任务队列</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务链</a>
                     </div>
                 </div>
                 <div class="nav-group">
@@ -93,15 +92,15 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                             </svg>
-                            <span>RouteNet</span>
+                            <span>路网管理</span>
                         </div>
                         <svg id="routenet-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <div id="routenet-submenu" class="submenu bg-sidebar-dark">
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Map Edit</a>
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">RouteNet Edit</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">地图编辑</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">路网编辑</a>
                     </div>
                 </div>
                 <div class="nav-group">
@@ -110,15 +109,15 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                             </svg>
-                            <span>Devices</span>
+                            <span>设备管理</span>
                         </div>
                         <svg id="devices-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <div id="devices-submenu" class="submenu bg-sidebar-dark">
-                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Device List</a>
-                        <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Device Model</a>
+                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备列表</a>
+                        <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备模型</a>
                     </div>
                 </div>
                 <div class="nav-group">
@@ -128,32 +127,30 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <span>System</span>
+                            <span>系统管理</span>
                         </div>
                         <svg id="system-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <div id="system-submenu" class="submenu bg-sidebar-dark">
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Role-Permission</a>
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">Role Management</a>
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">User-Role</a>
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">User Management</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色权限</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色管理</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户角色</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户管理</a>
                     </div>
                 </div>
             </nav>
             <div class="p-4 border-t border-white/10">
-                <p class="text-white/50 text-xs">Version 1.0.0</p>
+                <p class="text-white/50 text-xs">版本 1.0.0</p>
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
-            <!-- Header -->
             <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
                 <div>
-                    <h2 class="text-xl font-semibold text-sidebar">Task Queue</h2>
-                    <p class="text-text-secondary text-sm mt-1">Manage task priorities and execution order</p>
+                    <h2 class="text-xl font-semibold text-sidebar">任务队列</h2>
+                    <p class="text-text-secondary text-sm mt-1">管理任务优先级和执行顺序</p>
                 </div>
                 <div class="relative">
                     <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
@@ -168,20 +165,16 @@
                     <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
                         <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors">English (EN)</button>
                         <button onclick="setLanguage('zh')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors bg-bg-light">中文 (ZH)</button>
-                        <button onclick="setLanguage('ja')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors">日本語 (JA)</button>
                     </div>
                 </div>
             </header>
 
-            <!-- Page Content -->
             <div class="flex-1 p-6">
-                <!-- Stats Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <!-- Pending Tasks -->
                     <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-text-secondary text-sm font-medium">Pending Tasks</p>
+                                <p class="text-text-secondary text-sm font-medium">待处理任务</p>
                                 <p class="text-4xl font-bold text-warning mt-2">12</p>
                             </div>
                             <div class="w-14 h-14 bg-warning/10 rounded-lg flex items-center justify-center">
@@ -190,14 +183,13 @@
                                 </svg>
                             </div>
                         </div>
-                        <p class="text-text-secondary text-sm mt-3">Waiting in queue</p>
+                        <p class="text-text-secondary text-sm mt-3">队列中等待</p>
                     </div>
 
-                    <!-- In Progress -->
                     <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-text-secondary text-sm font-medium">In Progress</p>
+                                <p class="text-text-secondary text-sm font-medium">执行中</p>
                                 <p class="text-4xl font-bold text-executing mt-2">3</p>
                             </div>
                             <div class="w-14 h-14 bg-executing/10 rounded-lg flex items-center justify-center">
@@ -206,14 +198,13 @@
                                 </svg>
                             </div>
                         </div>
-                        <p class="text-text-secondary text-sm mt-3">Currently running</p>
+                        <p class="text-text-secondary text-sm mt-3">正在运行</p>
                     </div>
 
-                    <!-- Completed Today -->
                     <div class="bg-white rounded-lg p-6 shadow-sm border border-border-gray">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-text-secondary text-sm font-medium">Completed Today</p>
+                                <p class="text-text-secondary text-sm font-medium">今日完成</p>
                                 <p class="text-4xl font-bold text-success mt-2">28</p>
                             </div>
                             <div class="w-14 h-14 bg-success/10 rounded-lg flex items-center justify-center">
@@ -226,36 +217,34 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                             </svg>
-                            12% increase
+                            增长 12%
                         </p>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
                         <button class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors flex items-center gap-2 font-medium">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
-                            Add to Queue
+                            添加到队列
                         </button>
                         <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                             </svg>
-                            Refresh
+                            刷新
                         </button>
                     </div>
-                    <p class="text-text-secondary text-sm">Queue Position: Running tasks at top, pending below</p>
+                    <p class="text-text-secondary text-sm">队列位置：执行中任务在前，待处理在后</p>
                 </div>
 
-                <!-- Search and Filters -->
                 <div class="bg-white rounded-lg shadow-sm border border-border-gray p-4 mb-6">
                     <div class="flex flex-wrap gap-4">
                         <div class="flex-1 min-w-[200px]">
                             <div class="relative">
-                                <input type="text" placeholder="Search queue..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                <input type="text" placeholder="搜索队列..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
                                 <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -265,277 +254,132 @@
                         </div>
                         <div class="w-44">
                             <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                <option>All Priorities</option>
-                                <option>High</option>
-                                <option>Normal</option>
-                                <option>Low</option>
+                                <option>所有优先级</option>
+                                <option>高</option>
+                                <option>普通</option>
+                                <option>低</option>
                             </select>
                         </div>
                         <div class="w-44">
                             <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                <option>All Robots</option>
-                                <option>Robot #1</option>
-                                <option>Robot #2</option>
-                                <option>Robot #3</option>
-                                <option>Robot #4</option>
-                                <option>Robot #5</option>
-                            </select>
-                        </div>
-                        <div class="w-44">
-                            <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                <option>All Work Areas</option>
-                                <option>C11</option>
-                                <option>C12</option>
-                                <option>C13</option>
-                                <option>C14</option>
-                                <option>复材车间</option>
+                                <option>所有机器人</option>
+                                <option>机器人 #1</option>
+                                <option>机器人 #2</option>
+                                <option>机器人 #3</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Queue Table -->
                 <div class="bg-white rounded-lg shadow-sm border border-border-gray overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-bg-light sticky top-0">
                                 <tr>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm w-20">Position</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task ID</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Type</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Task Name</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Status</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Priority</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Assigned Robot</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Work Area</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Created</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">Actions</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm w-20">位置</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">任务ID</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">任务类型</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">任务名称</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">状态</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">优先级</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">分配机器人</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">工作区域</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">创建时间</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">操作</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-border-gray">
-                                <!-- Running Task 1 -->
                                 <tr class="bg-running-bg hover:bg-blue-50 transition-colors">
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-executing text-white font-bold text-sm">1</span>
                                     </td>
                                     <td class="px-4 py-3 text-sm text-primary font-medium">#Q1002</td>
                                     <td class="px-4 py-3 text-sm text-text-primary">12-3</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Room Service Delivery</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">客房服务配送</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">
                                             <svg class="w-3 h-3 mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                             </svg>
-                                            Running
+                                            运行中
                                         </span>
                                     </td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">高</span>
                                     </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Robot #7</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #7</td>
                                     <td class="px-4 py-3 text-sm text-text-primary">C12</td>
                                     <td class="px-4 py-3 text-sm text-text-secondary">14:20:00</td>
                                     <td class="px-4 py-3">
-                                        <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                        <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看详情</button>
                                     </td>
                                 </tr>
-                                <!-- Running Task 2 -->
                                 <tr class="bg-running-bg hover:bg-blue-50 transition-colors">
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-executing text-white font-bold text-sm">2</span>
                                     </td>
                                     <td class="px-4 py-3 text-sm text-primary font-medium">#Q1005</td>
                                     <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Package Delivery</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">包裹配送</td>
                                     <td class="px-4 py-3">
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">
                                             <svg class="w-3 h-3 mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                             </svg>
-                                            Running
+                                            运行中
                                         </span>
                                     </td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">普通</span>
                                     </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Robot #3</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #3</td>
                                     <td class="px-4 py-3 text-sm text-text-primary">C11</td>
                                     <td class="px-4 py-3 text-sm text-text-secondary">14:15:00</td>
                                     <td class="px-4 py-3">
-                                        <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
-                                    </td>
-                                </tr>
-                                <!-- Running Task 3 -->
-                                <tr class="bg-running-bg hover:bg-blue-50 transition-colors">
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-executing text-white font-bold text-sm">3</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-primary font-medium">#Q1008</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">配送</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Warehouse Move</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">
-                                            <svg class="w-3 h-3 mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                            </svg>
-                                            Running
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white">Low</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Robot #9</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">C13</td>
-                                    <td class="px-4 py-3 text-sm text-text-secondary">14:10:00</td>
-                                    <td class="px-4 py-3">
-                                        <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View Details</button>
+                                        <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看详情</button>
                                     </td>
                                 </tr>
 
-                                <!-- Separator -->
                                 <tr class="bg-bg-light">
                                     <td colspan="10" class="px-4 py-2">
                                         <div class="flex items-center gap-2 text-text-secondary text-sm">
                                             <div class="flex-1 h-px bg-border-gray"></div>
-                                            <span>Pending Tasks</span>
+                                            <span>待处理任务</span>
                                             <div class="flex-1 h-px bg-border-gray"></div>
                                         </div>
                                     </td>
                                 </tr>
 
-                                <!-- Pending Task 1 -->
                                 <tr class="hover:bg-bg-light transition-colors">
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">4</span>
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">3</span>
                                     </td>
                                     <td class="px-4 py-3 text-sm text-primary font-medium">#Q1001</td>
                                     <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Package Delivery to Floor 3</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">包裹配送至3楼</td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">待处理</span>
                                     </td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">高</span>
                                     </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Robot #3</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #3</td>
                                     <td class="px-4 py-3 text-sm text-text-primary">C11</td>
                                     <td class="px-4 py-3 text-sm text-text-secondary">14:25:00</td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors opacity-50 cursor-not-allowed" disabled title="Cannot move up - first pending task">
+                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors opacity-50 cursor-not-allowed" disabled title="无法上移 - 第一个待处理任务">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                                                 </svg>
                                             </button>
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move down">
+                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="下移">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                                 </svg>
                                             </button>
-                                            <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
-                                            <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Pending Task 2 -->
-                                <tr class="hover:bg-bg-light transition-colors">
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">5</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-primary font-medium">#Q1003</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">机场行李运输</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Airport Luggage Transport</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white">Low</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Robot #9</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">复材车间</td>
-                                    <td class="px-4 py-3 text-sm text-text-secondary">14:30:00</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move up">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                                </svg>
-                                            </button>
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move down">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                                </svg>
-                                            </button>
-                                            <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
-                                            <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Pending Task 3 -->
-                                <tr class="hover:bg-bg-light transition-colors">
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">6</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-primary font-medium">#Q1004</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">配送</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Warehouse Inventory Move</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">Normal</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Robot #5</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">C14</td>
-                                    <td class="px-4 py-3 text-sm text-text-secondary">14:35:00</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move up">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                                </svg>
-                                            </button>
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move down">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                                </svg>
-                                            </button>
-                                            <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
-                                            <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Pending Task 4 -->
-                                <tr class="hover:bg-bg-light transition-colors">
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-warning text-white font-bold text-sm">7</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-primary font-medium">#Q1006</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">12-3</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Equipment Transport</td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">Pending</span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">High</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Robot #4</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">C15</td>
-                                    <td class="px-4 py-3 text-sm text-text-secondary">14:40:00</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors" title="Move up">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                                </svg>
-                                            </button>
-                                            <button class="p-1.5 rounded border border-border-gray text-text-secondary hover:text-primary hover:border-primary transition-colors opacity-50 cursor-not-allowed" disabled title="Cannot move down - last pending task">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                                </svg>
-                                            </button>
-                                            <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">View</button>
-                                            <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">Remove</button>
+                                            <button onclick="window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看</button>
+                                            <button class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">移除</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -543,26 +387,24 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
                     <div class="px-4 py-3 border-t border-border-gray flex items-center justify-between">
-                        <p class="text-sm text-text-secondary">Showing <span class="font-medium text-text-primary">1</span> to <span class="font-medium text-text-primary">7</span> of <span class="font-medium text-text-primary">15</span> tasks</p>
+                        <p class="text-sm text-text-secondary">显示第 <span class="font-medium text-text-primary">1</span> 至 <span class="font-medium text-text-primary">4</span> 条，共 <span class="font-medium text-text-primary">15</span> 条</p>
                         <div class="flex items-center gap-1">
-                            <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Previous</button>
+                            <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">上一页</button>
                             <button class="px-3 py-1.5 text-sm rounded bg-primary text-white font-medium">1</button>
                             <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors">2</button>
-                            <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">Next</button>
+                            <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">下一页</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer -->
             <footer class="bg-white border-t border-border-gray px-6 py-4">
                 <div class="flex items-center justify-between">
-                    <p class="text-sm text-text-secondary">2026 Robot Management System. All rights reserved.</p>
+                    <p class="text-sm text-text-secondary">2026 机器人管理系统 版权所有</p>
                     <div class="flex items-center gap-4">
-                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Documentation</a>
-                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">Support</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">文档</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">支持</a>
                     </div>
                 </div>
             </footer>
@@ -580,7 +422,7 @@
             document.getElementById('language-dropdown').classList.toggle('hidden');
         }
         function setLanguage(lang) {
-            const langNames = { 'en': 'English', 'zh': '中文', 'ja': '日本語' };
+            const langNames = { 'en': 'English', 'zh': '中文' };
             document.getElementById('current-lang').textContent = langNames[lang];
             document.getElementById('language-dropdown').classList.add('hidden');
         }
