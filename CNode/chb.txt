@@ -1,0 +1,93 @@
+{
+  "tree_id": "TiantiZeroInCHBTaker",
+  "version": "1.0.0",
+  "node_json": {
+    "calc_equip": {
+      "param": {
+        "type": "#{JSON_PARAM|@order_type#}",
+        "move_param": "#{MAP_POSE_PARSE|#{SQL_PARAM|@SELECT approach_to_map_code, approach_to_poi_code FROM dispatch_order_templete WHERE cell_code='#{JSON_PARAM|@stock_place_from#}' AND operate=6#}#}"
+      }
+    },
+    "replay_state": 1,
+    "next": [
+      {
+        "state": 1,
+        "move": {
+          "replay_state": 2,
+          "next": [
+            {
+              "state": 1,
+              "call_equip": {
+                "param": {
+                  "operate": "chb_get_bag",
+                  "op_param": "#{SQL_PARAM|@SELECT op_params FROM dispatch_order_templete WHERE cell_code='#{JSON_PARAM|@stock_place_from#}' AND operate=6#}"
+                },
+                "replay_state": 3,
+                "next": [
+                  {
+                    "state": 1,
+                    "plan": {
+                      "param": {
+                        "move_param": "#{MAP_POSE_PARSE|#{SQL_PARAM|@SELECT approach_to_map_code, approach_to_poi_code FROM dispatch_order_templete WHERE cell_code='#{JSON_PARAM|@stock_place_to#}' AND operate=7#}#}"
+                      },
+                      "replay_state": 4,
+                      "next": [
+                        {
+                          "state": 1,
+                          "move": {
+                            "replay_state": 5,
+                            "next": [
+                              {
+                                "state": 1,
+                                "call_equip": {
+                                  "param": {
+                                    "operate": "chb_get_bag",
+                                    "op_param": "#{SQL_PARAM|@SELECT op_params FROM dispatch_order_templete WHERE cell_code='#{JSON_PARAM|@stock_place_to#}' AND operate=7#}"
+                                  },
+                                  "replay_state": 6,
+                                  "next": [
+                                    {
+                                      "state": 1,
+                                      "success": {
+                                        "replay_state": 7,
+                                        "next": []
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "state": 0,
+                    "error": {}
+                  },
+                  {
+                    "state": 2,
+                    "cancel": {}
+                  }
+                ]
+              }
+            },
+            {
+              "state": 0,
+              "error": {}
+            },
+            {
+              "state": 2,
+              "cancel": {}
+            }
+          ]
+        }
+      },
+      {
+        "state": 0,
+        "error": {}
+      }
+    ]
+  }
+}

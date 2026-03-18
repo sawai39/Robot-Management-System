@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务链详情 - 机器人管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3498db',
+                        'primary-dark': '#2980b9',
+                        'sidebar': '#2c3e50',
+                        'sidebar-dark': '#233140',
+                        'success': '#27ae60',
+                        'warning': '#f39c12',
+                        'error': '#e74c3c',
+                        'executing': '#9b59b6',
+                        'neutral': '#95a5a6',
+                        'text-primary': '#333333',
+                        'text-secondary': '#666666',
+                        'text-light': '#999999',
+                        'bg-light': '#f8f9fa',
+                        'border-gray': '#e0e0e0'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .submenu.expanded {
+            max-height: 200px;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .animate-pulse-custom {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .node-tree {
+            padding: 20px;
+        }
+        .node {
+            position: relative;
+            display: inline-block;
+            margin: 0 10px;
+        }
+        .node-content {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 80px;
+            min-height: 80px;
+            text-align: center;
+            color: white;
+        }
+        .node-content:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .node-children {
+            position: relative;
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .node-connector {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 20px;
+            height: 2px;
+            background-color: #ccc;
+            transform: translateY(-50%);
+        }
+        .node-connector-vertical {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 2px;
+            height: 40px;
+            background-color: #ccc;
+            transform: translateX(-50%);
+        }
+        .node-children .node {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        .node-calc_equip {
+            background-color: #3498db;
+            color: white;
+        }
+        .node-move {
+            background-color: #27ae60;
+            color: white;
+        }
+        .node-call_equip {
+            background-color: #f39c12;
+            color: white;
+        }
+        .node-plan {
+            background-color: #9b59b6;
+            color: white;
+        }
+        .node-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        .node-error {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .node-cancel {
+            background-color: #95a5a6;
+        }
+        .node-release_equip {
+            background-color: #1abc9c;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-bg-light min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Mobile sidebar toggle -->
+        <button id="mobile-menu-button" class="fixed top-4 left-4 z-40 lg:hidden bg-sidebar text-white p-2 rounded-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
+        
+        <aside id="sidebar" class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-5 border-b border-white/10">
+                <h1 class="text-white text-lg font-semibold leading-tight">
+                    机器人管理系统
+                </h1>
+            </div>
+            
+            <nav class="flex-1 py-4 overflow-y-auto">
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('apollo-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>Apollo</span>
+                        </div>
+                        <svg id="apollo-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="apollo-submenu" class="submenu expanded bg-sidebar-dark">
+                        <a href="index.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">场域监控</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span>任务管理</span>
+                        </div>
+                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="tasks-submenu" class="submenu expanded bg-sidebar-dark">
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务列表</a>
+                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务队列</a>
+                        <a href="task-chain-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white hover:bg-white/10 transition-colors bg-primary">任务链</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('routenet-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>路网管理</span>
+                        </div>
+                        <svg id="routenet-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="routenet-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">地图编辑</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">路网编辑</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('devices-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                            </svg>
+                            <span>设备管理</span>
+                        </div>
+                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="devices-submenu" class="submenu bg-sidebar-dark">
+                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备列表</a>
+                        <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备模型</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('system-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>系统管理</span>
+                        </div>
+                        <svg id="system-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="system-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色权限</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色管理</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户角色</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户管理</a>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="p-4 border-t border-white/10">
+                <p class="text-white/50 text-xs">版本 1.0.0</p>
+            </div>
+        </aside>
+        
+        <main class="flex-1 lg:ml-[250px] flex flex-col min-h-screen">
+            <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                <div>
+                    <h2 class="text-xl font-semibold text-sidebar">任务链详情</h2>
+                    <p class="text-text-secondary text-sm mt-1">查看和编辑任务链结构</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
+                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
+                        <span id="current-lang" class="text-sm font-medium">中文</span>
+                        <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div id="language-dropdown" class="hidden absolute right-4 top-16 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
+                        <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors flex items-center gap-2">
+                            <span>English</span>
+                            <span class="text-text-light text-xs">(EN)</span>
+                        </button>
+                        <button onclick="setLanguage('zh')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors flex items-center gap-2 bg-bg-light">
+                            <span>中文</span>
+                            <span class="text-text-light text-xs">(ZH)</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="flex-1 p-6">
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-text-primary">TiantiZeroInCHBTaker</h3>
+                            <div class="flex items-center gap-4 mt-2">
+                                <span class="text-sm text-text-secondary">版本: 1.0.0</span>
+                                <span class="px-3 py-1 bg-success/10 text-success text-xs rounded-full">启用</span>
+                                <span class="text-sm text-text-light">创建于: 2026-03-18</span>
+                                <span class="text-sm text-text-light">最后修改: 2026-03-18</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                <span>导出</span>
+                            </button>
+                            <button class="flex items-center gap-2 px-4 py-2 border border-success text-success rounded-lg hover:bg-success/5 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                <span>保存</span>
+                            </button>
+                            <button onclick="window.location.href='task-chain-list.html'" class="flex items-center gap-2 px-4 py-2 border border-border-gray text-text-secondary rounded-lg hover:bg-bg-light transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                <span>返回</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2">
+                            <h4 class="text-md font-semibold text-text-primary mb-4">树形结构</h4>
+                            <div class="bg-bg-light rounded-lg border border-border-gray p-4 overflow-x-auto">
+                                <div class="node-tree" style="display: flex; align-items: center; flex-wrap: nowrap; gap: 10px; min-width: max-content;">
+                                    <div class="node">
+                                        <div class="node-content node-calc_equip">
+                                            calc_equip
+                                        </div>
+                                        <div class="node-connector"></div>
+                                    </div>
+                                    <div class="node">
+                                        <div class="node-content node-move">
+                                            move
+                                        </div>
+                                        <div class="node-connector"></div>
+                                    </div>
+                                    <div class="node">
+                                        <div class="node-content node-call_equip">
+                                            call_equip
+                                        </div>
+                                        <div class="node-connector"></div>
+                                    </div>
+                                    <div class="node">
+                                        <div class="node-content node-plan">
+                                            plan
+                                        </div>
+                                        <div class="node-connector"></div>
+                                    </div>
+                                    <div class="node">
+                                        <div class="node-content node-move">
+                                            move
+                                        </div>
+                                        <div class="node-connector"></div>
+                                    </div>
+                                    <div class="node">
+                                        <div class="node-content node-call_equip">
+                                            call_equip
+                                        </div>
+                                        <div class="node-connector"></div>
+                                    </div>
+                                    <div class="node">
+                                        <div class="node-content node-success">
+                                            success
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="lg:col-span-1">
+                            <h4 class="text-md font-semibold text-text-primary mb-4">节点详情</h4>
+                            <div class="bg-bg-light rounded-lg border border-border-gray p-4">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">节点类型</label>
+                                    <input type="text" value="calc_equip" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" disabled>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">回放状态</label>
+                                    <input type="number" value="1" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">节点名称</label>
+                                    <input type="text" value="计算节点1" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">超时设置 (秒)</label>
+                                    <input type="number" value="60" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">重试次数</label>
+                                    <input type="number" value="3" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">参数</label>
+                                    <div class="bg-white border border-border-gray rounded-lg p-3">
+                                        <pre class="text-sm text-text-secondary overflow-auto max-h-40">{
+  "type": "#{JSON_PARAM|@order_type#}",
+  "move_param": "#{MAP_POSE_PARSE|#{SQL_PARAM|@SELECT approach_to_map_code, approach_to_poi_code FROM dispatch_order_templete WHERE cell_code='#{JSON_PARAM|@stock_place_from#}' AND operate=6#}#"
+}</pre>
+                                    </div>
+                                    <button class="mt-2 text-sm text-primary hover:underline">编辑参数</button>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-text-secondary mb-2">描述</label>
+                                    <textarea rows="2" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">计算订单类型并获取移动参数</textarea>
+                                </div>
+                                
+                                <div class="flex items-center gap-2">
+                                    <button class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
+                                        保存修改
+                                    </button>
+                                    <button class="px-4 py-2 border border-border-gray text-text-secondary rounded-lg hover:bg-bg-light transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <h4 class="text-md font-semibold text-text-primary mt-6 mb-4">版本历史</h4>
+                            <div class="bg-bg-light rounded-lg border border-border-gray p-4">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
+                                        <div>
+                                            <p class="font-medium text-text-primary">版本 1.0.0</p>
+                                            <p class="text-sm text-text-light">创建于 2026-03-18 10:30</p>
+                                            <p class="text-xs text-text-secondary mt-1">创建任务链</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-sm text-primary hover:underline">查看</button>
+                                            <button class="text-sm text-primary hover:underline">回滚</button>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
+                                        <div>
+                                            <p class="font-medium text-text-primary">版本 0.9.0</p>
+                                            <p class="text-sm text-text-light">创建于 2026-03-17 16:45</p>
+                                            <p class="text-xs text-text-secondary mt-1">添加移动节点</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-sm text-primary hover:underline">查看</button>
+                                            <button class="text-sm text-primary hover:underline">回滚</button>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
+                                        <div>
+                                            <p class="font-medium text-text-primary">版本 0.8.0</p>
+                                            <p class="text-sm text-text-light">创建于 2026-03-17 14:20</p>
+                                            <p class="text-xs text-text-secondary mt-1">初始版本</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button class="text-sm text-primary hover:underline">查看</button>
+                                            <button class="text-sm text-primary hover:underline">回滚</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-md font-semibold text-text-primary">执行历史</h4>
+                        <div class="flex items-center gap-2">
+                            <div class="relative">
+                                <select class="pl-4 pr-10 py-2 rounded-lg border border-border-gray focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none">
+                                    <option>最近7天</option>
+                                    <option>最近30天</option>
+                                    <option>最近90天</option>
+                                    <option>全部</option>
+                                </select>
+                                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-light pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                            <button class="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>导出</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="bg-bg-light border-b border-border-gray">
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-text-secondary">执行时间</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-text-secondary">状态</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-text-secondary">耗时</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-text-secondary">机器人</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-text-secondary">执行ID</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-text-secondary">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-border-gray hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-18 14:30:22</td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 bg-success/10 text-success text-xs rounded-full">成功</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">45秒</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">TZ123_001</td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">EXEC-20260318-001</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-sm text-primary hover:underline">查看详情</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-border-gray hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-18 13:15:47</td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 bg-error/10 text-error text-xs rounded-full">失败</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">22秒</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">TZ123_002</td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">EXEC-20260318-002</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-sm text-primary hover:underline">查看详情</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-border-gray hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-18 11:20:15</td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 bg-warning/10 text-warning text-xs rounded-full">取消</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">15秒</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">TZ123_003</td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">EXEC-20260318-003</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-sm text-primary hover:underline">查看详情</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-bg-light transition-colors">
+                                    <td class="px-4 py-3 text-sm text-text-primary">2026-03-18 10:45:08</td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 bg-success/10 text-success text-xs rounded-full">成功</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">38秒</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">TZ123_001</td>
+                                    <td class="px-4 py-3 text-sm text-text-secondary">EXEC-20260318-004</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-sm text-primary hover:underline">查看详情</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between">
+                        <p class="text-sm text-text-secondary">显示 1-4 条，共 12 条</p>
+                        <div class="flex items-center gap-2">
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-gray text-text-secondary hover:bg-bg-light transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white">1</button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-gray text-text-secondary hover:bg-bg-light transition-colors">2</button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-gray text-text-secondary hover:bg-bg-light transition-colors">3</button>
+                            <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-border-gray text-text-secondary hover:bg-bg-light transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="bg-white border-t border-border-gray px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-text-secondary">2026 机器人管理系统 版权所有</p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">文档</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">支持</a>
+                        <a href="#" class="text-sm text-text-secondary hover:text-primary transition-colors">隐私政策</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+    
+    <script>
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const arrow = document.getElementById('tasks-arrow');
+            submenu.classList.toggle('expanded');
+            arrow.classList.toggle('rotate-180');
+        }
+        
+        // 移动菜单切换
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+        
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        function setLanguage(lang) {
+            const langNames = {
+                'en': 'English',
+                'zh': '中文'
+            };
+            document.getElementById('current-lang').textContent = langNames[lang];
+            document.getElementById('language-dropdown').classList.add('hidden');
+            
+            const buttons = document.querySelectorAll('#language-dropdown button');
+            buttons.forEach(btn => btn.classList.remove('bg-bg-light'));
+            event.target.closest('button').classList.add('bg-bg-light');
+        }
+        
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('language-dropdown');
+            const button = e.target.closest('button');
+            if (!button || !button.onclick?.toString().includes('toggleLanguageDropdown')) {
+                if (!e.target.closest('#language-dropdown')) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        });
+        
+        // 节点点击事件
+        document.querySelectorAll('.node-content').forEach(node => {
+            node.addEventListener('click', function() {
+                // 移除所有节点的选中状态
+                document.querySelectorAll('.node-content').forEach(n => {
+                    n.classList.remove('ring-2', 'ring-offset-2', 'ring-primary');
+                });
+                // 添加当前节点的选中状态
+                this.classList.add('ring-2', 'ring-offset-2', 'ring-primary');
+            });
+        });
+    </script>
+</body>
+</html>
