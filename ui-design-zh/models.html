@@ -10,87 +10,180 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3498db',
+                        'primary': '#3498db',
                         'primary-dark': '#2980b9',
-                        'sidebar-bg': '#2c3e50',
-                        'sidebar-hover': '#34495e',
-                        success: '#27ae60',
-                        warning: '#f39c12',
-                        error: '#e74c3c',
-                        executing: '#9b59b6',
+                        'sidebar': '#2c3e50',
+                        'sidebar-dark': '#233140',
+                        'success': '#27ae60',
+                        'warning': '#f39c12',
+                        'error': '#e74c3c',
+                        'executing': '#9b59b6',
+                        'neutral': '#95a5a6',
+                        'text-primary': '#333333',
+                        'text-secondary': '#666666',
+                        'text-light': '#999999',
+                        'bg-light': '#f8f9fa',
+                        'border-gray': '#e0e0e0'
                     }
                 }
             }
         }
     </script>
     <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+        .nav-item { transition: all 0.3s ease; }
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .submenu.expanded { max-height: 200px; }
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-bg-light min-h-screen">
     <div class="flex min-h-screen">
-        <aside class="w-64 bg-[#2c3e50] text-white fixed h-full overflow-y-auto">
-            <div class="p-5 border-b border-gray-600">
-                <h1 class="text-lg font-semibold">机器人管理系统</h1>
+        <aside class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col">
+            <div class="p-5 border-b border-white/10">
+                <h1 class="text-white text-lg font-semibold leading-tight">机器人管理系统</h1>
             </div>
-            <nav class="mt-4">
-                <ul>
-                    <li>
-                        <a href="#" class="block px-5 py-3 text-gray-300 hover:bg-[#34495e] hover:text-white transition-colors">
-                            Apollo
-                        </a>
-                        <ul class="bg-[#233140]">
-                            <li><a href="index.html" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">场域监控</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-5 py-3 text-gray-300 hover:bg-[#34495e] hover:text-white transition-colors">
-                            任务管理
-                        </a>
-                        <ul class="bg-[#233140]">
-                            <li><a href="task-list.html" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">任务列表</a></li>
-                            <li><a href="task-queue.html" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">任务队列</a></li>
-                            <li><a href="#" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">任务链</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-5 py-3 text-gray-300 hover:bg-[#34495e] hover:text-white transition-colors">
-                            路网管理
-                        </a>
-                        <ul class="bg-[#233140]">
-                            <li><a href="#" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">地图编辑</a></li>
-                            <li><a href="#" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">路网编辑</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-5 py-3 text-gray-300 hover:bg-[#34495e] hover:text-white transition-colors">
-                            设备管理
-                        </a>
-                        <ul class="bg-[#233140]">
-                            <li><a href="device-list.html" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">设备列表</a></li>
-                            <li><a href="models.html" class="block px-8 py-2 text-sm text-white bg-primary transition-colors">设备模型</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-5 py-3 text-gray-300 hover:bg-[#34495e] hover:text-white transition-colors">
-                            系统管理
-                        </a>
-                        <ul class="bg-[#233140]">
-                            <li><a href="#" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">角色权限</a></li>
-                            <li><a href="#" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">角色管理</a></li>
-                            <li><a href="#" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">用户角色</a></li>
-                            <li><a href="#" class="block px-8 py-2 text-sm text-gray-400 hover:text-white hover:bg-[#34495e] transition-colors">用户管理</a></li>
-                        </ul>
-                    </li>
-                </ul>
+            <nav class="flex-1 py-4 overflow-y-auto">
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('apollo-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>Apollo</span>
+                        </div>
+                        <svg id="apollo-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="apollo-submenu" class="submenu bg-sidebar-dark">
+                        <a href="index.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">场域监控</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span>任务管理</span>
+                        </div>
+                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="tasks-submenu" class="submenu bg-sidebar-dark">
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务列表</a>
+                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务队列</a>
+                        <a href="task-chain-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务链</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('routenet-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>路网管理</span>
+                        </div>
+                        <svg id="routenet-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="routenet-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">地图编辑</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">路网编辑</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('devices-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                            </svg>
+                            <span>设备管理</span>
+                        </div>
+                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="devices-submenu" class="submenu expanded bg-sidebar-dark">
+                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备列表</a>
+                        <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white hover:bg-white/10 transition-colors bg-primary">设备模型</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('event-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span>事件管理</span>
+                        </div>
+                        <svg id="event-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="event-submenu" class="submenu bg-sidebar-dark">
+                        <a href="exception-alarm.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">异常报警</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('system-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>系统管理</span>
+                        </div>
+                        <svg id="system-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="system-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色权限</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色管理</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户角色</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户管理</a>
+                    </div>
+                </div>
             </nav>
+            <div class="p-4 border-t border-white/10">
+                <p class="text-white/50 text-xs">版本 1.0.0</p>
+            </div>
         </aside>
 
-        <main class="ml-64 flex-1 p-6">
-            <div class="max-w-7xl mx-auto">
+        <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
+            <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                <div>
+                    <h2 class="text-xl font-semibold text-sidebar">型号管理</h2>
+                    <p class="text-text-secondary text-sm mt-1">管理设备型号和配置</p>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
+                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
+                        <span id="current-lang" class="text-sm font-medium">中文</span>
+                        <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
+                        <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors">English (EN)</button>
+                        <button onclick="setLanguage('zh')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors bg-bg-light">中文 (ZH)</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-1 p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-semibold text-gray-800">型号管理</h2>
                     <div class="flex items-center gap-4">
@@ -405,22 +498,41 @@
     </div>
 
     <script>
-        const langBtn = document.getElementById('langBtn');
-        const langDropdown = document.getElementById('langDropdown');
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('-submenu', '-arrow'));
+            
+            if (submenu.classList.contains('expanded')) {
+                submenu.classList.remove('expanded');
+                arrow.classList.remove('rotate-180');
+            } else {
+                submenu.classList.add('expanded');
+                arrow.classList.add('rotate-180');
+            }
+        }
+
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        function setLanguage(lang) {
+            document.getElementById('current-lang').textContent = lang === 'en' ? 'English' : '中文';
+            toggleLanguageDropdown();
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('language-dropdown');
+            const langBtn = e.target.closest('button[onclick="toggleLanguageDropdown()"]');
+            if (!langBtn && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
         const addModelBtn = document.getElementById('addModelBtn');
         const addModelModal = document.getElementById('addModelModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const cancelBtn = document.getElementById('cancelBtn');
-
-        langBtn.addEventListener('click', () => {
-            langDropdown.classList.toggle('hidden');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
-                langDropdown.classList.add('hidden');
-            }
-        });
 
         addModelBtn.addEventListener('click', () => {
             addModelModal.classList.remove('hidden');

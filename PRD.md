@@ -151,6 +151,7 @@ A persistent sidebar navigation panel that provides access to all major modules 
 | **Tasks (任务)** | Task List (任务列表), Task Queue (任务队列), Task Chain (任务链) |
 | **RouteNet (路网)** | Map Edit (地图管理), RouteNet Edit (路网编辑) |
 | **Devices (设备)** | Device List (设备列表), Device Model (设备模型) |
+| **Event (事件)** | Exception/Alarm (异常报警) |
 | **System (系统)** | Role-Permission (角色-权限), Role Management (角色管理), User-Role (人员-角色), User Management (用户管理) |
 
 **Components:**
@@ -166,6 +167,8 @@ A persistent sidebar navigation panel that provides access to all major modules 
 - **Devices Module** (expandable submenu)
   - Device List (设备列表)
   - Device Model (设备模型)
+- **Event Module** (expandable submenu)
+  - Exception/Alarm (异常报警)
 - **System Module** (expandable submenu)
   - Role-Permission (角色-权限)
   - Role Management (角色管理)
@@ -657,7 +660,434 @@ Modal form for adding new robot/device models to the system.
 
 ---
 
-### 3.5 Multi-language Support
+### 3.6 Event Management
+
+#### 3.6.1 Exception/Alarm Overview
+
+**Description:**
+The Exception/Alarm module provides comprehensive monitoring and management of device errors and task errors throughout the robot management system. This module enables real-time error detection, classification, notification, tracking, and resolution workflow management to ensure system reliability and minimize operational downtime.
+
+**Purpose:**
+- Detect and monitor device errors in real-time (robot malfunctions, sensor failures, communication issues, etc.)
+- Track task execution errors (navigation failures, task aborts, timeout errors, etc.)
+- Provide immediate alerts and notifications to relevant personnel
+- Maintain comprehensive error history and analytics
+- Streamline error resolution workflow with assignment and tracking
+- Generate error reports for analysis and improvement
+
+**Scope:**
+- Device error monitoring for all registered robots, elevators, and doors
+- Task error tracking across all task types and execution stages
+- Real-time error detection and alerting
+- Error classification by severity and type
+- Multi-channel notification system (in-app, email, SMS)
+- Error history and trend analysis
+- Error resolution workflow with assignment and status tracking
+- Error reporting and export capabilities
+
+#### 3.6.2 Error Classification and Severity Levels
+
+**Error Types:**
+
+**Device Errors:**
+| Error Type | Description | Examples |
+|------------|-------------|----------|
+| Communication | Device connectivity issues | Connection lost, timeout, signal weak |
+| Sensor Failure | Sensor malfunction or data errors | Lidar failure, camera error, sensor timeout |
+| Power/Battery | Power-related issues | Low battery, charging failure, battery overheating |
+| Movement | Navigation and motion issues | Stuck, collision detected, path planning failure |
+| Hardware | Physical hardware problems | Motor failure, wheel malfunction, door jam |
+| System | Software/system errors | System crash, memory overflow, CPU overload |
+| Safety | Safety-related issues | E-stop activated, obstacle detection failure |
+
+**Task Errors:**
+| Error Type | Description | Examples |
+|------------|-------------|----------|
+| Navigation | Path planning and execution failures | Path blocked, unreachable destination, localization failure |
+| Execution | Task execution problems | Action failed, timeout, resource unavailable |
+| Resource | Resource allocation issues | Robot unavailable, device busy, capacity exceeded |
+| Priority | Priority and scheduling conflicts | Task conflict, queue overflow, priority violation |
+| Validation | Task validation errors | Invalid parameters, missing data, constraint violation |
+| Timeout | Time-related failures | Task timeout, step timeout, response timeout |
+
+**Severity Levels:**
+
+| Level | Description | Color | Response Time |
+|-------|-------------|-------|---------------|
+| Critical | System-critical errors requiring immediate attention | Red (#e74c3c) | < 5 minutes |
+| High | Major errors affecting operations | Orange (#e67e22) | < 30 minutes |
+| Medium | Moderate errors with partial impact | Yellow (#f39c12) | < 2 hours |
+| Low | Minor errors with minimal impact | Blue (#3498db) | < 24 hours |
+| Info | Informational errors for awareness | Gray (#95a5a6) | No immediate action |
+
+#### 3.6.3 Exception/Alarm List
+
+**Description:**
+Comprehensive list view of all device and task errors with advanced filtering, search, and real-time updates.
+
+**Functional Requirements:**
+
+**Dashboard Statistics:**
+- FR-EA-001: System shall display error statistics cards:
+  - Active Errors count (errors requiring resolution)
+  - Critical Errors count (severity: critical)
+  - Today's Errors count
+  - Resolved Today count
+- FR-EA-002: Statistics shall update in real-time
+- FR-EA-003: Critical errors shall be highlighted with pulsing animation
+
+**Search and Filter:**
+- FR-EA-004: System shall provide search input for error ID, description, or device/task search
+- FR-EA-005: System shall provide error type filter: All Types, Device Errors, Task Errors
+- FR-EA-006: System shall provide severity filter: All Severities, Critical, High, Medium, Low, Info
+- FR-EA-007: System shall provide status filter: All Statuses, Active, Resolved, Ignored, In Progress
+- FR-EA-008: System shall provide time range filter: All Time, Last Hour, Last 24 Hours, Last 7 Days, Last 30 Days
+- FR-EA-009: System shall provide device filter: All Devices, [device list]
+- FR-EA-010: System shall provide assignee filter: All Assignees, Unassigned, [user list]
+
+**Error Table:**
+- FR-EA-011: Table shall display columns: Error ID, Error Type, Severity, Status, Device/Task, Description, Occurred Time, Assignee, Actions
+- FR-EA-012: Severity badges shall display with color coding and icon
+- FR-EA-013: Status badges shall display with color coding:
+  - Active: Red (#e74c3c)
+  - In Progress: Orange (#f39c12)
+  - Resolved: Green (#27ae60)
+  - Ignored: Gray (#95a5a6)
+- FR-EA-014: Critical and high severity errors shall be highlighted with colored background
+- FR-EA-015: Each row shall be clickable to view error details
+- FR-EA-016: Real-time updates shall be indicated with visual indicator
+- FR-EA-017: Actions column shall include: View Details, Assign, Resolve, Ignore
+
+**Pagination:**
+- FR-EA-018: System shall display pagination controls
+- FR-EA-019: Active page shall be highlighted
+- FR-EA-020: Page size selector shall be available (10, 25, 50, 100)
+
+**Action Buttons:**
+- FR-EA-021: "Refresh" button shall reload error list
+- FR-EA-022: "Export" button shall export filtered errors to CSV/Excel
+- FR-EA-023: "Mark All Resolved" button shall be available for filtered results
+- FR-EA-024: "Bulk Assign" button shall assign multiple errors to a user
+
+**Real-time Updates:**
+- FR-EA-025: New errors shall appear automatically without page refresh
+- FR-EA-026: Error status changes shall update in real-time
+- FR-EA-027: Sound notification shall play for critical errors (optional)
+- FR-EA-028: Visual notification shall appear for new errors
+
+**Error Data Structure:**
+```javascript
+{
+  errorId: String,
+  errorType: Enum ['device', 'task'],
+  errorCategory: String,
+  severity: Enum ['critical', 'high', 'medium', 'low', 'info'],
+  status: Enum ['active', 'in_progress', 'resolved', 'ignored'],
+  sourceType: Enum ['robot', 'elevator', 'door', 'task'],
+  sourceId: String,
+  sourceName: String,
+  description: String,
+  details: Object,
+  occurredTime: DateTime,
+  resolvedTime: DateTime | null,
+  assignee: String | null,
+  assigneeId: String | null,
+  assignedTime: DateTime | null,
+  resolutionNotes: String | null,
+  occurrenceCount: Number,
+  relatedErrors: Array<String>
+}
+```
+
+#### 3.6.4 Error Details
+
+**Description:**
+Detailed view of a single error with comprehensive information, history, and resolution workflow.
+
+**Functional Requirements:**
+
+**Navigation:**
+- FR-ED-001: "Back to Error List" button shall return to error list
+- FR-ED-002: Error details shall load when clicking on error row or "View Details" button
+
+**Error Information Section:**
+- FR-ED-003: System shall display error information in a grid layout:
+  - Error ID
+  - Error Type (Device/Task)
+  - Error Category
+  - Severity (with badge and icon)
+  - Status (with badge)
+  - Source Type
+  - Source Name/ID
+  - Occurred Time
+  - Duration (if resolved)
+- FR-ED-004: Severity shall be visually emphasized with color and icon
+- FR-ED-005: Critical errors shall have warning banner
+
+**Error Description Section:**
+- FR-ED-006: System shall display detailed error description
+- FR-ED-007: System shall display error details object with relevant data:
+  - For device errors: sensor data, error codes, device state
+  - For task errors: task ID, step information, failure point
+- FR-ED-008: System shall display error context information:
+  - Location (if applicable)
+  - Related task or device
+  - Environmental conditions (if available)
+
+**Error History Section:**
+- FR-ED-009: System shall display occurrence history timeline
+- FR-ED-010: Timeline shall show:
+  - First occurrence time
+  - All subsequent occurrences
+  - Occurrence count
+  - Time between occurrences
+- FR-ED-011: System shall display related errors list
+- FR-ED-012: System shall display error patterns and trends
+
+**Resolution Workflow Section:**
+- FR-ED-013: System shall display current assignee with avatar
+- FR-ED-014: System shall display assignment time
+- FR-ED-015: "Reassign" button shall open user selection modal
+- FR-ED-016: "Resolve" button shall open resolution form
+- FR-ED-017: "Ignore" button shall mark error as ignored (with confirmation)
+- FR-ED-018: Resolution form shall include:
+  - Resolution notes (required)
+  - Resolution method dropdown
+  - Follow-up actions checkbox
+  - Preventive measures notes
+- FR-ED-019: System shall display resolution history if previously resolved
+
+**Activity Log Section:**
+- FR-ED-020: System shall display activity log table
+- FR-ED-021: Table shall include columns: Time, Action, User, Details
+- FR-ED-022: Activities shall include: Error Created, Assigned, Reassigned, Status Changed, Resolved, Ignored, Comment Added
+
+**Related Information Section:**
+- FR-ED-023: For device errors: link to device details page
+- FR-ED-024: For task errors: link to task details page
+- FR-ED-025: System shall display similar errors for reference
+
+**Action Buttons:**
+- FR-ED-026: "View Device/Task" button shall navigate to related entity
+- FR-ED-027: "Create Task" button shall create maintenance task for device errors
+- FR-ED-028: "Add Comment" button shall add notes to error
+- FR-ED-029: "Export" button shall export error details to PDF
+
+#### 3.6.5 Error Notification System
+
+**Description:**
+Multi-channel notification system for alerting relevant personnel about errors based on severity and configuration.
+
+**Functional Requirements:**
+
+**Notification Channels:**
+- FR-EN-001: System shall support in-app notifications
+- FR-EN-002: System shall support email notifications
+- FR-EN-003: System shall support SMS notifications (optional)
+- FR-EN-004: System shall support push notifications (optional)
+
+**Notification Rules:**
+- FR-EN-005: System shall provide notification rule configuration
+- FR-EN-006: Rules shall be based on:
+  - Error severity level
+  - Error type/category
+  - Device type
+  - Work area
+  - Time of day
+- FR-EN-007: System shall allow multiple notification channels per rule
+- FR-EN-008: System shall allow notification recipient assignment per rule
+
+**In-App Notifications:**
+- FR-EN-009: System shall display notification bell icon in header
+- FR-EN-010: Notification count badge shall show unread count
+- FR-EN-011: Clicking bell shall open notification dropdown
+- FR-EN-012: Notifications shall display with:
+  - Error severity icon
+  - Error description
+  - Time ago
+  - Action button (View Details)
+- FR-EN-013: Critical errors shall display as persistent banner
+- FR-EN-014: Notifications shall be marked as read on click
+
+**Email Notifications:**
+- FR-EN-015: System shall send email notifications based on rules
+- FR-EN-016: Email shall include:
+  - Error summary
+  - Error details
+  - Severity level
+  - Source information
+  - Action link to error details
+- FR-EN-017: Critical errors shall trigger immediate email
+- FR-EN-018: Non-critical errors may be batched (configurable)
+
+**SMS Notifications:**
+- FR-EN-019: System shall send SMS for critical errors only
+- FR-EN-020: SMS shall include brief error summary and action link
+- FR-EN-021: SMS rate limiting shall be applied (max 1 per 5 minutes per user)
+
+**Notification Preferences:**
+- FR-EN-022: Users shall configure notification preferences
+- FR-EN-023: Preferences shall include:
+  - Enabled notification channels
+  - Severity thresholds
+  - Quiet hours
+  - Device/work area filters
+- FR-EN-024: System shall respect user preferences
+
+**Notification History:**
+- FR-EN-025: System shall maintain notification history
+- FR-EN-026: History shall show: sent time, channel, recipient, status
+- FR-EN-027: Failed notifications shall be logged and retried
+
+#### 3.6.6 Error Analytics and Reporting
+
+**Description:**
+Comprehensive analytics and reporting capabilities for error analysis, trend identification, and performance improvement.
+
+**Functional Requirements:**
+
+**Analytics Dashboard:**
+- FR-EA-101: System shall display error analytics dashboard
+- FR-EA-102: Dashboard shall include:
+  - Error trend chart (errors over time)
+  - Error distribution by severity (pie chart)
+  - Error distribution by type (bar chart)
+  - Error distribution by device (bar chart)
+  - Top 10 most frequent errors
+  - Average resolution time by severity
+  - Error rate by work area
+
+**Time Range Selection:**
+- FR-EA-103: System shall provide time range selector: Last 24 Hours, Last 7 Days, Last 30 Days, Last 90 Days, Custom Range
+- FR-EA-104: Charts shall update based on selected time range
+
+**Error Trend Analysis:**
+- FR-EA-105: System shall display error trend line chart
+- FR-EA-106: Chart shall show total errors by day/hour
+- FR-EA-107: Chart shall overlay resolved errors
+- FR-EA-108: Chart shall show trend line for prediction
+
+**Error Distribution Analysis:**
+- FR-EA-109: System shall display error distribution by severity
+- FR-EA-110: System shall display error distribution by error type
+- FR-EA-111: System shall display error distribution by device type
+- FR-EA-112: Charts shall be interactive with drill-down capability
+
+**Performance Metrics:**
+- FR-EA-113: System shall display key metrics:
+  - Total errors in period
+  - Active errors
+  - Resolved errors
+  - Average resolution time
+  - Resolution rate
+  - Recurrence rate
+  - Critical error response time
+
+**Top Errors Analysis:**
+- FR-EA-114: System shall display top 10 most frequent errors
+- FR-EA-115: Each error shall show:
+  - Error category
+  - Occurrence count
+  - Percentage of total
+  - Average resolution time
+  - Trend (increasing/decreasing)
+
+**Error Reports:**
+- FR-EA-116: System shall provide report generation
+- FR-EA-117: Report types shall include:
+  - Daily error summary
+  - Weekly error report
+  - Monthly error analysis
+  - Custom date range report
+- FR-EA-118: Reports shall include:
+  - Executive summary
+  - Error statistics
+  - Top errors analysis
+  - Trends and patterns
+  - Recommendations
+- FR-EA-119: Reports shall be exportable to PDF and Excel
+- FR-EA-120: Reports shall be schedulable for automatic delivery
+
+**Export Capabilities:**
+- FR-EA-121: System shall export error data to CSV
+- FR-EA-122: System shall export error data to Excel
+- FR-EA-123: System shall export error data to JSON
+- FR-EA-124: Export shall respect current filters
+- FR-EA-125: Export shall include all error details
+
+#### 3.6.7 Error Resolution Workflow
+
+**Description:**
+Structured workflow for assigning, tracking, and resolving errors with accountability and documentation.
+
+**Functional Requirements:**
+
+**Error Assignment:**
+- FR-ER-001: System shall allow manual error assignment
+- FR-ER-002: System shall support automatic assignment based on rules
+- FR-ER-003: Assignment rules shall consider:
+  - Error type
+  - Device type
+  - Work area
+  - User availability
+  - User expertise
+- FR-ER-004: System shall notify assignee upon assignment
+- FR-ER-005: Assignment history shall be tracked
+
+**Error Status Workflow:**
+- FR-ER-006: System shall support error status transitions:
+  - Active → In Progress (when assigned or work started)
+  - In Progress → Resolved (when issue fixed)
+  - In Progress → Active (if issue persists)
+  - Active → Ignored (if not actionable)
+  - Resolved → Active (if error recurs)
+- FR-ER-007: Status changes shall require notes
+- FR-ER-008: Status changes shall be logged
+
+**Resolution Process:**
+- FR-ER-009: System shall require resolution notes
+- FR-ER-010: Resolution notes shall include:
+  - Root cause analysis
+  - Resolution method
+  - Preventive measures
+  - Follow-up actions
+- FR-ER-011: System shall allow attachment of supporting documents
+- FR-ER-012: System shall link resolution to related tasks
+
+**Escalation Rules:**
+- FR-ER-013: System shall support automatic escalation
+- FR-ER-014: Escalation shall trigger based on:
+  - Time since occurrence
+  - Severity level
+  - Resolution time exceeded
+  - Recurrence count
+- FR-ER-015: Escalation shall notify higher-level personnel
+- FR-ER-016: Escalation history shall be tracked
+
+**Collaboration Features:**
+- FR-ER-017: System shall allow comments on errors
+- FR-ER-018: Comments shall support @mentions
+- FR-ER-019: Comments shall notify mentioned users
+- FR-ER-020: System shall allow error tagging
+- FR-ER-021: Tags shall include: urgent, recurring, investigation needed, etc.
+
+**Resolution Templates:**
+- FR-ER-022: System shall provide resolution templates
+- FR-ER-023: Templates shall be customizable by error type
+- FR-ER-024: Templates shall include common resolution steps
+- FR-ER-025: Templates shall improve consistency
+
+**Follow-up Tasks:**
+- FR-ER-026: System shall allow creation of follow-up tasks
+- FR-ER-027: Follow-up tasks shall be linked to error
+- FR-ER-028: Follow-up tasks shall include:
+  - Maintenance tasks
+  - Investigation tasks
+  - Process improvement tasks
+
+---
+
+### 3.7 Multi-language Support
 
 #### 3.5.1 Language Switcher
 
@@ -713,6 +1143,8 @@ Global language selection control for switching between supported languages.
 | Devices | 设备 |
 | Device List | 设备列表 |
 | Device Model | 设备模型 |
+| Event | 事件 |
+| Exception/Alarm | 异常报警 |
 | System | 系统 |
 | Role-Permission | 角色-权限 |
 | Role Management | 角色管理 |
@@ -893,6 +1325,125 @@ Global language selection control for switching between supported languages.
 | Search | 搜索 |
 | Reset | 重置 |
 | Submit | 提交 |
+
+**Event/Exception Page Translations:**
+
+*Statistics Cards:*
+| English | Chinese |
+|---------|---------|
+| Active Errors | 活动错误 |
+| Critical Errors | 严重错误 |
+| Today's Errors | 今日错误 |
+| Resolved Today | 今日已解决 |
+
+*Buttons:*
+| English | Chinese |
+|---------|---------|
+| Refresh | 刷新 |
+| Export | 导出 |
+| Mark All Resolved | 标记全部已解决 |
+| Bulk Assign | 批量分配 |
+| View Details | 查看详情 |
+| Assign | 分配 |
+| Resolve | 解决 |
+| Ignore | 忽略 |
+| Reassign | 重新分配 |
+| Create Task | 创建任务 |
+| Add Comment | 添加评论 |
+
+*Search & Filter Area:*
+| English | Chinese |
+|---------|---------|
+| Search errors... | 搜索错误... |
+| All Types | 所有类型 |
+| Device Errors | 设备错误 |
+| Task Errors | 任务错误 |
+| All Severities | 所有严重级别 |
+| Critical | 严重 |
+| High | 高 |
+| Medium | 中 |
+| Low | 低 |
+| Info | 信息 |
+| All Statuses | 所有状态 |
+| Active | 活动 |
+| In Progress | 进行中 |
+| Resolved | 已解决 |
+| Ignored | 已忽略 |
+| All Time | 全部时间 |
+| Last Hour | 最近1小时 |
+| Last 24 Hours | 最近24小时 |
+| Last 7 Days | 最近7天 |
+| Last 30 Days | 最近30天 |
+| All Devices | 所有设备 |
+| All Assignees | 所有负责人 |
+| Unassigned | 未分配 |
+
+*Table Headers:*
+| English | Chinese |
+|---------|---------|
+| Error ID | 错误ID |
+| Error Type | 错误类型 |
+| Severity | 严重级别 |
+| Status | 状态 |
+| Device/Task | 设备/任务 |
+| Description | 描述 |
+| Occurred Time | 发生时间 |
+| Assignee | 负责人 |
+
+*Error Type Labels:*
+| English | Chinese |
+|---------|---------|
+| Device | 设备 |
+| Task | 任务 |
+
+*Error Categories:*
+| English | Chinese |
+|---------|---------|
+| Communication | 通信 |
+| Sensor Failure | 传感器故障 |
+| Power/Battery | 电源/电池 |
+| Movement | 运动 |
+| Hardware | 硬件 |
+| System | 系统 |
+| Safety | 安全 |
+| Navigation | 导航 |
+| Execution | 执行 |
+| Resource | 资源 |
+| Priority | 优先级 |
+| Validation | 验证 |
+| Timeout | 超时 |
+
+*Notification Translations:*
+| English | Chinese |
+|---------|---------|
+| Notifications | 通知 |
+| Mark as Read | 标记为已读 |
+| Notification Preferences | 通知偏好 |
+| Notification Rules | 通知规则 |
+| Configure Rules | 配置规则 |
+| Quiet Hours | 静音时段 |
+
+*Analytics Translations:*
+| English | Chinese |
+|---------|---------|
+| Error Analytics | 错误分析 |
+| Error Trend | 错误趋势 |
+| Error Distribution | 错误分布 |
+| Top Errors | 热门错误 |
+| Performance Metrics | 性能指标 |
+| Generate Report | 生成报告 |
+| Daily Summary | 每日摘要 |
+| Weekly Report | 每周报告 |
+| Monthly Analysis | 每月分析 |
+
+*Resolution Translations:*
+| English | Chinese |
+|---------|---------|
+| Resolution Notes | 解决说明 |
+| Resolution Method | 解决方法 |
+| Preventive Measures | 预防措施 |
+| Follow-up Actions | 后续行动 |
+| Root Cause Analysis | 根本原因分析 |
 
 **Footer Translations:**
 | English | Chinese |
@@ -1140,6 +1691,209 @@ Global language selection control for switching between supported languages.
 - AC-LANG-002-4: All table headers display in Japanese
 - AC-LANG-002-5: All status badges display in Japanese
 - AC-LANG-002-6: All form labels display in Japanese
+
+### 4.6 Event Management
+
+#### US-EVENT-001: View Exception/Alarm List
+**As a** Maintenance Technician  
+**I want to** view a list of all device and task errors  
+**So that** I can monitor system health and identify issues requiring attention
+
+**Acceptance Criteria:**
+- AC-EVENT-001-1: Error table displays with all required columns
+- AC-EVENT-001-2: Severity badges display with correct colors and icons
+- AC-EVENT-001-3: Status badges display with correct colors
+- AC-EVENT-001-4: Dashboard statistics display correctly
+- AC-EVENT-001-5: Critical errors are highlighted
+- AC-EVENT-001-6: Real-time updates appear automatically
+- AC-EVENT-001-7: Each row is clickable
+
+#### US-EVENT-002: Search and Filter Errors
+**As a** Fleet Manager  
+**I want to** search and filter errors  
+**So that** I can quickly find specific errors or focus on critical issues
+
+**Acceptance Criteria:**
+- AC-EVENT-002-1: Search input accepts text input for error ID, description, or device/task
+- AC-EVENT-002-2: Error type filter applies immediately on selection
+- AC-EVENT-002-3: Severity filter applies immediately on selection
+- AC-EVENT-002-4: Status filter applies immediately on selection
+- AC-EVENT-002-5: Time range filter applies immediately on selection
+- AC-EVENT-002-6: Multiple filters can be combined
+- AC-EVENT-002-7: Device filter shows available devices
+- AC-EVENT-002-8: Assignee filter shows available users
+
+#### US-EVENT-003: View Error Details
+**As a** Maintenance Technician  
+**I want to** view detailed information about an error  
+**So that** I can understand the issue and determine the appropriate resolution
+
+**Acceptance Criteria:**
+- AC-EVENT-003-1: Clicking error row opens details page
+- AC-EVENT-003-2: Error information grid displays all fields
+- AC-EVENT-003-3: Severity is visually emphasized with color and icon
+- AC-EVENT-003-4: Error description displays with full details
+- AC-EVENT-003-5: Error history timeline displays correctly
+- AC-EVENT-003-6: Activity log shows all actions
+- AC-EVENT-003-7: Related errors are displayed
+- AC-EVENT-003-8: Links to related device/task are available
+
+#### US-EVENT-004: Assign Error to User
+**As a** Fleet Manager  
+**I want to** assign errors to specific users  
+**So that** accountability is established and resolution is tracked
+
+**Acceptance Criteria:**
+- AC-EVENT-004-1: Assign button opens user selection modal
+- AC-EVENT-004-2: User selection modal displays available users
+- AC-EVENT-004-3: Assignee is updated after selection
+- AC-EVENT-004-4: Assignment time is recorded
+- AC-EVENT-004-5: Assignee receives notification
+- AC-EVENT-004-6: Assignment history is logged
+- AC-EVENT-004-7: Bulk assign works for multiple errors
+
+#### US-EVENT-005: Resolve Error
+**As a** Maintenance Technician  
+**I want to** mark an error as resolved  
+**So that** the error is tracked as fixed and system health is updated
+
+**Acceptance Criteria:**
+- AC-EVENT-005-1: Resolve button opens resolution form
+- AC-EVENT-005-2: Resolution form requires notes
+- AC-EVENT-005-3: Resolution form includes resolution method dropdown
+- AC-EVENT-005-4: Resolution form includes preventive measures field
+- AC-EVENT-005-5: Error status changes to Resolved
+- AC-EVENT-005-6: Resolution time is recorded
+- AC-EVENT-007-7: Resolution notes are saved
+- AC-EVENT-005-8: Activity log records resolution
+
+#### US-EVENT-006: Configure Error Notifications
+**As a** System Administrator  
+**I want to** configure notification rules for errors  
+**So that** relevant personnel are alerted appropriately
+
+**Acceptance Criteria:**
+- AC-EVENT-006-1: Notification rules can be created
+- AC-EVENT-006-2: Rules can be based on severity level
+- AC-EVENT-006-3: Rules can be based on error type
+- AC-EVENT-006-4: Rules can be based on device type
+- AC-EVENT-006-5: Multiple notification channels can be selected
+- AC-EVENT-006-6: Recipients can be assigned per rule
+- AC-EVENT-006-7: Rules can be edited and deleted
+- AC-EVENT-006-8: Rules are applied immediately
+
+#### US-EVENT-007: Receive Error Notifications
+**As a** Maintenance Technician  
+**I want to** receive notifications about errors  
+**So that** I can respond quickly to issues
+
+**Acceptance Criteria:**
+- AC-EVENT-007-1: In-app notifications display in header
+- AC-EVENT-007-2: Notification badge shows unread count
+- AC-EVENT-007-3: Clicking bell opens notification dropdown
+- AC-EVENT-007-4: Notifications display severity icon and description
+- AC-EVENT-007-5: Critical errors display as persistent banner
+- AC-EVENT-007-6: Email notifications are sent based on rules
+- AC-EVENT-007-7: SMS notifications are sent for critical errors
+- AC-EVENT-007-8: Notifications are marked as read on click
+
+#### US-EVENT-008: View Error Analytics
+**As a** Fleet Manager  
+**I want to** view error analytics and trends  
+**So that** I can identify patterns and improve system reliability
+
+**Acceptance Criteria:**
+- AC-EVENT-008-1: Analytics dashboard displays with all charts
+- AC-EVENT-008-2: Error trend chart shows errors over time
+- AC-EVENT-008-3: Error distribution by severity displays correctly
+- AC-EVENT-008-4: Error distribution by type displays correctly
+- AC-EVENT-008-5: Top 10 most frequent errors are listed
+- AC-EVENT-008-6: Performance metrics display correctly
+- AC-EVENT-008-7: Time range selector updates all charts
+- AC-EVENT-008-8: Charts are interactive with drill-down
+
+#### US-EVENT-009: Generate Error Reports
+**As a** Fleet Manager  
+**I want to** generate error reports  
+**So that** I can share analysis with stakeholders
+
+**Acceptance Criteria:**
+- AC-EVENT-009-1: Report generation modal opens
+- AC-EVENT-009-2: Report types are available (daily, weekly, monthly, custom)
+- AC-EVENT-009-3: Date range can be selected
+- AC-EVENT-009-4: Report includes executive summary
+- AC-EVENT-009-5: Report includes error statistics
+- AC-EVENT-009-6: Report includes top errors analysis
+- AC-EVENT-009-7: Report includes trends and patterns
+- AC-EVENT-009-8: Report can be exported to PDF
+- AC-EVENT-009-9: Report can be exported to Excel
+- AC-EVENT-010-10: Reports can be scheduled for automatic delivery
+
+#### US-EVENT-010: Export Error Data
+**As a** System Administrator  
+**I want to** export error data  
+**So that** I can perform offline analysis or archive records
+
+**Acceptance Criteria:**
+- AC-EVENT-010-1: Export button is available
+- AC-EVENT-010-2: Export formats include CSV, Excel, JSON
+- AC-EVENT-010-3: Export respects current filters
+- AC-EVENT-010-4: Export includes all error details
+- AC-EVENT-010-5: Export file downloads successfully
+- AC-EVENT-010-6: Exported data is accurate and complete
+
+#### US-EVENT-011: Configure Notification Preferences
+**As a** user  
+**I want to** configure my notification preferences  
+**So that** I receive notifications that are relevant to me
+
+**Acceptance Criteria:**
+- AC-EVENT-011-1: Notification preferences modal opens
+- AC-EVENT-011-2: Notification channels can be enabled/disabled
+- AC-EVENT-011-3: Severity thresholds can be set
+- AC-EVENT-011-4: Quiet hours can be configured
+- AC-EVENT-011-5: Device/work area filters can be applied
+- AC-EVENT-011-6: Preferences are saved immediately
+- AC-EVENT-011-7: System respects user preferences
+
+#### US-EVENT-012: Track Error Resolution Progress
+**As a** Fleet Manager  
+**I want to** track error resolution progress  
+**So that** I can ensure issues are being addressed
+
+**Acceptance Criteria:**
+- AC-EVENT-012-1: Error list shows assignee for each error
+- AC-EVENT-012-2: Error list shows status for each error
+- AC-EVENT-012-3: Error details show assignment time
+- AC-EVENT-012-4: Error details show resolution time
+- AC-EVENT-012-5: Activity log shows all status changes
+- AC-EVENT-012-6: Average resolution time is calculated
+- AC-EVENT-012-7: Resolution rate is displayed
+
+#### US-EVENT-013: Add Comments to Error
+**As a** Maintenance Technician  
+**I want to** add comments to errors  
+**So that** I can collaborate with team members on resolution
+
+**Acceptance Criteria:**
+- AC-EVENT-013-1: Add Comment button opens comment form
+- AC-EVENT-013-2: Comment form accepts text input
+- AC-EVENT-013-3: Comments support @mentions
+- AC-EVENT-013-4: Mentioned users receive notification
+- AC-EVENT-013-5: Comments display in activity log
+- AC-EVENT-013-6: Comments show author and timestamp
+
+#### US-EVENT-014: Create Follow-up Tasks
+**As a** Maintenance Technician  
+**I want to** create follow-up tasks for errors  
+**So that** preventive actions can be tracked
+
+**Acceptance Criteria:**
+- AC-EVENT-014-1: Create Task button opens task creation form
+- AC-EVENT-014-2: Task is linked to error
+- AC-EVENT-014-3: Task type can be selected (maintenance, investigation, improvement)
+- AC-EVENT-014-4: Task appears in task list
+- AC-EVENT-014-5: Task shows reference to error
 
 ---
 
@@ -1600,6 +2354,46 @@ Robot Management System/
 }
 ```
 
+**Error Object:**
+```javascript
+{
+  errorId: String,
+  errorType: Enum ['device', 'task'],
+  errorCategory: String,
+  severity: Enum ['critical', 'high', 'medium', 'low', 'info'],
+  status: Enum ['active', 'in_progress', 'resolved', 'ignored'],
+  sourceType: Enum ['robot', 'elevator', 'door', 'task'],
+  sourceId: String,
+  sourceName: String,
+  description: String,
+  details: Object,
+  occurredTime: DateTime,
+  resolvedTime: DateTime | null,
+  assignee: String | null,
+  assigneeId: String | null,
+  assignedTime: DateTime | null,
+  resolutionNotes: String | null,
+  occurrenceCount: Number,
+  relatedErrors: Array<String>
+}
+```
+
+**Notification Rule Object:**
+```javascript
+{
+  ruleId: String,
+  ruleName: String,
+  severityLevels: Array<String>,
+  errorTypes: Array<String>,
+  deviceTypes: Array<String>,
+  workAreas: Array<String>,
+  channels: Array<String>,
+  recipients: Array<String>,
+  timeOfDay: Object | null,
+  enabled: Boolean
+}
+```
+
 #### 6.3.2 State Management
 
 - Current language: Global variable
@@ -1685,12 +2479,44 @@ const translations = {
 - PUT /api/models/:id - Update model
 - DELETE /api/models/:id - Delete model
 
+**Errors:**
+- GET /api/errors - Retrieve error list
+- GET /api/errors/:id - Retrieve error details
+- POST /api/errors - Create new error
+- PUT /api/errors/:id/assign - Assign error to user
+- PUT /api/errors/:id/resolve - Resolve error
+- PUT /api/errors/:id/ignore - Ignore error
+- POST /api/errors/bulk-assign - Bulk assign errors
+- GET /api/errors/analytics - Retrieve error analytics
+- GET /api/errors/reports - Generate error report
+- GET /api/errors/export - Export error data
+- POST /api/errors/:id/comments - Add comment to error
+
+**Notification Rules:**
+- GET /api/notification-rules - Retrieve notification rules
+- GET /api/notification-rules/:id - Retrieve notification rule details
+- POST /api/notification-rules - Create new notification rule
+- PUT /api/notification-rules/:id - Update notification rule
+- DELETE /api/notification-rules/:id - Delete notification rule
+- PUT /api/notification-rules/:id/toggle - Enable/disable notification rule
+
+**Notifications:**
+- GET /api/notifications - Retrieve user notifications
+- PUT /api/notifications/:id/read - Mark notification as read
+- PUT /api/notifications/read-all - Mark all notifications as read
+- GET /api/notification-preferences - Retrieve user notification preferences
+- PUT /api/notification-preferences - Update user notification preferences
+
 #### 6.6.2 WebSocket (Real-time Updates)
 
 - Task status updates
 - Device location updates
 - Real-time metrics streaming
 - Queue position updates
+- Error notifications and updates
+- Error status changes
+- New error alerts
+- Notification updates
 
 ### 6.7 Testing Requirements
 
@@ -1788,6 +2614,7 @@ const translations = {
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | March 12, 2026 | PM | Initial PRD creation |
+| 1.1 | March 24, 2026 | PM | Added Event Management module with Exception/Alarm feature including device and task error tracking, notification system, analytics, and resolution workflow |
 
 ---
 

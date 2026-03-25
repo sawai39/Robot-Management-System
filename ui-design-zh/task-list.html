@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>设备列表 - 机器人管理系统</title>
+    <title>任务列表 - 机器人管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -63,6 +63,22 @@
                     </div>
                 </div>
                 <div class="nav-group">
+                    <button onclick="toggleSubmenu('event-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span>事件管理</span>
+                        </div>
+                        <svg id="event-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="event-submenu" class="submenu bg-sidebar-dark">
+                        <a href="exception-alarm.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">异常报警</a>
+                    </div>
+                </div>
+                <div class="nav-group">
                     <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
                         <div class="flex items-center gap-3">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,14 +86,14 @@
                             </svg>
                             <span>任务管理</span>
                         </div>
-                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div id="tasks-submenu" class="submenu bg-sidebar-dark">
-                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务列表</a>
+                    <div id="tasks-submenu" class="submenu expanded bg-sidebar-dark">
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">任务列表</a>
                         <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务队列</a>
-                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务链</a>
+                        <a href="task-chain-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务链</a>
                     </div>
                 </div>
                 <div class="nav-group">
@@ -105,12 +121,12 @@
                             </svg>
                             <span>设备管理</span>
                         </div>
-                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div id="devices-submenu" class="submenu expanded bg-sidebar-dark">
-                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">设备列表</a>
+                    <div id="devices-submenu" class="submenu bg-sidebar-dark">
+                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备列表</a>
                         <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备模型</a>
                     </div>
                 </div>
@@ -143,8 +159,8 @@
         <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
             <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
                 <div>
-                    <h2 class="text-xl font-semibold text-sidebar">设备列表</h2>
-                    <p class="text-text-secondary text-sm mt-1">管理和监控所有已注册设备</p>
+                    <h2 class="text-xl font-semibold text-sidebar">任务列表</h2>
+                    <p class="text-text-secondary text-sm mt-1">查看和管理所有任务</p>
                 </div>
                 <div class="relative">
                     <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
@@ -166,11 +182,11 @@
             <div class="flex-1 p-6">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
-                        <button onclick="openAddDeviceModal()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors flex items-center gap-2 font-medium">
+                        <button class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors flex items-center gap-2 font-medium">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
-                            添加设备
+                            新建任务
                         </button>
                         <button class="bg-neutral text-white px-4 py-2 rounded hover:bg-neutral/80 transition-colors flex items-center gap-2 font-medium">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,14 +195,14 @@
                             刷新
                         </button>
                     </div>
-                    <p class="text-text-secondary text-sm">共 <span class="font-semibold text-text-primary">24</span> 台设备</p>
+                    <p class="text-text-secondary text-sm">共 <span class="font-semibold text-text-primary">156</span> 个任务</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-sm border border-border-gray p-4 mb-6">
                     <div class="flex flex-wrap gap-4">
                         <div class="flex-1 min-w-[250px]">
                             <div class="relative">
-                                <input type="text" placeholder="搜索设备..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
+                                <input type="text" placeholder="按名称或ID搜索任务..." class="w-full border border-border-gray rounded px-4 py-2 pr-10 focus:outline-none focus:border-primary transition-colors">
                                 <button class="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-primary transition-colors">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -196,18 +212,23 @@
                         </div>
                         <div class="w-48">
                             <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                <option>所有类型</option>
-                                <option>机器人</option>
-                                <option>电梯</option>
-                                <option>门</option>
+                                <option>所有状态</option>
+                                <option>待处理</option>
+                                <option>已分配</option>
+                                <option>在途中</option>
+                                <option>执行中</option>
+                                <option>已完成</option>
+                                <option>失败</option>
                             </select>
                         </div>
                         <div class="w-48">
                             <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                                <option>所有状态</option>
-                                <option>在线</option>
-                                <option>离线</option>
-                                <option>维护中</option>
+                                <option>所有机器人</option>
+                                <option>机器人 #1</option>
+                                <option>机器人 #2</option>
+                                <option>机器人 #3</option>
+                                <option>机器人 #4</option>
+                                <option>机器人 #5</option>
                             </select>
                         </div>
                     </div>
@@ -218,97 +239,114 @@
                         <table class="w-full">
                             <thead class="bg-bg-light sticky top-0">
                                 <tr>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">设备ID</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">设备名称</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">类型</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">型号</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">品牌</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">任务ID</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">任务类型</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">任务名称</th>
                                     <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">状态</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">电量</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">当前任务</th>
-                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">位置</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">机器人</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">工作区域</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">预计到达</th>
+                                    <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">优先级</th>
                                     <th class="text-left px-4 py-3 font-semibold text-text-primary text-sm">操作</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-border-gray">
-                                <tr class="hover:bg-bg-light cursor-pointer transition-colors" onclick="window.location.href='device-details.html'">
-                                    <td class="px-4 py-3 text-sm text-primary font-medium">TZ123_001</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">天体0号</td>
+                                <tr class="hover:bg-bg-light cursor-pointer transition-colors" onclick="window.location.href='task-details.html'">
+                                    <td class="px-4 py-3 text-sm text-primary font-medium">#12345</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">包裹配送至3楼</td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">机器人</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">在途中</span>
                                     </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">TZC123</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Tianti</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #7</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">C11</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">14:45:30</td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">在线</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">普通</span>
                                     </td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
-                                            <div class="w-16 h-2 bg-border-gray rounded-full overflow-hidden">
-                                                <div class="h-full bg-success rounded-full" style="width: 85%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium text-text-primary">85%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">任务 #12345</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">2楼 办公室</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <button onclick="event.stopPropagation(); window.location.href='device-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看</button>
-                                            <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">编辑</button>
+                                            <button onclick="event.stopPropagation(); window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看详情</button>
                                             <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">删除</button>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="hover:bg-bg-light cursor-pointer transition-colors bg-error/5" onclick="window.location.href='device-details.html'">
-                                    <td class="px-4 py-3 text-sm text-primary font-medium">MIR-001</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">MiR200</td>
+                                <tr class="hover:bg-bg-light cursor-pointer transition-colors" onclick="window.location.href='task-details.html'">
+                                    <td class="px-4 py-3 text-sm text-primary font-medium">#12346</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">12-3</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">客房服务配送</td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">机器人</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-executing text-white">执行中</span>
                                     </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">MiR200</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">MiR</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #3</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">C12</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">14:50:00</td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">离线</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error text-white">高</span>
                                     </td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
-                                            <div class="w-16 h-2 bg-border-gray rounded-full overflow-hidden">
-                                                <div class="h-full bg-error rounded-full" style="width: 0%"></div>
-                                            </div>
-                                            <span class="text-xs font-medium text-error">0%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-text-light">-</td>
-                                    <td class="px-4 py-3 text-sm text-text-light">未知</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center gap-2">
-                                            <button onclick="event.stopPropagation(); window.location.href='device-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看</button>
-                                            <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">编辑</button>
+                                            <button onclick="event.stopPropagation(); window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看详情</button>
                                             <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">删除</button>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="hover:bg-bg-light cursor-pointer transition-colors" onclick="window.location.href='device-details.html'">
-                                    <td class="px-4 py-3 text-sm text-primary font-medium">ELV-001</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">电梯-1</td>
+                                <tr class="hover:bg-bg-light cursor-pointer transition-colors" onclick="window.location.href='task-details.html'">
+                                    <td class="px-4 py-3 text-sm text-primary font-medium">#12347</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机场行李运输</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机场行李运输</td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-executing/10 text-executing">电梯</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning text-white">待处理</span>
                                     </td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Gen2</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">Otis</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #9</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">复材车间</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">15:00:00</td>
                                     <td class="px-4 py-3">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">在线</span>
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral text-white">低</span>
                                     </td>
-                                    <td class="px-4 py-3">
-                                        <span class="text-xs text-text-light">不适用</span>
-                                    </td>
-                                    <td class="px-4 py-3 text-sm text-text-light">-</td>
-                                    <td class="px-4 py-3 text-sm text-text-primary">A栋</td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">
-                                            <button onclick="event.stopPropagation(); window.location.href='device-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看</button>
-                                            <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-neutral border border-neutral rounded hover:bg-neutral hover:text-white transition-colors">编辑</button>
+                                            <button onclick="event.stopPropagation(); window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看详情</button>
+                                            <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-bg-light cursor-pointer transition-colors" onclick="window.location.href='task-details.html'">
+                                    <td class="px-4 py-3 text-sm text-primary font-medium">#12348</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">配送</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">仓库库存移动</td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary text-white">已分配</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #5</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">C13</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">15:15:00</td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">普通</span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="event.stopPropagation(); window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看详情</button>
+                                            <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-bg-light cursor-pointer transition-colors" onclick="window.location.href='task-details.html'">
+                                    <td class="px-4 py-3 text-sm text-primary font-medium">#12349</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">飞速达</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">文件配送至行政部</td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">已完成</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">机器人 #2</td>
+                                    <td class="px-4 py-3 text-sm text-text-primary">C11</td>
+                                    <td class="px-4 py-3 text-sm text-text-light">-</td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-white">普通</span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="event.stopPropagation(); window.location.href='task-details.html'" class="px-3 py-1.5 text-xs font-medium text-primary border border-primary rounded hover:bg-primary hover:text-white transition-colors">查看详情</button>
                                             <button onclick="event.stopPropagation();" class="px-3 py-1.5 text-xs font-medium text-error border border-error rounded hover:bg-error hover:text-white transition-colors">删除</button>
                                         </div>
                                     </td>
@@ -318,7 +356,7 @@
                     </div>
 
                     <div class="px-4 py-3 border-t border-border-gray flex items-center justify-between">
-                        <p class="text-sm text-text-secondary">显示第 <span class="font-medium text-text-primary">1</span> 至 <span class="font-medium text-text-primary">3</span> 条，共 <span class="font-medium text-text-primary">24</span> 条</p>
+                        <p class="text-sm text-text-secondary">显示第 <span class="font-medium text-text-primary">1</span> 至 <span class="font-medium text-text-primary">5</span> 条，共 <span class="font-medium text-text-primary">156</span> 条</p>
                         <div class="flex items-center gap-1">
                             <button class="px-3 py-1.5 text-sm border border-border-gray rounded hover:bg-bg-light transition-colors text-text-secondary">上一页</button>
                             <button class="px-3 py-1.5 text-sm rounded bg-primary text-white font-medium">1</button>
@@ -342,61 +380,6 @@
         </main>
     </div>
 
-    <div id="add-device-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-        <div class="absolute inset-0 bg-black/50" onclick="closeAddDeviceModal()"></div>
-        <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-border-gray">
-                <h3 class="text-lg font-semibold text-sidebar">添加新设备</h3>
-                <button onclick="closeAddDeviceModal()" class="text-text-secondary hover:text-text-primary transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div id="modal-step-1" class="p-6">
-                <p class="text-sm text-text-secondary mb-4">步骤 1：验证连接</p>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-text-primary mb-1">型号</label>
-                        <select class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors bg-white">
-                            <option>请选择型号...</option>
-                            <option>TZC123 - 抱箱机器人</option>
-                            <option>TZC122 - 12-3蜂巢车</option>
-                            <option>XG-R1 - 仙工搬运</option>
-                            <option>MiR200</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-text-primary mb-1">连接口令</label>
-                        <input type="password" placeholder="请输入连接口令" class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors">
-                        <p class="text-xs text-text-light mt-1">请输入连接口令以验证身份</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="modal-step-2" class="hidden p-6">
-                <p class="text-sm text-text-secondary mb-4">步骤 2：输入设备信息</p>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-text-primary mb-1">设备ID</label>
-                        <input type="text" placeholder="请输入设备ID" class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-text-primary mb-1">设备名称</label>
-                        <input type="text" placeholder="请输入设备名称" class="w-full border border-border-gray rounded px-4 py-2 focus:outline-none focus:border-primary transition-colors">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-border-gray">
-                <button onclick="closeAddDeviceModal()" class="px-4 py-2 text-sm font-medium text-text-secondary border border-border-gray rounded hover:bg-bg-light transition-colors">取消</button>
-                <button id="modal-verify-btn" onclick="showStep2()" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded hover:bg-primary-dark transition-colors">验证</button>
-                <button id="modal-add-btn" class="hidden px-4 py-2 text-sm font-medium text-white bg-primary rounded hover:bg-primary-dark transition-colors">添加设备</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         function toggleSubmenu(id) {
             const submenu = document.getElementById(id);
@@ -411,22 +394,6 @@
             const langNames = { 'en': 'English', 'zh': '中文' };
             document.getElementById('current-lang').textContent = langNames[lang];
             document.getElementById('language-dropdown').classList.add('hidden');
-        }
-        function openAddDeviceModal() {
-            document.getElementById('add-device-modal').classList.remove('hidden');
-        }
-        function closeAddDeviceModal() {
-            document.getElementById('add-device-modal').classList.add('hidden');
-            document.getElementById('modal-step-1').classList.remove('hidden');
-            document.getElementById('modal-step-2').classList.add('hidden');
-            document.getElementById('modal-verify-btn').classList.remove('hidden');
-            document.getElementById('modal-add-btn').classList.add('hidden');
-        }
-        function showStep2() {
-            document.getElementById('modal-step-1').classList.add('hidden');
-            document.getElementById('modal-step-2').classList.remove('hidden');
-            document.getElementById('modal-verify-btn').classList.add('hidden');
-            document.getElementById('modal-add-btn').classList.remove('hidden');
         }
         document.addEventListener('click', function(e) {
             if (!e.target.closest('button')?.onclick?.toString().includes('toggleLanguageDropdown')) {

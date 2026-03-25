@@ -1,0 +1,284 @@
+{
+    "equip_type": "TiantiZeroInCHBTaker",
+    "equip_class": 2,
+    "description": "抱箱式机器人",
+    "manufacturer": "商飞智能技术有限公司",
+    "equip_flash": "data/model/flash/tianti_zero.jpg",
+    "version": "v1.0.0",
+    "last_update_timestamp": 1768391550622,
+    "equip_properties": [
+        {
+            "key": "equip_size_x",
+            "label": "设备X向尺寸长",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_size_y",
+            "label": "设备Y向尺寸宽",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_size_z",
+            "label": "设备Z向尺寸高",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_voltage",
+            "label": "额定电压",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_current",
+            "label": "额定电流",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_electricity",
+            "label": "额定电量",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_max_acceleration",
+            "label": "最大加速度",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_max_speed",
+            "label": "最大速度",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_temperature_min",
+            "label": "最低工作温度",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_temperature_max",
+            "label": "最高工作温度",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "max_capacity",
+            "label": "最大容量",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "max_load",
+            "label": "最大载荷",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        },
+        {
+            "key": "equip_check_hours",
+            "label": "周期维护小时数",
+            "type": "float",
+            "value": 0.0,
+            "required": false
+        }
+    ],
+    "connect_configs": [
+        {
+            "id": "socket_bridge_topic",
+            "label": "天体套接字桥接通讯",
+            "connect_params": [
+                {
+                    "key": "equip_id",
+                    "label": "设备连接唯一标识",
+                    "type": "string",
+                    "value": "TZXXXN_000",
+                    "required": true
+                },
+                {
+                    "key": "scan",
+                    "label": "雷达话题",
+                    "type": "string",
+                    "value": "posed_livox_mapping",
+                    "required": false
+                },
+                {
+                    "key": "scan",
+                    "label": "雷达话题2",
+                    "type": "string",
+                    "value": "posed_livox_mapping2",
+                    "required": false
+                },
+                {
+                    "key": "pose",
+                    "label": "位姿话题",
+                    "type": "string",
+                    "value": "robot_pose",
+                    "required": false
+                },
+                {
+                    "key": "equip_stat_notify",
+                    "label": "设备状态话题",
+                    "type": "string",
+                    "value": "robot_stat_notification",
+                    "required": false
+                },
+                {
+                    "key": "twist",
+                    "label": "速度话题",
+                    "type": "string",
+                    "value": "smooth_cmd_vel",
+                    "required": false
+                },
+                {
+                    "key": "monitor_notify",
+                    "label": "事件监控话题",
+                    "type": "string",
+                    "value": "error_code_monitor",
+                    "required": false
+                },
+                {
+                    "key": "task_stat_notify",
+                    "label": "任务状态话题",
+                    "type": "string",
+                    "value": "modify_task",
+                    "required": false
+                },
+                {
+                    "key": "path",
+                    "label": "实时路径话题",
+                    "type": "string",
+                    "value": "nav_plan",
+                    "required": false
+                }
+            ]
+        }
+    ],
+    "atom_ops": [
+        {
+            "id": "move",
+            "label": "移动",
+            "op_params": [
+                {
+                    "key": "poi",
+                    "label": "目的地",
+                    "type": "string",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "strategy",
+                    "label": "移动策略",
+                    "type": "json",
+                    "value": null,
+                    "required": false
+                }
+            ]
+        },
+        {
+            "id": "chb_get_bag",
+            "label": "抱箱取放货",
+            "op_params": [
+                {
+                    "key": "capture_op",
+                    "label": "抱取操作码",
+                    "type": "string",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "capture_op_param",
+                    "label": "抱取参数",
+                    "type": "json",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "docking_poi",
+                    "label": "抱取点",
+                    "type": "string",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "docking_poi_strategy",
+                    "label": "抱取点导航策略",
+                    "type": "json",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "act_op",
+                    "label": "抱取操作码2",
+                    "type": "string",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "act_op_param",
+                    "label": "抱取参数2",
+                    "type": "json",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "exit_strategy",
+                    "label": "退出策略",
+                    "type": "json",
+                    "value": null,
+                    "required": true
+                }
+            ]
+        },
+        {
+            "id": "sing_charg",
+            "label": "磁吸充电",
+            "op_params": [
+                {
+                    "key": "poi",
+                    "label": "充电桩",
+                    "type": "string",
+                    "value": null,
+                    "required": true
+                },
+                {
+                    "key": "strategy",
+                    "label": "充电策略",
+                    "type": "json",
+                    "value": null,
+                    "required": false
+                },
+                {
+                    "key": "op",
+                    "label": "充电操作码",
+                    "type": "json",
+                    "value": null,
+                    "required": false
+                },
+                {
+                    "key": "param",
+                    "label": "充电参数",
+                    "type": "json",
+                    "value": null,
+                    "required": false
+                }
+            ]
+        }
+    ]
+}

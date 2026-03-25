@@ -1,0 +1,37 @@
+{
+    "tree_id": "move",
+    "version": "1.0.0",
+    "node_json": {
+        "2027": {
+            "param": {
+                "x": "#{JSON_PARAM|@x#}",
+                "y": "#{JSON_PARAM|@y#}",
+                "yaw": "#{JSON_PARAM|@yaw#}",
+                "strategy": "#{JSON_PARAM|@strategy#}"
+            },
+            "next": [
+                {
+                    "state": 1,
+                    "success": {
+                        "reply_state": 1,
+                        "next": []
+                    }
+                },
+                {
+                    "state": 0,
+                    "error": {
+                        "reply_state": 98,
+                        "next": []
+                    }
+                }
+                {
+                    "state": 2
+                    "cancel": {
+                        "reply_state": 99,
+                        "next": []
+                    },
+                }
+            ]
+        }
+    }
+}
