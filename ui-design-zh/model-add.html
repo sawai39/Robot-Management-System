@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加新模型 - 机器人管理系统</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3498db',
+                        'primary-dark': '#2980b9',
+                        sidebar: '#2c3e50',
+                        'sidebar-dark': '#233140',
+                        'sidebar-hover': '#34495e',
+                        'bg-light': '#f8fafc',
+                        success: '#27ae60',
+                        warning: '#f39c12',
+                        error: '#e74c3c',
+                        executing: '#9b59b6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+        .nav-item { transition: all 0.3s ease; }
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .submenu.expanded { max-height: 200px; }
+    </style>
+</head>
+<body class="bg-bg-light min-h-screen">
+    <div class="flex min-h-screen">
+        <aside class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col">
+            <div class="p-5 border-b border-white/10">
+                <h1 class="text-white text-lg font-semibold leading-tight">机器人管理系统</h1>
+            </div>
+            <nav class="flex-1 py-4 overflow-y-auto">
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('apollo-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>Apollo</span>
+                        </div>
+                        <svg id="apollo-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="apollo-submenu" class="submenu bg-sidebar-dark">
+                        <a href="index.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">场域监控</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span>任务管理</span>
+                        </div>
+                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="tasks-submenu" class="submenu bg-sidebar-dark">
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务列表</a>
+                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务队列</a>
+                        <a href="task-chain-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务链</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('routenet-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>路网管理</span>
+                        </div>
+                        <svg id="routenet-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="routenet-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">地图编辑</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">路网编辑</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('devices-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                            </svg>
+                            <span>设备管理</span>
+                        </div>
+                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="devices-submenu" class="submenu expanded bg-sidebar-dark">
+                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备列表</a>
+                        <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">设备模型</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('event-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span>事件管理</span>
+                        </div>
+                        <svg id="event-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="event-submenu" class="submenu bg-sidebar-dark">
+                        <a href="exception-alarm.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">异常报警</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('system-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>系统管理</span>
+                        </div>
+                        <svg id="system-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="system-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色权限</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色管理</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户角色</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户管理</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="ml-[250px] flex-1 p-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800">添加新模型</h2>
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <button id="langBtn" class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+                                <span class="text-xl">🌐</span>
+                                <span>中文</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="langDropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">English</a>
+                                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 bg-gray-100">中文</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="models.html" class="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-300 bg-white hover:bg-gray-100 transition-colors text-gray-700 mb-6">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    返回模型列表
+                </a>
+
+                <form class="bg-white rounded-lg shadow-md p-6">
+                    <!-- Basic Information -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">基本信息</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">型号ID <span class="text-error">*</span></label>
+                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="请输入型号ID">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">型号名称 <span class="text-error">*</span></label>
+                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="请输入型号名称">
+                            </div>
+                            <div class="mb-4 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">描述 <span class="text-error">*</span></label>
+                                <textarea rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none" placeholder="请输入型号描述"></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">制造商 <span class="text-error">*</span></label>
+                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="请输入制造商">
+                            </div>
+                            <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">版本</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="例如: v1.0.0">
+                        </div>
+                        <div class="mb-4 md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">图片</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">上传文件</label>
+                                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-primary transition-colors cursor-pointer">
+                                        <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                        </svg>
+                                        <p class="text-sm text-gray-500">点击上传或拖拽文件到此处</p>
+                                        <p class="text-xs text-gray-400 mt-1">.jpg, .jpeg, .png</p>
+                                        <input type="file" class="hidden" accept=".jpg,.jpeg,.png">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">图片URL</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="例如: data/model/flash/tianti_zero.jpg">
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Properties -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">设备属性</h3>
+                        <div class="flex justify-between items-center mb-4">
+                            <button type="button" id="add-equip-property" class="px-3 py-1 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm">
+                                + 添加属性
+                            </button>
+                            <button type="button" class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm">
+                                从文件导入
+                            </button>
+                        </div>
+                        <div id="equip-properties-container" class="space-y-4">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Key</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="equip_size_x">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">标签</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="设备X向尺寸长">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                                        <select class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                                            <option value="float" selected>float</option>
+                                            <option value="string">string</option>
+                                            <option value="json">json</option>
+                                            <option value="boolean">boolean</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">值</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="0.0">
+                                    </div>
+                                    <div class="lg:col-span-4 flex items-center">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-2">
+                                            <span class="text-sm text-gray-700">必填</span>
+                                        </label>
+                                        <button type="button" class="ml-auto px-3 py-1 text-error border border-error rounded hover:bg-error hover:text-white transition-colors text-sm">
+                                            删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Key</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="equip_size_y">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">标签</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="设备Y向尺寸宽">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                                        <select class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                                            <option value="float" selected>float</option>
+                                            <option value="string">string</option>
+                                            <option value="json">json</option>
+                                            <option value="boolean">boolean</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">值</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="0.0">
+                                    </div>
+                                    <div class="lg:col-span-4 flex items-center">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-2">
+                                            <span class="text-sm text-gray-700">必填</span>
+                                        </label>
+                                        <button type="button" class="ml-auto px-3 py-1 text-error border border-error rounded hover:bg-error hover:text-white transition-colors text-sm">
+                                            删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Properties -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">动态属性</h3>
+                        <div class="flex justify-between items-center mb-4">
+                            <button type="button" id="add-dynamic-property" class="px-3 py-1 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm">
+                                + 添加属性
+                            </button>
+                        </div>
+                        <div id="dynamic-properties-container" class="space-y-4">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Key</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="dynamic_param_1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">标签</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="动态参数1">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                                        <select class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                                            <option value="string" selected>string</option>
+                                            <option value="float">float</option>
+                                            <option value="json">json</option>
+                                            <option value="boolean">boolean</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">值</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                                    </div>
+                                    <div class="lg:col-span-4 flex items-center">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-2">
+                                            <span class="text-sm text-gray-700">必填</span>
+                                        </label>
+                                        <button type="button" class="ml-auto px-3 py-1 text-error border border-error rounded hover:bg-error hover:text-white transition-colors text-sm">
+                                            删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connection Configs -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">连接配置</h3>
+                        <div class="flex justify-between items-center mb-4">
+                            <button type="button" class="px-3 py-1 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm">
+                                + 添加配置
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">ID</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="socket_bridge_topic">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">标签</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="天体套接字桥接通讯">
+                                    </div>
+                                </div>
+                                <h5 class="text-sm font-semibold text-gray-600 mb-2">连接参数</h5>
+                                <div class="space-y-3">
+                                    <div class="border-l-2 border-primary pl-4 py-1">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Key</label>
+                                                <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm" value="equip_id">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">标签</label>
+                                                <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm" value="设备连接唯一标识">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">类型</label>
+                                                <select class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm">
+                                                    <option value="string" selected>string</option>
+                                                    <option value="float">float</option>
+                                                    <option value="json">json</option>
+                                                    <option value="boolean">boolean</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">值</label>
+                                                <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm" value="TZXXXN_000">
+                                            </div>
+                                            <div class="lg:col-span-4 flex items-center">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="mr-2" checked>
+                                                    <span class="text-xs text-gray-700">必填</span>
+                                                </label>
+                                                <button type="button" class="ml-auto px-2 py-1 text-error border border-error rounded hover:bg-error hover:text-white transition-colors text-xs">
+                                                    删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm w-full text-center">
+                                        + 添加参数
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Atomic Operations -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">原子操作</h3>
+                        <div class="flex justify-between items-center mb-4">
+                            <button type="button" class="px-3 py-1 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm">
+                                + 添加操作
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">ID</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="move">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">标签</label>
+                                        <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" value="移动">
+                                    </div>
+                                </div>
+                                <h5 class="text-sm font-semibold text-gray-600 mb-2">操作参数</h5>
+                                <div class="space-y-3">
+                                    <div class="border-l-2 border-primary pl-4 py-1">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">Key</label>
+                                                <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm" value="poi">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">标签</label>
+                                                <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm" value="目的地">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">类型</label>
+                                                <select class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm">
+                                                    <option value="string" selected>string</option>
+                                                    <option value="float">float</option>
+                                                    <option value="json">json</option>
+                                                    <option value="boolean">boolean</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 mb-1">值</label>
+                                                <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary text-sm">
+                                            </div>
+                                            <div class="lg:col-span-4 flex items-center">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" class="mr-2" checked>
+                                                    <span class="text-xs text-gray-700">必填</span>
+                                                </label>
+                                                <button type="button" class="ml-auto px-2 py-1 text-error border border-error rounded hover:bg-error hover:text-white transition-colors text-xs">
+                                                    删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm w-full text-center">
+                                        + 添加参数
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex justify-end items-center mt-8 pt-4 border-t border-gray-200">
+                        <a href="models.html" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors mr-3">
+                            取消
+                        </a>
+                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
+                            保存型号
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const langBtn = document.getElementById('langBtn');
+        const langDropdown = document.getElementById('langDropdown');
+
+        langBtn.addEventListener('click', () => {
+            langDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+                langDropdown.classList.add('hidden');
+            }
+        });
+
+        // Toggle submenu functionality
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('submenu', 'arrow'));
+            
+            if (submenu) {
+                submenu.classList.toggle('expanded');
+                if (arrow) {
+                    arrow.classList.toggle('rotate-180');
+                }
+            }
+        }
+
+        // Delete property functionality
+        document.querySelectorAll('button').forEach(button => {
+            if (button.textContent.includes('删除')) {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Delete property logic here
+                    if (confirm('确定要删除这个属性吗？')) {
+                        // Remove the parent element
+                        button.closest('.bg-gray-50').remove();
+                    }
+                });
+            }
+        });
+
+        // Add property functionality
+        function createPropertyForm() {
+            return `
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Key</label>
+                            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="请输入键名">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">标签</label>
+                            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="请输入标签">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                            <select class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                                <option value="string">string</option>
+                                <option value="float">float</option>
+                                <option value="json">json</option>
+                                <option value="boolean">boolean</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">值</label>
+                            <input type="text" class="w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:border-primary" placeholder="请输入值">
+                        </div>
+                        <div class="lg:col-span-4 flex items-center">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2">
+                                <span class="text-sm text-gray-700">必填</span>
+                            </label>
+                            <button type="button" class="ml-auto px-3 py-1 text-error border border-error rounded hover:bg-error hover:text-white transition-colors text-sm">
+                                删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add equipment property
+        document.getElementById('add-equip-property').addEventListener('click', () => {
+            const container = document.getElementById('equip-properties-container');
+            const propertyForm = createPropertyForm();
+            container.insertAdjacentHTML('beforeend', propertyForm);
+            
+            // Add delete functionality to the new property
+            const deleteButtons = container.querySelectorAll('button');
+            const newDeleteButton = deleteButtons[deleteButtons.length - 1];
+            newDeleteButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('确定要删除这个属性吗？')) {
+                    newDeleteButton.closest('.bg-gray-50').remove();
+                }
+            });
+        });
+
+        // Add dynamic property
+        document.getElementById('add-dynamic-property').addEventListener('click', () => {
+            const container = document.getElementById('dynamic-properties-container');
+            const propertyForm = createPropertyForm();
+            container.insertAdjacentHTML('beforeend', propertyForm);
+            
+            // Add delete functionality to the new property
+            const deleteButtons = container.querySelectorAll('button');
+            const newDeleteButton = deleteButtons[deleteButtons.length - 1];
+            newDeleteButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('确定要删除这个属性吗？')) {
+                    newDeleteButton.closest('.bg-gray-50').remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
