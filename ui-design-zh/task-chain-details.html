@@ -30,6 +30,13 @@
         }
     </script>
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -61,104 +68,46 @@
         .animate-pulse-custom {
             animation: pulse 2s ease-in-out infinite;
         }
-        .node-tree {
-            padding: 20px;
+        /* Fixed: Consistent SVG container for desktop */
+        .tree-svg-container {
+            width: 100%;
+            max-width: 100%;
+            min-height: 400px;
+            height: auto;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
-        .node {
-            position: relative;
-            display: inline-block;
-            margin: 0 10px;
-        }
-        .node-content {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: 500;
+        .tree-node:hover {
+            stroke: #2c3e50;
+            stroke-width: 3;
             cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 80px;
-            min-height: 80px;
-            text-align: center;
-            color: white;
         }
-        .node-content:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .tree-line {
+            stroke: #7f8c8d;
+            stroke-width: 2;
         }
-        .node-children {
-            position: relative;
-            display: block;
-            text-align: center;
-            margin-top: 40px;
-        }
-        .node-connector {
-            position: absolute;
-            top: 50%;
-            left: 100%;
-            width: 20px;
-            height: 2px;
-            background-color: #ccc;
-            transform: translateY(-50%);
-        }
-        .node-connector-vertical {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            width: 2px;
-            height: 40px;
-            background-color: #ccc;
-            transform: translateX(-50%);
-        }
-        .node-children .node {
-            display: inline-block;
-            margin: 0 10px;
-        }
-        .node-calc_equip {
-            background-color: #3498db;
-            color: white;
-        }
-        .node-move {
-            background-color: #27ae60;
-            color: white;
-        }
-        .node-call_equip {
-            background-color: #f39c12;
-            color: white;
-        }
-        .node-plan {
-            background-color: #9b59b6;
-            color: white;
-        }
-        .node-success {
-            background-color: #27ae60;
-            color: white;
-        }
-        .node-error {
-            background-color: #e74c3c;
-            color: white;
-        }
-        .node-cancel {
-            background-color: #95a5a6;
-        }
-        .node-release_equip {
-            background-color: #1abc9c;
-            color: white;
+        .node-calc_equip { fill: #3498db; }
+        .node-move { fill: #27ae60; }
+        .node-call_equip { fill: #f39c12; }
+        .node-plan { fill: #9b59b6; }
+        .node-success { fill: #27ae60; }
+        .node-error { fill: #e74c3c; }
+        .node-cancel { fill: #95a5a6; }
+        .node-release_equip { fill: #1abc9c; }
+        
+        /* Fixed: Node details panel with fixed height and vertical scroll only */
+        .node-details-panel {
+            height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            width: 100%;
         }
     </style>
 </head>
 <body class="bg-bg-light min-h-screen">
-    <div class="flex min-h-screen">
-        <!-- Mobile sidebar toggle -->
-        <button id="mobile-menu-button" class="fixed top-4 left-4 z-40 lg:hidden bg-sidebar text-white p-2 rounded-lg">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-            </svg>
-        </button>
-        
-        <aside id="sidebar" class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+    <div class="flex min-h-screen max-w-full">
+        <!-- Fixed: Sidebar always visible (desktop only) -->
+        <aside id="sidebar" class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col transition-all duration-300">
             <div class="p-5 border-b border-white/10">
                 <h1 class="text-white text-lg font-semibold leading-tight">
                     机器人管理系统
@@ -277,8 +226,9 @@
             </div>
         </aside>
         
-        <main class="flex-1 lg:ml-[250px] flex flex-col min-h-screen">
-            <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+        <!-- Fixed: Main content with fixed margin for sidebar -->
+        <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
+            <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-40">
                 <div>
                     <h2 class="text-xl font-semibold text-sidebar">任务链详情</h2>
                     <p class="text-text-secondary text-sm mt-1">查看和编辑任务链结构</p>
@@ -295,7 +245,7 @@
                         </svg>
                     </button>
                     
-                    <div id="language-dropdown" class="hidden absolute right-4 top-16 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
+                    <div id="language-dropdown" class="hidden absolute right-8 top-16 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
                         <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors flex items-center gap-2">
                             <span>English</span>
                             <span class="text-text-light text-xs">(EN)</span>
@@ -308,7 +258,7 @@
                 </div>
             </header>
             
-            <div class="flex-1 p-6">
+            <div class="flex-1 p-6 overflow-y-auto">
                 <div class="bg-white rounded-lg shadow-sm border border-border-gray p-6 mb-6">
                     <div class="flex items-center justify-between mb-6">
                         <div>
@@ -342,62 +292,22 @@
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-2">
+                    <!-- Fixed: Two panels side by side permanently (no mobile stacking) -->
+                    <div class="flex gap-6 w-full">
+                        <div class="w-2/3 flex flex-col">
                             <h4 class="text-md font-semibold text-text-primary mb-4">树形结构</h4>
-                            <div class="bg-bg-light rounded-lg border border-border-gray p-4 overflow-x-auto">
-                                <div class="node-tree" style="display: flex; align-items: center; flex-wrap: nowrap; gap: 10px; min-width: max-content;">
-                                    <div class="node">
-                                        <div class="node-content node-calc_equip">
-                                            calc_equip
-                                        </div>
-                                        <div class="node-connector"></div>
-                                    </div>
-                                    <div class="node">
-                                        <div class="node-content node-move">
-                                            move
-                                        </div>
-                                        <div class="node-connector"></div>
-                                    </div>
-                                    <div class="node">
-                                        <div class="node-content node-call_equip">
-                                            call_equip
-                                        </div>
-                                        <div class="node-connector"></div>
-                                    </div>
-                                    <div class="node">
-                                        <div class="node-content node-plan">
-                                            plan
-                                        </div>
-                                        <div class="node-connector"></div>
-                                    </div>
-                                    <div class="node">
-                                        <div class="node-content node-move">
-                                            move
-                                        </div>
-                                        <div class="node-connector"></div>
-                                    </div>
-                                    <div class="node">
-                                        <div class="node-content node-call_equip">
-                                            call_equip
-                                        </div>
-                                        <div class="node-connector"></div>
-                                    </div>
-                                    <div class="node">
-                                        <div class="node-content node-success">
-                                            success
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="bg-bg-light rounded-lg border border-border-gray p-4 flex-1">
+                                <svg class="tree-svg-container" id="treeSvg" width="100%" height="auto"></svg>
                             </div>
                         </div>
                         
-                        <div class="lg:col-span-1">
+                        <!-- Fixed: Node details panel with fixed width and vertical scroll only -->
+                        <div class="w-1/3 flex flex-col">
                             <h4 class="text-md font-semibold text-text-primary mb-4">节点详情</h4>
-                            <div class="bg-bg-light rounded-lg border border-border-gray p-4">
+                            <div class="bg-bg-light rounded-lg border border-border-gray p-4 node-details-panel">
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-text-secondary mb-2">节点类型</label>
-                                    <input type="text" value="calc_equip" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" disabled>
+                                    <input type="text" id="node-type" value="calc_equip" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" disabled>
                                 </div>
                                 
                                 <div class="mb-4">
@@ -407,7 +317,7 @@
                                 
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-text-secondary mb-2">节点名称</label>
-                                    <input type="text" value="计算节点1" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <input type="text" id="node-name" value="计算节点1" class="w-full px-4 py-2 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                                 </div>
                                 
                                 <div class="mb-4">
@@ -423,7 +333,7 @@
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-text-secondary mb-2">参数</label>
                                     <div class="bg-white border border-border-gray rounded-lg p-3">
-                                        <pre class="text-sm text-text-secondary overflow-auto max-h-40">{
+                                        <pre class="text-sm text-text-secondary overflow-auto max-h-40 whitespace-pre-wrap break-words">{
   "type": "#{JSON_PARAM|@order_type#}",
   "move_param": "#{MAP_POSE_PARSE|#{SQL_PARAM|@SELECT approach_to_map_code, approach_to_poi_code FROM dispatch_order_templete WHERE cell_code='#{JSON_PARAM|@stock_place_from#}' AND operate=6#}#"
 }</pre>
@@ -447,43 +357,43 @@
                                     </button>
                                 </div>
                             </div>
-                            
-                            <h4 class="text-md font-semibold text-text-primary mt-6 mb-4">版本历史</h4>
-                            <div class="bg-bg-light rounded-lg border border-border-gray p-4">
-                                <div class="space-y-3">
-                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
-                                        <div>
-                                            <p class="font-medium text-text-primary">版本 1.0.0</p>
-                                            <p class="text-sm text-text-light">创建于 2026-03-18 10:30</p>
-                                            <p class="text-xs text-text-secondary mt-1">创建任务链</p>
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <button class="text-sm text-primary hover:underline">查看</button>
-                                            <button class="text-sm text-primary hover:underline">回滚</button>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
-                                        <div>
-                                            <p class="font-medium text-text-primary">版本 0.9.0</p>
-                                            <p class="text-sm text-text-light">创建于 2026-03-17 16:45</p>
-                                            <p class="text-xs text-text-secondary mt-1">添加移动节点</p>
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <button class="text-sm text-primary hover:underline">查看</button>
-                                            <button class="text-sm text-primary hover:underline">回滚</button>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
-                                        <div>
-                                            <p class="font-medium text-text-primary">版本 0.8.0</p>
-                                            <p class="text-sm text-text-light">创建于 2026-03-17 14:20</p>
-                                            <p class="text-xs text-text-secondary mt-1">初始版本</p>
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <button class="text-sm text-primary hover:underline">查看</button>
-                                            <button class="text-sm text-primary hover:underline">回滚</button>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                    
+                    <h4 class="text-md font-semibold text-text-primary mt-6 mb-4">版本历史</h4>
+                    <div class="bg-bg-light rounded-lg border border-border-gray p-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
+                                <div>
+                                    <p class="font-medium text-text-primary">版本 1.0.0</p>
+                                    <p class="text-sm text-text-light">创建于 2026-03-18 10:30</p>
+                                    <p class="text-xs text-text-secondary mt-1">创建任务链</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button class="text-sm text-primary hover:underline">查看</button>
+                                    <button class="text-sm text-primary hover:underline">回滚</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
+                                <div>
+                                    <p class="font-medium text-text-primary">版本 0.9.0</p>
+                                    <p class="text-sm text-text-light">创建于 2026-03-17 16:45</p>
+                                    <p class="text-xs text-text-secondary mt-1">添加移动节点</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button class="text-sm text-primary hover:underline">查看</button>
+                                    <button class="text-sm text-primary hover:underline">回滚</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-border-gray">
+                                <div>
+                                    <p class="font-medium text-text-primary">版本 0.8.0</p>
+                                    <p class="text-sm text-text-light">创建于 2026-03-17 14:20</p>
+                                    <p class="text-xs text-text-secondary mt-1">初始版本</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button class="text-sm text-primary hover:underline">查看</button>
+                                    <button class="text-sm text-primary hover:underline">回滚</button>
                                 </div>
                             </div>
                         </div>
@@ -619,12 +529,6 @@
             arrow.classList.toggle('rotate-180');
         }
         
-        // 移动菜单切换
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('-translate-x-full');
-        });
-        
         function toggleLanguageDropdown() {
             const dropdown = document.getElementById('language-dropdown');
             dropdown.classList.toggle('hidden');
@@ -654,16 +558,121 @@
         });
         
         // 节点点击事件
-        document.querySelectorAll('.node-content').forEach(node => {
-            node.addEventListener('click', function() {
-                // 移除所有节点的选中状态
-                document.querySelectorAll('.node-content').forEach(n => {
-                    n.classList.remove('ring-2', 'ring-offset-2', 'ring-primary');
-                });
-                // 添加当前节点的选中状态
-                this.classList.add('ring-2', 'ring-offset-2', 'ring-primary');
+        let selectedNode = null;
+        
+        const treeData = {
+            name: "calc_equip",
+            type: "calc_equip",
+            children: [
+                { 
+                    name: "move", 
+                    type: "move",
+                    children: [
+                        { name: "call_equip", type: "call_equip" },
+                        { 
+                            name: "plan", 
+                            type: "plan",
+                            children: [
+                                { name: "move", type: "move" },
+                                { name: "call_equip", type: "call_equip" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+        
+        const treeConfig = {
+            nodeRadius: 35,
+            horizontalSpacing: 150,
+            verticalSpacing: 100,
+            textColor: "white"
+        };
+        
+        const svg = document.getElementById("treeSvg");
+        let nodeId = 0;
+        
+        function drawTree(node, level, x, y) {
+            node.id = nodeId++;
+            node.x = x;
+            node.y = y;
+            
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", x);
+            circle.setAttribute("cy", y);
+            circle.setAttribute("r", treeConfig.nodeRadius);
+            circle.setAttribute("fill", getNodeColor(node.type));
+            circle.setAttribute("class", "tree-node");
+            circle.setAttribute("data-name", node.name);
+            circle.setAttribute("data-type", node.type);
+            circle.addEventListener("click", function() {
+                selectNode(node, this);
             });
-        });
+            svg.appendChild(circle);
+            
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", x);
+            text.setAttribute("y", y);
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("dominant-baseline", "middle");
+            text.setAttribute("fill", treeConfig.textColor);
+            text.setAttribute("font-size", "11");
+            text.setAttribute("font-weight", "500");
+            text.textContent = node.name;
+            svg.appendChild(text);
+            
+            if (!node.children || node.children.length === 0) return;
+            
+            const totalChildren = node.children.length;
+            const startX = x - ((totalChildren - 1) * treeConfig.horizontalSpacing) / 2;
+            
+            node.children.forEach((child, index) => {
+                const childX = startX + index * treeConfig.horizontalSpacing;
+                const childY = y + treeConfig.verticalSpacing;
+                
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", y);
+                line.setAttribute("x2", childX);
+                line.setAttribute("y2", childY);
+                line.setAttribute("class", "tree-line");
+                svg.appendChild(line);
+                
+                drawTree(child, level + 1, childX, childY);
+            });
+        }
+        
+        function getNodeColor(type) {
+            const colors = {
+                'calc_equip': '#3498db',
+                'move': '#27ae60',
+                'call_equip': '#f39c12',
+                'plan': '#9b59b6',
+                'success': '#27ae60',
+                'error': '#e74c3c',
+                'cancel': '#95a5a6',
+                'release_equip': '#1abc9c'
+            };
+            return colors[type] || '#95a5a6';
+        }
+        
+        function selectNode(node, circleElement) {
+            if (selectedNode) {
+                selectedNode.setAttribute("stroke", "none");
+            }
+            selectedNode = circleElement;
+            circleElement.setAttribute("stroke", "#2c3e50");
+            circleElement.setAttribute("stroke-width", "3");
+            
+            document.getElementById('node-type').value = node.type;
+            document.getElementById('node-name').value = node.name;
+        }
+        
+        // Set SVG dimensions based on container (desktop only)
+        const svgWidth = svg.parentElement.clientWidth || 800;
+        const svgHeight = 500;
+        svg.setAttribute("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
+        drawTree(treeData, 0, svgWidth / 2, 60);
     </script>
 </body>
 </html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfect Connected Interactive Tree Graph</title>
+    <style>
+        * { margin: 0; padding: 20px; box-sizing: border-box; }
+        body { background: #f8f9fa; font-family: Arial, sans-serif; }
+        .tree-container { width: 100%; height: 600px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        /* Node hover effect */
+        .tree-node:hover { stroke: #2c3e50; stroke-width: 3; cursor: pointer; }
+        /* Line style (PERFECTLY CONNECTED TO NODES) */
+        .tree-line { stroke: #7f8c8d; stroke-width: 2; }
+    </style>
+</head>
+<body>
+    <h2>Interactive Tree Graph (100% Connected Nodes + Lines)</h2>
+    <svg class="tree-container" id="treeSvg"></svg>
+
+<script>
+// 1. TREE DATA STRUCTURE (EDIT THIS TO MAKE YOUR OWN TREE)
+// Root → Branches → Sub-branches (unlimited depth)
+const treeData = {
+    name: "ROOT",
+    children: [
+        { name: "BRANCH 1", children: [{ name: "LEAF 1.1" }, { name: "LEAF 1.2" }] },
+        { name: "BRANCH 2", children: [{ name: "LEAF 2.1" }, { name: "LEAF 2.2", children: [{ name: "LEAF 2.2.1" }] }] },
+        { name: "BRANCH 3" }
+    ]
+};
+
+// 2. CONFIG (customize node size/colors/spacing)
+const config = {
+    nodeRadius: 16,       // Node circle size
+    horizontalSpacing: 120, // Space between branches
+    verticalSpacing: 100,   // Space between levels
+    nodeColor: "#3498db",   // Node fill color
+    textColor: "white"      // Node text color
+};
+
+// 3. CORE LOGIC: DRAW PERFECTLY CONNECTED TREE (NO GAPS EVER)
+const svg = document.getElementById("treeSvg");
+let nodeId = 0;
+
+// Recursively position + draw nodes + LINES CONNECTED TO NODE CENTERS
+function drawTree(node, level, x, y) {
+    node.id = nodeId++;
+    node.x = x;
+    node.y = y;
+
+    // 🔴 DRAW NODE (circle/dot) - CENTER POINT IS (x,y)
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", x);
+    circle.setAttribute("cy", y);
+    circle.setAttribute("r", config.nodeRadius);
+    circle.setAttribute("fill", config.nodeColor);
+    circle.setAttribute("class", "tree-node");
+    svg.appendChild(circle);
+
+    // DRAW NODE TEXT
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", x);
+    text.setAttribute("y", y);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("dominant-baseline", "middle");
+    text.setAttribute("fill", config.textColor);
+    text.setAttribute("font-size", "12");
+    text.textContent = node.name;
+    svg.appendChild(text);
+
+    // IF NO CHILDREN, STOP
+    if (!node.children || node.children.length === 0) return;
+
+    // CALCULATE CHILD POSITIONS (auto-align branches evenly)
+    const totalChildren = node.children.length;
+    const startX = x - ((totalChildren - 1) * config.horizontalSpacing) / 2;
+
+    // DRAW CHILDREN + CONNECTING LINES (lines END AT NODE CENTERS = NO GAPS)
+    node.children.forEach((child, index) => {
+        const childX = startX + index * config.horizontalSpacing;
+        const childY = y + config.verticalSpacing;
+
+        // 📏 DRAW CONNECTING LINE (from parent CENTER to child CENTER)
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", childX);
+        line.setAttribute("y2", childY);
+        line.setAttribute("class", "tree-line");
+        svg.appendChild(line);
+
+        // Recursively draw child nodes
+        drawTree(child, level + 1, childX, childY);
+    });
+}
+
+// 4. INITIALIZE TREE (root at top-center)
+drawTree(treeData, 0, svg.clientWidth / 2, config.verticalSpacing);
+</script>
+</body>
+</html>
