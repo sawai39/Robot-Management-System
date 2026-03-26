@@ -564,20 +564,83 @@
             name: "calc_equip",
             type: "calc_equip",
             children: [
-                { 
-                    name: "move", 
+                {
+                    name: "error",
+                    type: "error",
+                },
+                {
+                    name: "move",
                     type: "move",
                     children: [
-                        { name: "call_equip", type: "call_equip" },
-                        { 
-                            name: "plan", 
-                            type: "plan",
+                        {
+                            name: "error",
+                            type: "error",
+                        },
+                        {
+                            name: "call_equip",
+                            type: "call_equip",
                             children: [
-                                { name: "move", type: "move" },
-                                { name: "call_equip", type: "call_equip" }
+                                {
+                                    name: "error",
+                                    type: "error",
+                                },
+                                {
+                                    name: "plan",
+                                    type: "plan",
+                                    children: [
+                                        {
+                                            name: "move",
+                                            type: "move",
+                                            children: [
+                                                {
+                                                    name: "error",
+                                                    type: "error",
+                                                },
+                                                {
+                                                    name: "call_equip",
+                                                    type: "call_equip",
+                                                    children: [
+                                                        {
+                                                            name: "error",
+                                                            type: "error",
+                                                        },
+                                                        {
+                                                            name: "success",
+                                                            type: "success",
+                                                        },
+                                                        {
+                                                            name: "cancel",
+                                                            type: "cancel",
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    name: "cancel",
+                                                    type: "cancel",
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name: "cancel",
+                                            type: "cancel",
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "cancel",
+                                    type: "cancel",
+                                }
                             ]
+                        },
+                        {
+                            name: "cancel",
+                            type: "cancel",
                         }
                     ]
+                },
+                {
+                    name: "cancel",
+                    type: "cancel",
                 }
             ]
         };
