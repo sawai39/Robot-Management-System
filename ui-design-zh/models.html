@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>型号管理 - 机器人管理系统</title>
+    <title>模型管理 - 机器人管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -163,8 +163,8 @@
         <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
             <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
                 <div>
-                    <h2 class="text-xl font-semibold text-sidebar">型号管理</h2>
-                    <p class="text-text-secondary text-sm mt-1">管理设备型号和配置</p>
+                    <h2 class="text-xl font-semibold text-sidebar">模型管理</h2>
+                    <p class="text-text-secondary text-sm mt-1">管理设备模型和配置</p>
                 </div>
                 <div class="relative">
                     <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
@@ -185,7 +185,7 @@
 
             <div class="flex-1 p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-semibold text-gray-800">型号管理</h2>
+                    <h2 class="text-2xl font-semibold text-gray-800">模型管理</h2>
                     <div class="flex items-center gap-4">
                         <div class="relative">
                             <button id="langBtn" class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 transition-colors">
@@ -206,14 +206,13 @@
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex items-center gap-4">
                         <div class="relative">
-                            <input type="text" placeholder="搜索型号..." class="w-64 px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                            <input type="text" placeholder="搜索模型..." class="w-64 px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
                             <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
                         <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white">
                             <option value="all">所有类别</option>
-                            <option value="tianti">天体机器人</option>
                             <option value="mir">米尔机器人</option>
                             <option value="elevator">电梯</option>
                         </select>
@@ -225,7 +224,7 @@
                     </div>
                     <div class="flex gap-3">
                         <a href="model-add.html" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium">
-                            + 添加新型号
+                            + 添加新模型
                         </a>
                         <button class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium">
                             刷新
@@ -234,10 +233,6 @@
                 </div>
 
                 <section class="mb-8">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                        <span class="w-1 h-6 bg-primary rounded"></span>
-                        天体机器人
-                    </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
                             <div class="flex justify-between items-start mb-4">
@@ -308,15 +303,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </section>
 
-                <section class="mb-8">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                        <span class="w-1 h-6 bg-success rounded"></span>
-                        米尔机器人
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-lg font-semibold text-gray-800">MiR-100</h4>
@@ -358,15 +345,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </section>
 
-                <section class="mb-8">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                        <span class="w-1 h-6 bg-warning rounded"></span>
-                        电梯
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300">
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-lg font-semibold text-gray-800">ELEV-200</h4>
@@ -394,21 +373,13 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </section>
 
-                <section class="mb-8">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                        <span class="w-1 h-6 bg-executing rounded"></span>
-                        自定义型号
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-white rounded-lg shadow-md p-6 card-hover transition-all duration-300 border-2 border-dashed border-gray-300">
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-lg font-semibold text-gray-800">自定义 AMR-01</h4>
                                 <span class="px-2 py-1 bg-executing/10 text-executing text-xs font-semibold rounded">CUST-001</span>
                             </div>
-                            <p class="text-gray-600 text-sm mb-2">基础型号: 抱箱机器人 (TBT-001)</p>
+                            <p class="text-gray-600 text-sm mb-2">基础模型: 抱箱机器人 (TBT-001)</p>
                             <p class="text-gray-600 text-sm mb-4">定制版本，配备扩展电池和增强导航，适用于户外使用。</p>
                             <div class="flex items-center justify-between">
                                 <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">启用</span>
@@ -423,7 +394,7 @@
                                 <h4 class="text-lg font-semibold text-gray-800">特种配送机器人</h4>
                                 <span class="px-2 py-1 bg-executing/10 text-executing text-xs font-semibold rounded">CUST-002</span>
                             </div>
-                            <p class="text-gray-600 text-sm mb-2">基础型号: MiR-100 (MIR-001)</p>
+                            <p class="text-gray-600 text-sm mb-2">基础模型: MiR-100 (MIR-001)</p>
                             <p class="text-gray-600 text-sm mb-4">洁净室环境定制版，配备HEPA过滤系统。</p>
                             <div class="flex items-center justify-between">
                                 <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">停用</span>
