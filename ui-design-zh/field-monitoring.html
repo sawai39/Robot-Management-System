@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>场域监控 - 机器人管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#3498db',
+                        'primary-dark': '#2980b9',
+                        'sidebar': '#2c3e50',
+                        'sidebar-dark': '#233140',
+                        'success': '#27ae60',
+                        'warning': '#f39c12',
+                        'error': '#e74c3c',
+                        'executing': '#9b59b6',
+                        'neutral': '#95a5a6',
+                        'text-primary': '#333333',
+                        'text-secondary': '#666666',
+                        'text-light': '#999999',
+                        'bg-light': '#f8f9fa',
+                        'border-gray': '#e0e0e0'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .submenu.expanded {
+            max-height: 200px;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .animate-pulse-custom {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .map-container {
+            position: relative;
+            background: #ffffff;
+            overflow: hidden;
+        }
+        .map-grid {
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .obstacle {
+            fill: none;
+            stroke: #2c3e50;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .landmark {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .landmark:hover {
+            transform: scale(1.2);
+        }
+        .robot-marker {
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .robot-marker:hover {
+            transform: scale(1.1);
+        }
+        .path-line {
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .virtual-wall {
+            stroke-width: 3;
+            fill: rgba(231, 76, 60, 0.1);
+        }
+        .area {
+            fill-opacity: 0.3;
+            stroke-width: 2;
+        }
+        .tool-btn {
+            transition: all 0.2s;
+        }
+        .tool-btn:hover {
+            transform: translateY(-2px);
+        }
+        .tool-btn.active {
+            ring: 2px solid #3498db;
+            ring-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-bg-light min-h-screen">
+    <div class="flex min-h-screen">
+        <aside class="w-[250px] bg-sidebar fixed left-0 top-0 h-full z-30 flex flex-col">
+            <div class="p-5 border-b border-white/10">
+                <h1 class="text-white text-lg font-semibold leading-tight">
+                    机器人管理系统
+                </h1>
+            </div>
+            
+            <nav class="flex-1 py-4 overflow-y-auto">
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('apollo-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>Apollo</span>
+                        </div>
+                        <svg id="apollo-arrow" class="w-4 h-4 transform transition-transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="apollo-submenu" class="submenu expanded bg-sidebar-dark">
+                        <a href="index.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors bg-primary">场域监控</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('tasks-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span>任务管理</span>
+                        </div>
+                        <svg id="tasks-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="tasks-submenu" class="submenu bg-sidebar-dark">
+                        <a href="task-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务列表</a>
+                        <a href="task-queue.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务队列</a>
+                        <a href="task-chain-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">任务链</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('routenet-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                            <span>路网管理</span>
+                        </div>
+                        <svg id="routenet-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="routenet-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">地图编辑</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">路网编辑</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('devices-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                            </svg>
+                            <span>设备管理</span>
+                        </div>
+                        <svg id="devices-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="devices-submenu" class="submenu bg-sidebar-dark">
+                        <a href="device-list.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备列表</a>
+                        <a href="models.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">设备模型</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('event-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span>事件管理</span>
+                        </div>
+                        <svg id="event-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="event-submenu" class="submenu bg-sidebar-dark">
+                        <a href="exception-alarm.html" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">异常报警</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button onclick="toggleSubmenu('system-submenu')" class="nav-item w-full flex items-center justify-between px-5 py-3 text-white hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>系统管理</span>
+                        </div>
+                        <svg id="system-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="system-submenu" class="submenu bg-sidebar-dark">
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色权限</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">角色管理</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户角色</a>
+                        <a href="#" class="nav-item block pl-12 pr-5 py-2.5 text-white/80 hover:text-white hover:bg-white/5 transition-colors">用户管理</a>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="p-4 border-t border-white/10">
+                <p class="text-white/50 text-xs">版本 1.0.0</p>
+            </div>
+        </aside>
+        
+        <main class="flex-1 ml-[250px] flex flex-col min-h-screen">
+            <header class="bg-white border-b border-border-gray px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                <div>
+                    <h2 class="text-xl font-semibold text-sidebar">场域监控</h2>
+                    <p class="text-text-secondary text-sm mt-1">实时监控机器人运行状态和场域环境</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-text-secondary">楼层:</span>
+                        <select id="floorSelect" class="px-3 py-2 border border-border-gray rounded-lg focus:outline-none focus:border-primary bg-white">
+                            <option value="1F">1F</option>
+                            <option value="2F">2F</option>
+                            <option value="3F">3F</option>
+                        </select>
+                    </div>
+                    
+                    <div class="relative">
+                        <button onclick="toggleLanguageDropdown()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-gray hover:bg-bg-light transition-colors">
+                            <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                            </svg>
+                            <span id="current-lang" class="text-sm font-medium">中文</span>
+                            <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-border-gray py-1 z-50">
+                            <button onclick="setLanguage('en')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors">English (EN)</button>
+                            <button onclick="setLanguage('zh')" class="w-full text-left px-4 py-2 text-sm hover:bg-bg-light transition-colors bg-bg-light">中文 (ZH)</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="flex-1 p-6 flex gap-6">
+                <div class="flex-1 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-text-secondary">机器人筛选:</span>
+                                <select id="robotFilter" class="px-3 py-2 border border-border-gray rounded-lg focus:outline-none focus:border-primary bg-white">
+                                    <option value="all">全部</option>
+                                    <option value="online">在线</option>
+                                    <option value="task">执行任务</option>
+                                    <option value="charging">充电中</option>
+                                    <option value="offline">离线</option>
+                                    <option value="error">故障</option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-text-secondary">刷新频率:</span>
+                                <select id="refreshRate" class="px-3 py-2 border border-border-gray rounded-lg focus:outline-none focus:border-primary bg-white">
+                                    <option value="1">1秒</option>
+                                    <option value="5" selected>5秒</option>
+                                    <option value="10">10秒</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <button id="editModeBtn" onclick="toggleEditMode()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                                编辑模式
+                            </button>
+                            <button onclick="toggleLayerPanel()" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium">
+                                图层管理
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="mapContainer" class="map-container rounded-lg shadow-md border border-border-gray flex-1 map-grid">
+                        <svg id="mapSvg" width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+                            <defs>
+                                <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+                                </pattern>
+                            </defs>
+                            
+                            <rect width="100%" height="100%" fill="url(#gridPattern)"/>
+                            
+                            <g id="obstaclesLayer">
+                                <path class="obstacle" d="M 50 50 L 750 50 L 750 550 L 50 550 Z" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                                <path class="obstacle" d="M 150 150 L 300 150 L 300 300 L 150 300 Z" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                                <path class="obstacle" d="M 400 100 L 550 100 L 550 250 L 400 250 Z" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                                <path class="obstacle" d="M 600 200 L 750 200 L 750 400 L 600 400 Z" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                                <path class="obstacle" d="M 100 400 L 250 400 L 250 500 L 100 500 Z" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                                <path class="obstacle" d="M 450 450 L 700 450 L 700 550 L 450 550 Z" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                            </g>
+                            
+                            <g id="virtualWallsLayer">
+                                <rect class="virtual-wall" x="300" y="300" width="100" height="80" stroke="#e74c3c" stroke-dasharray="5,5"/>
+                            </g>
+                            
+                            <g id="areasLayer">
+                                <rect class="area" x="50" y="50" width="100" height="120" stroke="#3498db" fill="#3498db"/>
+                                <text x="100" y="115" text-anchor="middle" fill="#3498db" font-size="12" font-weight="bold">存储区</text>
+                                
+                                <rect class="area" x="170" y="50" width="100" height="120" stroke="#27ae60" fill="#27ae60"/>
+                                <text x="220" y="115" text-anchor="middle" fill="#27ae60" font-size="12" font-weight="bold">工作区</text>
+                                
+                                <rect class="area" x="700" y="50" width="70" height="70" stroke="#f39c12" fill="#f39c12"/>
+                                <text x="735" y="90" text-anchor="middle" fill="#f39c12" font-size="12" font-weight="bold">充电区</text>
+                                
+                                <rect class="area" x="160" y="160" width="130" height="130" stroke="#9b59b6" fill="#9b59b6" fill-opacity="0.3"/>
+                                <text x="225" y="230" text-anchor="middle" fill="#9b59b6" font-size="18" font-weight="bold">200工位</text>
+                                
+                                <rect class="area" x="410" y="110" width="130" height="130" stroke="#9b59b6" fill="#9b59b6" fill-opacity="0.3"/>
+                                <text x="475" y="180" text-anchor="middle" fill="#9b59b6" font-size="18" font-weight="bold">201工位</text>
+                                
+                                <rect class="area" x="610" y="210" width="130" height="180" stroke="#9b59b6" fill="#9b59b6" fill-opacity="0.3"/>
+                                <text x="675" y="305" text-anchor="middle" fill="#9b59b6" font-size="18" font-weight="bold">202工位</text>
+                                
+                                <rect class="area" x="110" y="410" width="130" height="80" stroke="#9b59b6" fill="#9b59b6" fill-opacity="0.3"/>
+                                <text x="175" y="455" text-anchor="middle" fill="#9b59b6" font-size="18" font-weight="bold">203工位</text>
+                                
+                                <rect class="area" x="460" y="460" width="230" height="80" stroke="#9b59b6" fill="#9b59b6" fill-opacity="0.3"/>
+                                <text x="575" y="505" text-anchor="middle" fill="#9b59b6" font-size="18" font-weight="bold">204工位</text>
+                                
+                                <rect class="area" x="310" y="310" width="380" height="130" stroke="#9b59b6" fill="#9b59b6" fill-opacity="0.3"/>
+                                <text x="500" y="380" text-anchor="middle" fill="#9b59b6" font-size="18" font-weight="bold">205工位</text>
+                            </g>
+                            
+                            <g id="pathsLayer">
+                                <rect class="area" x="400" y="50" width="200" height="200" stroke="#3498db" fill="#3498db" fill-opacity="0.3"/>
+                                <text x="500" y="155" text-anchor="middle" fill="#3498db" font-size="14" font-weight="bold">主通道</text>
+                                
+                                <path class="path-line" d="M 500 110 L 500 200 L 600 200" stroke="#27ae60" stroke-dasharray="5,5"/>
+                            </g>
+                            
+                            <g id="landmarksLayer">
+                                <g class="landmark" onclick="showLandmarkInfo('充电桩1')">
+                                    <circle cx="200" cy="180" r="15" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+                                    <text x="200" y="185" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">⚡</text>
+                                </g>
+                                
+                                <g class="landmark" onclick="showLandmarkInfo('充电桩2')">
+                                    <circle cx="650" cy="180" r="15" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+                                    <text x="650" y="185" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">⚡</text>
+                                </g>
+                                
+                                <g class="landmark" onclick="showLandmarkInfo('货架A')">
+                                    <rect x="100" y="320" width="30" height="30" fill="#3498db" stroke="#fff" stroke-width="2" rx="3"/>
+                                    <text x="115" y="340" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">📦</text>
+                                </g>
+                                
+                                <g class="landmark" onclick="showLandmarkInfo('入口1')">
+                                    <rect x="30" y="340" width="25" height="30" fill="#27ae60" stroke="#fff" stroke-width="2" rx="3"/>
+                                    <text x="42" y="360" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">🚪</text>
+                                </g>
+                                
+                                <g class="landmark" onclick="showLandmarkInfo('工作站1')">
+                                    <rect x="450" y="80" width="30" height="30" fill="#e67e22" stroke="#fff" stroke-width="2" rx="3"/>
+                                    <text x="465" y="100" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">🔧</text>
+                                </g>
+                            </g>
+                            
+                            <g id="predictedPathsLayer">
+                                <path id="predictedPath" class="path-line" d="M 200 200 L 300 200 L 400 200" stroke="#3498db" stroke-dasharray="8,4" opacity="0"/>
+                            </g>
+                            
+                            <g id="robotsLayer">
+                                <g class="robot-marker" onclick="showRobotInfo('robot1')" transform="translate(200, 200)">
+                                    <circle cx="0" cy="0" r="20" fill="#27ae60" stroke="#fff" stroke-width="3"/>
+                                    <text x="0" y="5" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text>
+                                    <text x="0" y="35" text-anchor="middle" fill="#27ae60" font-size="10" font-weight="bold">天体0号</text>
+                                </g>
+                                
+                                <g class="robot-marker" onclick="showRobotInfo('robot2')" transform="translate(400, 200)">
+                                    <circle cx="0" cy="0" r="20" fill="#3498db" stroke="#fff" stroke-width="3"/>
+                                    <text x="0" y="5" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">2</text>
+                                    <text x="0" y="35" text-anchor="middle" fill="#3498db" font-size="10" font-weight="bold">天体1号</text>
+                                    <circle cx="0" cy="-25" r="10" fill="#3498db" stroke="#fff" stroke-width="2"/>
+                                    <text x="0" y="-21" text-anchor="middle" fill="#fff" font-size="8">📋</text>
+                                </g>
+                                
+                                <g class="robot-marker" onclick="showRobotInfo('robot3')" transform="translate(700, 440)">
+                                    <circle cx="0" cy="0" r="20" fill="#f39c12" stroke="#fff" stroke-width="3"/>
+                                    <text x="0" y="5" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">3</text>
+                                    <text x="0" y="35" text-anchor="middle" fill="#f39c12" font-size="10" font-weight="bold">天体2号</text>
+                                    <circle cx="0" cy="-25" r="10" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+                                    <text x="0" y="-21" text-anchor="middle" fill="#fff" font-size="8">⚡</text>
+                                </g>
+                                
+                                <g class="robot-marker" onclick="showRobotInfo('robot4')" transform="translate(500, 110)">
+                                    <circle cx="0" cy="0" r="20" fill="#95a5a6" stroke="#fff" stroke-width="3"/>
+                                    <text x="0" y="5" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">4</text>
+                                    <text x="0" y="35" text-anchor="middle" fill="#95a5a6" font-size="10" font-weight="bold">天体3号</text>
+                                    <circle cx="0" cy="-25" r="10" fill="#95a5a6" stroke="#fff" stroke-width="2"/>
+                                    <text x="0" y="-21" text-anchor="middle" fill="#fff" font-size="8">💤</text>
+                                </g>
+                                
+                                <g class="robot-marker" onclick="showRobotInfo('robot5')" transform="translate(600, 200)">
+                                    <circle cx="0" cy="0" r="20" fill="#e74c3c" stroke="#fff" stroke-width="3"/>
+                                    <text x="0" y="5" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">5</text>
+                                    <text x="0" y="35" text-anchor="middle" fill="#e74c3c" font-size="10" font-weight="bold">天体4号</text>
+                                    <circle cx="0" cy="-25" r="10" fill="#e74c3c" stroke="#fff" stroke-width="2"/>
+                                    <text x="0" y="-21" text-anchor="middle" fill="#fff" font-size="8">⚠️</text>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    
+                    <div id="editTools" class="hidden bg-white rounded-lg shadow-md border border-border-gray p-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-medium text-text-secondary">编辑工具:</span>
+                            <button id="selectTool" onclick="selectTool('select')" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors active">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 11-5 5zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+                                </svg>
+                            </button>
+                            <button id="landmarkTool" onclick="selectTool('landmark')" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-8a2 2 0 012-2h14a2 2 0 012 2v8"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7-7"></path>
+                                </svg>
+                            </button>
+                            <button id="pathTool" onclick="selectTool('path')" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </button>
+                            <button id="wallTool" onclick="selectTool('wall')" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V7l8-4 8 4V7l8 4v14"></path>
+                                </svg>
+                            </button>
+                            <button id="areaTool" onclick="selectTool('area')" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                                </svg>
+                            </button>
+                            <button id="deleteTool" onclick="selectTool('delete')" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                            <div class="h-6 w-px bg-border-gray"></div>
+                            <button onclick="undoAction()" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                                </svg>
+                            </button>
+                            <button onclick="redoAction()" class="tool-btn px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-80 flex flex-col gap-4">
+                    <div class="bg-white rounded-lg shadow-md border border-border-gray p-4">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">机器人状态</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 bg-success rounded-full"></div>
+                                    <span class="text-sm font-medium">在线/空闲</span>
+                                </div>
+                                <span class="text-2xl font-bold text-success">1</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 bg-primary rounded-full"></div>
+                                    <span class="text-sm font-medium">执行任务中</span>
+                                </div>
+                                <span class="text-2xl font-bold text-primary">1</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 bg-warning rounded-full"></div>
+                                    <span class="text-sm font-medium">充电中</span>
+                                </div>
+                                <span class="text-2xl font-bold text-warning">1</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 bg-neutral rounded-full"></div>
+                                    <span class="text-sm font-medium">离线</span>
+                                </div>
+                                <span class="text-2xl font-bold text-neutral">1</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 bg-error rounded-full"></div>
+                                    <span class="text-sm font-medium">故障/异常</span>
+                                </div>
+                                <span class="text-2xl font-bold text-error">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md border border-border-gray p-4">
+                        <h3 class="text-lg font-semibold text-sidebar mb-4">图例</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 bg-success rounded-full"></div>
+                                <span class="text-sm">在线/空闲</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 bg-primary rounded-full"></div>
+                                <span class="text-sm">执行任务中</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 bg-warning rounded-full"></div>
+                                <span class="text-sm">充电中</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 bg-neutral rounded-full"></div>
+                                <span class="text-sm">离线</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 bg-error rounded-full"></div>
+                                <span class="text-sm">故障/异常</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 bg-primary rounded"></div>
+                                <span class="text-sm">主路径</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 bg-success rounded"></div>
+                                <span class="text-sm">备用路径</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 border-2 border-error border-dashed"></div>
+                                <span class="text-sm">虚拟墙</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="robotInfoPanel" class="hidden fixed right-6 top-24 w-80 bg-white rounded-lg shadow-xl border border-border-gray z-40">
+        <div class="flex items-center justify-between p-4 border-b border-border-gray">
+            <h3 class="text-lg font-semibold text-sidebar">机器人详情</h3>
+            <button onclick="closeRobotInfo()" class="text-text-secondary hover:text-text-primary transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="p-4 space-y-4">
+            <div class="flex items-center gap-4">
+                <div id="robotStatusIcon" class="w-12 h-12 bg-success rounded-full flex items-center justify-center">
+                    <span class="text-white text-xl font-bold">1</span>
+                </div>
+                <div>
+                    <h4 id="robotName" class="text-lg font-semibold text-sidebar">天体0号</h4>
+                    <p id="robotId" class="text-sm text-text-secondary">ID: TZ123_001</p>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">状态:</span>
+                    <span id="robotStatus" class="text-sm font-medium text-success">在线/空闲</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">当前任务:</span>
+                    <span id="robotTask" class="text-sm font-medium">无</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">电量:</span>
+                    <span id="robotBattery" class="text-sm font-medium">85%</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">位置:</span>
+                    <span id="robotPosition" class="text-sm font-medium">1F, (200, 200)</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">速度:</span>
+                    <span id="robotSpeed" class="text-sm font-medium">0 m/s</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">最后更新:</span>
+                    <span id="robotLastUpdate" class="text-sm font-medium">2024-01-20 14:35:22</span>
+                </div>
+            </div>
+            
+            <div class="space-y-2 pt-4 border-t border-border-gray">
+                <button onclick="showPredictedPath()" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                    显示预测路径
+                </button>
+                <button onclick="showRobotHistory()" class="w-full px-4 py-2 bg-gray-100 text-sidebar rounded-lg hover:bg-gray-200 transition-colors font-medium">
+                    查看历史轨迹
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="predictedPathPanel" class="hidden fixed right-6 top-24 w-80 bg-white rounded-lg shadow-xl border border-border-gray z-40">
+        <div class="flex items-center justify-between p-4 border-b border-border-gray">
+            <h3 class="text-lg font-semibold text-sidebar">预测路径详情</h3>
+            <button onclick="closePredictedPath()" class="text-text-secondary hover:text-text-primary transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="p-4 space-y-4">
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">机器人:</span>
+                    <span id="pathRobot" class="text-sm font-medium">天体0号 (TZ123_001)</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">当前任务:</span>
+                    <span id="pathTask" class="text-sm font-medium">#12345</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">任务类型:</span>
+                    <span id="pathTaskType" class="text-sm font-medium">飞速达</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">目标位置:</span>
+                    <span id="pathTarget" class="text-sm font-medium">3F, Room 301</span>
+                </div>
+            </div>
+            
+            <div class="space-y-2 pt-4 border-t border-border-gray">
+                <h4 class="text-sm font-semibold text-sidebar">预测路径信息:</h4>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">总距离:</span>
+                    <span class="text-sm font-medium">125.6 米</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">预计时长:</span>
+                    <span class="text-sm font-medium">2分35秒</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">预计到达:</span>
+                    <span class="text-sm font-medium">14:37:50</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">途经点:</span>
+                    <span class="text-sm font-medium">5个</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-text-secondary">路径置信度:</span>
+                    <span class="text-sm font-medium">95%</span>
+                </div>
+            </div>
+            
+            <div class="space-y-2 pt-4 border-t border-border-gray">
+                <h4 class="text-sm font-semibold text-sidebar">途经点列表:</h4>
+                <div class="space-y-1 text-sm">
+                    <div class="flex justify-between">
+                        <span>1. 当前位置 (12.5, 8.3, 1F)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>2. 电梯入口 (15.2, 10.1, 1F)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>3. 电梯出口 (15.2, 10.1, 3F)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>4. 走廊转角 (20.5, 15.3, 3F)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>5. 目标位置 (25.8, 18.7, 3F)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-2 pt-4 border-t border-border-gray">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" class="rounded">
+                    <span class="text-sm">显示实际路径</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" class="rounded">
+                    <span class="text-sm">显示偏差标记</span>
+                </label>
+            </div>
+            
+            <div class="flex gap-2 pt-4 border-t border-border-gray">
+                <button onclick="closePredictedPath()" class="flex-1 px-4 py-2 bg-gray-100 text-sidebar rounded-lg hover:bg-gray-200 transition-colors font-medium">
+                    关闭预测路径
+                </button>
+                <button onclick="recalculatePath()" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                    重新计算路径
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="layerPanel" class="hidden fixed right-6 top-24 w-80 bg-white rounded-lg shadow-xl border border-border-gray z-40">
+        <div class="flex items-center justify-between p-4 border-b border-border-gray">
+            <h3 class="text-lg font-semibold text-sidebar">图层管理</h3>
+            <button onclick="closeLayerPanel()" class="text-text-secondary hover:text-text-primary transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerMap" checked class="rounded">
+                    <span class="text-sm font-medium">地图底图</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerObstacles" checked class="rounded">
+                    <span class="text-sm font-medium">障碍物</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerLandmarks" checked class="rounded">
+                    <span class="text-sm font-medium">地标</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerPaths" checked class="rounded">
+                    <span class="text-sm font-medium">路径</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerVirtualWalls" checked class="rounded">
+                    <span class="text-sm font-medium">虚拟墙</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerAreas" checked class="rounded">
+                    <span class="text-sm font-medium">区域</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerRobots" checked class="rounded">
+                    <span class="text-sm font-medium">机器人</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="layerTrajectory" class="rounded">
+                    <span class="text-sm font-medium">轨迹</span>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="w-24">
+            </div>
+            
+            <div class="pt-4 border-t border-border-gray">
+                <button onclick="saveLayerConfig()" class="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium">
+                    保存配置
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('-submenu', '-arrow'));
+            
+            if (submenu.classList.contains('expanded')) {
+                submenu.classList.remove('expanded');
+                arrow.classList.remove('rotate-180');
+            } else {
+                submenu.classList.add('expanded');
+                arrow.classList.add('rotate-180');
+            }
+        }
+        
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        function setLanguage(lang) {
+            document.getElementById('current-lang').textContent = lang === 'en' ? 'English' : '中文';
+            toggleLanguageDropdown();
+        }
+        
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('language-dropdown');
+            const langBtn = e.target.closest('button[onclick="toggleLanguageDropdown()"]');
+            if (!langBtn && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+        
+        let editMode = false;
+        let currentTool = 'select';
+        
+        function toggleEditMode() {
+            editMode = !editMode;
+            const editBtn = document.getElementById('editModeBtn');
+            const editTools = document.getElementById('editTools');
+            
+            if (editMode) {
+                editBtn.textContent = '编辑模式';
+                editBtn.classList.remove('bg-warning');
+                editBtn.classList.add('bg-primary');
+                editTools.classList.add('hidden');
+            } else {
+                editBtn.textContent = '退出编辑';
+                editBtn.classList.remove('bg-primary');
+                editBtn.classList.add('bg-warning');
+                editTools.classList.remove('hidden');
+            }
+        }
+        
+        function selectTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tool + 'Tool').classList.add('active');
+        }
+        
+        function showRobotInfo(robotId) {
+            const panel = document.getElementById('robotInfoPanel');
+            panel.classList.remove('hidden');
+            
+            const robotData = {
+                'robot1': { name: '天体0号', id: 'TZ123_001', status: '在线/空闲', statusColor: 'success', battery: '85%', position: '1F, (200, 200)', speed: '0 m/s' },
+                'robot2': { name: '天体1号', id: 'TZ123_002', status: '执行任务中', statusColor: 'primary', battery: '72%', position: '1F, (400, 200)', speed: '1.2 m/s', task: '#12345' },
+                'robot3': { name: '天体2号', id: 'TZ123_003', status: '充电中', statusColor: 'warning', battery: '45%', position: '1F, (700, 440)', speed: '0 m/s' },
+                'robot4': { name: '天体3号', id: 'TZ123_004', status: '离线', statusColor: 'neutral', battery: '0%', position: '1F, (500, 110)', speed: '0 m/s' },
+                'robot5': { name: '天体4号', id: 'TZ123_005', status: '故障/异常', statusColor: 'error', battery: '23%', position: '1F, (600, 200)', speed: '0 m/s' }
+            };
+            
+            const robot = robotData[robotId];
+            document.getElementById('robotName').textContent = robot.name;
+            document.getElementById('robotId').textContent = 'ID: ' + robot.id;
+            document.getElementById('robotStatus').textContent = robot.status;
+            document.getElementById('robotStatus').className = 'text-sm font-medium text-' + robot.statusColor;
+            document.getElementById('robotBattery').textContent = robot.battery;
+            document.getElementById('robotPosition').textContent = robot.position;
+            document.getElementById('robotSpeed').textContent = robot.speed;
+            document.getElementById('robotTask').textContent = robot.task || '无';
+            
+            const statusIcon = document.getElementById('robotStatusIcon');
+            statusIcon.className = 'w-12 h-12 bg-' + robot.statusColor + ' rounded-full flex items-center justify-center';
+        }
+        
+        function closeRobotInfo() {
+            document.getElementById('robotInfoPanel').classList.add('hidden');
+        }
+        
+        function showPredictedPath() {
+            document.getElementById('predictedPathPanel').classList.remove('hidden');
+            document.getElementById('predictedPath').setAttribute('opacity', '1');
+        }
+        
+        function closePredictedPath() {
+            document.getElementById('predictedPathPanel').classList.add('hidden');
+            document.getElementById('predictedPath').setAttribute('opacity', '0');
+        }
+        
+        function showLandmarkInfo(landmarkName) {
+            alert('地标信息: ' + landmarkName);
+        }
+        
+        function toggleLayerPanel() {
+            document.getElementById('layerPanel').classList.toggle('hidden');
+        }
+        
+        function closeLayerPanel() {
+            document.getElementById('layerPanel').classList.add('hidden');
+        }
+        
+        function saveLayerConfig() {
+            alert('图层配置已保存');
+            closeLayerPanel();
+        }
+        
+        function showRobotHistory() {
+            alert('查看历史轨迹功能');
+        }
+        
+        function recalculatePath() {
+            alert('重新计算路径');
+        }
+        
+        function undoAction() {
+            alert('撤销操作');
+        }
+        
+        function redoAction() {
+            alert('重做操作');
+        }
+        
+        document.getElementById('floorSelect').addEventListener('change', (e) => {
+            alert('切换到楼层: ' + e.target.value);
+        });
+        
+        document.getElementById('robotFilter').addEventListener('change', (e) => {
+            alert('筛选机器人: ' + e.target.value);
+        });
+        
+        document.getElementById('refreshRate').addEventListener('change', (e) => {
+            alert('设置刷新频率: ' + e.target.value + '秒');
+        });
+    </script>
+</body>
+</html>
